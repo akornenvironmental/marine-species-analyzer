@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marine Species Text Analyzer</title>
+    <title>🐚 Marine Species Text Analyzer</title>
     <style>
         * {
             margin: 0;
@@ -76,6 +76,7 @@
             transition: all 0.3s ease;
             background: white;
             margin: 20px 0;
+            position: relative;
         }
 
         .upload-area:hover {
@@ -88,6 +89,12 @@
             border-color: #28a745;
             background: #f0fff0;
             transform: scale(1.02);
+        }
+
+        .upload-area.processing {
+            pointer-events: none;
+            opacity: 0.7;
+            background: #f8f9fa;
         }
 
         .upload-icon {
@@ -131,6 +138,12 @@
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-secondary {
@@ -327,6 +340,7 @@
             border-radius: 8px;
             padding: 15px;
             margin: 15px 0;
+            animation: slideIn 0.3s ease-out;
         }
 
         .processing-message.success {
@@ -342,6 +356,17 @@
         .processing-message.warning {
             background: #fff3e0;
             border-color: #ff9800;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .export-section {
@@ -390,6 +415,15 @@
             transition: width 0.3s ease;
         }
 
+        .pdf-status {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
@@ -434,6 +468,11 @@
             <!-- API Status -->
             <div id="apiStatus" class="api-status">
                 <strong>🔄 System Status:</strong> <span id="statusText">✅ Online - Database connections verified</span>
+            </div>
+
+            <!-- PDF.js Status -->
+            <div id="pdfStatus" class="pdf-status" style="display: none;">
+                <strong>📄 PDF Processing:</strong> <span id="pdfStatusText">Loading PDF.js library...</span>
             </div>
 
             <!-- Input Section -->
@@ -521,9 +560,21 @@ Example formats:
     <!-- PDF.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
-        // Configure PDF.js
-        if (typeof pdfjsLib !== 'undefined') {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        // Initialize PDF.js
+        let pdfLibReady = false;
+
+        function initializePDFJS() {
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                pdfLibReady = true;
+                document.getElementById('pdfStatus').style.display = 'block';
+                document.getElementById('pdfStatusText').textContent = '✅ Ready for PDF processing';
+                console.log('PDF.js initialized successfully');
+            } else {
+                console.warn('PDF.js not loaded, using fallback method');
+                document.getElementById('pdfStatus').style.display = 'block';
+                document.getElementById('pdfStatusText').textContent = '⚠️ Using fallback PDF processing';
+            }
         }
 
         // Configuration
@@ -550,7 +601,6 @@ Example formats:
 
         // Global variables
         let analysisResults = [];
-        let currentAnalysis = null;
 
         // Sample data
         const SAMPLE_DATA = {
@@ -595,6 +645,9 @@ Chlorostoma brunnea Brown turban snail`
             initializeApp();
             setupEventListeners();
             checkAPIStatus();
+            
+            // Initialize PDF.js after a short delay
+            setTimeout(initializePDFJS, 1000);
         });
 
         function initializeApp() {
@@ -616,12 +669,12 @@ Chlorostoma brunnea Brown turban snail`
                 uploadArea.classList.remove('dragover');
             });
 
-            uploadArea.addEventListener('drop', (e) => {
+            uploadArea.addEventListener('drop', async (e) => {
                 e.preventDefault();
                 uploadArea.classList.remove('dragover');
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
-                    handleFileUpload(files);
+                    await handleFileUpload(files);
                 }
             });
 
@@ -666,8 +719,207 @@ Chlorostoma brunnea Brown turban snail`
             }
         }
 
-        function handleFileUpload(files) {
-            showProcessingMessage('PDF upload feature will be available in the full version. For now, please paste text directly.', 'warning');
+        async function handleFileUpload(files) {
+            if (!files || files.length === 0) return;
+
+            console.log('Processing files:', Array.from(files).map(f => f.name));
+
+            try {
+                const uploadArea = document.getElementById('uploadArea');
+                uploadArea.classList.add('processing');
+                
+                showProcessingMessage('📁 Starting PDF processing...', 'info');
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    console.log(`Processing file ${i + 1}:`, {
+                        name: file.name,
+                        type: file.type,
+                        size: file.size
+                    });
+                    
+                    // Validate file type
+                    if (file.type !== 'application/pdf') {
+                        showProcessingMessage(`❌ "${file.name}" is not a PDF file. Please upload PDF files only.`, 'error');
+                        continue;
+                    }
+
+                    // Validate file size (10MB limit)
+                    if (file.size > 10 * 1024 * 1024) {
+                        const fileSizeMB = Math.round(file.size / 1024 / 1024);
+                        showProcessingMessage(`❌ "${file.name}" is too large (${fileSizeMB}MB). Please upload files smaller than 10MB.`, 'error');
+                        continue;
+                    }
+
+                    // Show file info
+                    const fileSizeKB = Math.round(file.size / 1024);
+                    showProcessingMessage(`📄 Processing "${file.name}" (${fileSizeKB}KB)...`, 'info');
+                    
+                    try {
+                        let extractedText = '';
+                        
+                        if (pdfLibReady) {
+                            // Use PDF.js for proper extraction
+                            extractedText = await extractTextWithPDFJS(file);
+                        } else {
+                            // Fallback method
+                            extractedText = await extractTextFallback(file);
+                        }
+                        
+                        if (extractedText && extractedText.trim().length > 0) {
+                            // Success - add text to input area
+                            const textInput = document.getElementById('textInput');
+                            const existingText = textInput.value.trim();
+                            
+                            if (existingText) {
+                                textInput.value = existingText + '\n\n--- From ' + file.name + ' ---\n' + extractedText;
+                            } else {
+                                textInput.value = '--- From ' + file.name + ' ---\n' + extractedText;
+                            }
+                            
+                            const charCount = extractedText.length;
+                            const wordCount = extractedText.split(/\s+/).filter(w => w.length > 0).length;
+                            
+                            showProcessingMessage(`✅ Successfully extracted text from "${file.name}"! Found ${charCount} characters and ${wordCount} words.`, 'success');
+                            
+                            // Auto-scroll to text area
+                            setTimeout(() => {
+                                document.getElementById('textInput').scrollIntoView({ 
+                                    behavior: 'smooth', 
+                                    block: 'center' 
+                                });
+                            }, 500);
+                            
+                        } else {
+                            // Manual extraction guide
+                            showProcessingMessage(`📄 "${file.name}" processed, but automatic text extraction wasn't successful.`, 'warning');
+                            showProcessingMessage(`💡 Manual extraction: Open the PDF → Select All text (Ctrl+A) → Copy (Ctrl+C) → Paste into the text area below`, 'info');
+                        }
+                        
+                    } catch (extractError) {
+                        console.error('File processing error:', extractError);
+                        showProcessingMessage(`⚠️ Error processing "${file.name}": ${extractError.message}`, 'warning');
+                        showProcessingMessage(`💡 Please try manual copy-paste from the PDF.`, 'info');
+                    }
+                }
+                
+                showProcessingMessage(`📁 File processing complete!`, 'success');
+                
+            } catch (error) {
+                console.error('File upload error:', error);
+                showProcessingMessage(`❌ Upload failed: ${error.message}`, 'error');
+            } finally {
+                // Re-enable upload area after processing
+                setTimeout(() => {
+                    const uploadArea = document.getElementById('uploadArea');
+                    uploadArea.classList.remove('processing');
+                    document.getElementById('pdfInput').value = '';
+                }, 1000);
+            }
+        }
+
+        async function extractTextWithPDFJS(file) {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    
+                    const loadingTask = pdfjsLib.getDocument({
+                        data: arrayBuffer,
+                        verbosity: 0
+                    });
+                    
+                    const pdf = await loadingTask.promise;
+                    let fullText = '';
+                    const numPages = pdf.numPages;
+                    
+                    console.log(`Processing PDF with ${numPages} pages using PDF.js...`);
+                    
+                    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                        try {
+                            const page = await pdf.getPage(pageNum);
+                            const textContent = await page.getTextContent();
+                            
+                            const pageText = textContent.items
+                                .map(item => item.str)
+                                .join(' ')
+                                .replace(/\s+/g, ' ')
+                                .trim();
+                            
+                            if (pageText) {
+                                fullText += pageText + '\n\n';
+                            }
+                            
+                            // Update progress
+                            const progress = Math.round((pageNum / numPages) * 100);
+                            showProcessingMessage(`Processing page ${pageNum}/${numPages} (${progress}%)...`, 'info');
+                            
+                        } catch (pageError) {
+                            console.warn(`Error processing page ${pageNum}:`, pageError);
+                        }
+                    }
+                    
+                    resolve(fullText.trim());
+                    
+                } catch (error) {
+                    console.error('PDF.js extraction error:', error);
+                    reject(new Error(`PDF processing failed: ${error.message}`));
+                }
+            });
+        }
+
+        async function extractTextFallback(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const arrayBuffer = e.target.result;
+                        const uint8Array = new Uint8Array(arrayBuffer);
+                        
+                        // Try to decode as text
+                        let text = '';
+                        try {
+                            text = new TextDecoder('utf-8').decode(uint8Array);
+                        } catch (decodeError) {
+                            text = Array.from(uint8Array)
+                                .map(byte => String.fromCharCode(byte))
+                                .join('');
+                        }
+                        
+                        // Look for readable text patterns
+                        const textMatches = text.match(/[a-zA-Z][a-zA-Z\s.,;:!?'"()-]{20,}/g);
+                        
+                        if (textMatches && textMatches.length > 0) {
+                            let extractedText = textMatches
+                                .join(' ')
+                                .replace(/\s+/g, ' ')
+                                .replace(/[^\w\s.,;:!?'"()-]/g, ' ')
+                                .replace(/\s+/g, ' ')
+                                .trim();
+                            
+                            if (extractedText.length > 100) {
+                                extractedText = extractedText
+                                    .split(' ')
+                                    .filter(word => word.length > 0 && word.length < 50)
+                                    .join(' ');
+                                
+                                resolve(extractedText);
+                                return;
+                            }
+                        }
+                        
+                        resolve('');
+                        
+                    } catch (error) {
+                        console.log('Fallback extraction failed:', error);
+                        resolve('');
+                    }
+                };
+                
+                reader.onerror = () => resolve('');
+                reader.readAsArrayBuffer(file);
+            });
         }
 
         function loadSample() {
@@ -759,27 +1011,26 @@ Chlorostoma brunnea Brown turban snail`
             const species = [];
             let matches = [];
 
-            // Much more precise regex patterns for scientific names
+            // Precise regex patterns for scientific names
             const patterns = [
                 // Numbered entries: 649. Eubranchus madapamensis (Rao, 1969)
                 /\b\d+\.\s*([A-Z][a-z]+)\s+([a-z]+)(?:\s+\([^)]+\))?/g,
                 // Direct binomial with authority: Eubranchus madapamensis (Rao, 1969)
                 /\b([A-Z][a-z]{3,})\s+([a-z]{4,})(?:\s+\([^)]+\))?/g,
-                // Simple binomial: Genus species (minimum lengths to avoid false matches)
+                // Simple binomial: Genus species
                 /\b([A-Z][a-z]{3,})\s+([a-z]{4,})\b(?!\s+(?:and|or|the|in|of|to|from|with|by|for|at|on))/g
             ];
 
             patterns.forEach(pattern => {
                 let match;
-                const textCopy = text; // Work on a copy to avoid regex lastIndex issues
-                pattern.lastIndex = 0; // Reset regex
+                const textCopy = text;
+                pattern.lastIndex = 0;
                 
                 while ((match = pattern.exec(textCopy)) !== null) {
                     const genus = match[1];
                     const species = match[2];
                     const scientificName = `${genus} ${species}`;
                     
-                    // Validate that this looks like a real scientific name
                     if (isValidScientificName(genus, species, scientificName)) {
                         if (!matches.some(m => m.scientificName === scientificName)) {
                             matches.push({
@@ -795,40 +1046,34 @@ Chlorostoma brunnea Brown turban snail`
             });
 
             console.log(`Extracted ${matches.length} potential species:`, matches.map(m => m.scientificName));
-            return matches.slice(0, 50); // Limit to 50 species for performance
+            return matches.slice(0, 50);
         }
 
         function isValidScientificName(genus, species, fullName) {
-            // Exclude obvious non-species terms
             const excludePatterns = [
                 /^(Marine|Pacific|Atlantic|Ocean|Sea|North|South|East|West|The|This|Body|Color|Size|Habitat|Distribution|Description|Remarks)/i,
                 /^(Only|Mexican|Prize|Verdes|Baja|Rhinophores|Bulbous|Intertidal|Covered|About|Irregular)/i,
                 /^(mm|cm|in|ft|and|or|the|of|to|from|with|by|for|at|on|California|Mexico|Oregon)/i
             ];
 
-            // Check if genus or species match exclude patterns
             for (const pattern of excludePatterns) {
                 if (pattern.test(genus) || pattern.test(species) || pattern.test(fullName)) {
                     return false;
                 }
             }
 
-            // Genus should be capitalized, species lowercase
             if (genus[0] !== genus[0].toUpperCase() || species[0] !== species[0].toLowerCase()) {
                 return false;
             }
 
-            // Both should be reasonable lengths (3-20 characters)
             if (genus.length < 3 || genus.length > 20 || species.length < 4 || species.length > 20) {
                 return false;
             }
 
-            // Should only contain letters (no numbers or special characters)
             if (!/^[A-Za-z]+$/.test(genus) || !/^[A-Za-z]+$/.test(species)) {
                 return false;
             }
 
-            // Common non-species words that might slip through
             const commonWords = [
                 'Marine Biology', 'Pacific Ocean', 'Sea Level', 'North America', 'South Pacific',
                 'Body color', 'Size range', 'This rare', 'Only recorded', 'Mexican waters',
@@ -839,11 +1084,27 @@ Chlorostoma brunnea Brown turban snail`
             return !commonWords.includes(fullName);
         }
 
-        function extractCommonName(rawText, scientificName) {
-            // Try to extract common name from the context
-            const afterScientific = rawText.replace(scientificName, '').trim();
-            const commonNameMatch = afterScientific.match(/^[A-Z][a-z\s]+/);
-            return commonNameMatch ? commonNameMatch[0].trim() : '';
+        function extractCommonName(text, matchIndex, scientificName) {
+            const beforeMatch = text.substring(Math.max(0, matchIndex - 100), matchIndex);
+            const afterMatch = text.substring(matchIndex + scientificName.length, matchIndex + scientificName.length + 100);
+            
+            const commonNamePatterns = [
+                /^\s*([A-Z][a-z\s]+?)(?:\s+Description:|$)/,
+                /\(([^)]+)\)/,
+                /^\s*-?\s*([A-Z][a-z\s]+?)(?:\s+Description:|$)/
+            ];
+
+            for (const pattern of commonNamePatterns) {
+                const match = afterMatch.match(pattern);
+                if (match && match[1]) {
+                    const commonName = match[1].trim();
+                    if (commonName.length < 50 && !commonName.includes('color') && !commonName.includes('size')) {
+                        return commonName;
+                    }
+                }
+            }
+
+            return '';
         }
 
         async function verifySpeciesWithDatabases(scientificName) {
@@ -857,7 +1118,7 @@ Chlorostoma brunnea Brown turban snail`
             };
 
             try {
-                // Verify with WoRMS (most authoritative for marine species)
+                // Verify with WoRMS
                 const wormsResult = await verifyWithWoRMS(scientificName);
                 results.worms = wormsResult;
                 if (wormsResult.success) {
@@ -908,32 +1169,24 @@ Chlorostoma brunnea Brown turban snail`
                 const cleanName = cleanScientificName(scientificName);
                 const url = `${CONFIG.WORMS_API.BASE_URL}/AphiaRecordsByName/${encodeURIComponent(cleanName)}?like=false&marine_only=true`;
                 
-                console.log(`Querying WoRMS: ${url}`);
-                
                 const response = await fetch(url, {
                     method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Accept': 'application/json' }
                 });
 
-                // Check if response is ok and has content
                 if (!response.ok) {
                     if (response.status === 204 || response.status === 404) {
                         return { success: false, status: 'not_found', message: 'Species not found in WoRMS' };
                     }
-                    throw new Error(`WoRMS API error: ${response.status} ${response.statusText}`);
+                    throw new Error(`WoRMS API error: ${response.status}`);
                 }
 
-                // Check if response has content
                 const contentLength = response.headers.get('content-length');
                 if (contentLength === '0') {
                     return { success: false, status: 'not_found', message: 'No data returned from WoRMS' };
                 }
 
                 const responseText = await response.text();
-                
-                // Check if response is empty
                 if (!responseText || responseText.trim() === '') {
                     return { success: false, status: 'not_found', message: 'Empty response from WoRMS' };
                 }
@@ -942,8 +1195,6 @@ Chlorostoma brunnea Brown turban snail`
                 try {
                     data = JSON.parse(responseText);
                 } catch (parseError) {
-                    console.error('JSON parse error:', parseError);
-                    console.error('Response text:', responseText);
                     throw new Error('Invalid JSON response from WoRMS');
                 }
 
@@ -974,12 +1225,7 @@ Chlorostoma brunnea Brown turban snail`
                 
             } catch (error) {
                 console.error('WoRMS verification error:', error);
-                return { 
-                    success: false, 
-                    status: 'error', 
-                    message: error.message,
-                    error: error.message 
-                };
+                return { success: false, status: 'error', message: error.message };
             }
         }
 
@@ -989,13 +1235,9 @@ Chlorostoma brunnea Brown turban snail`
                 const url = `${CONFIG.GBIF_API.BASE_URL}/species/match?name=${encodeURIComponent(cleanName)}`;
                 
                 const response = await fetch(url);
-                
-                if (!response.ok) {
-                    throw new Error(`GBIF API error: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`GBIF API error: ${response.status}`);
 
                 const data = await response.json();
-                
                 if (!data || data.matchType === 'NONE') {
                     return { success: false, status: 'not_found' };
                 }
@@ -1019,7 +1261,6 @@ Chlorostoma brunnea Brown turban snail`
                 };
                 
             } catch (error) {
-                console.error('GBIF verification error:', error);
                 return { success: false, status: 'error', error: error.message };
             }
         }
@@ -1030,13 +1271,9 @@ Chlorostoma brunnea Brown turban snail`
                 const url = `${CONFIG.INATURALIST_API.BASE_URL}/taxa?q=${encodeURIComponent(cleanName)}&is_active=true&rank=species`;
                 
                 const response = await fetch(url);
-                
-                if (!response.ok) {
-                    throw new Error(`iNaturalist API error: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`iNaturalist API error: ${response.status}`);
 
                 const data = await response.json();
-                
                 if (!data.results || data.results.length === 0) {
                     return { success: false, status: 'not_found' };
                 }
@@ -1056,7 +1293,6 @@ Chlorostoma brunnea Brown turban snail`
                 };
                 
             } catch (error) {
-                console.error('iNaturalist verification error:', error);
                 return { success: false, status: 'error', error: error.message };
             }
         }
@@ -1067,7 +1303,6 @@ Chlorostoma brunnea Brown turban snail`
                 const url = `${CONFIG.OBIS_API.BASE_URL}/taxon/${encodeURIComponent(cleanName)}`;
                 
                 const response = await fetch(url);
-                
                 if (!response.ok) {
                     if (response.status === 404) {
                         return { success: false, status: 'not_found' };
@@ -1076,7 +1311,6 @@ Chlorostoma brunnea Brown turban snail`
                 }
 
                 const data = await response.json();
-                
                 if (!data || !data.scientificName) {
                     return { success: false, status: 'not_found' };
                 }
@@ -1098,17 +1332,16 @@ Chlorostoma brunnea Brown turban snail`
                 };
                 
             } catch (error) {
-                console.error('OBIS verification error:', error);
                 return { success: false, status: 'error', error: error.message };
             }
         }
 
         function cleanScientificName(name) {
             return name
-                .replace(/\([^)]*\)/g, '') // Remove parentheses and content
-                .replace(/\d+\./g, '') // Remove numbers with dots
-                .replace(/[^\w\s]/g, ' ') // Replace special characters with spaces
-                .replace(/\s+/g, ' ') // Collapse multiple spaces
+                .replace(/\([^)]*\)/g, '')
+                .replace(/\d+\./g, '')
+                .replace(/[^\w\s]/g, ' ')
+                .replace(/\s+/g, ' ')
                 .trim();
         }
 
@@ -1140,7 +1373,6 @@ Chlorostoma brunnea Brown turban snail`
             
             container.insertBefore(messageDiv, container.firstChild);
             
-            // Auto-hide success messages after 5 seconds
             if (type === 'success') {
                 setTimeout(() => {
                     if (messageDiv.parentNode) {
@@ -1155,7 +1387,6 @@ Chlorostoma brunnea Brown turban snail`
             const summary = document.getElementById('resultsSummary');
             const speciesList = document.getElementById('speciesList');
 
-            // Calculate summary statistics
             const stats = {
                 total: results.length,
                 verified: results.filter(r => r.verification.worms?.success || r.verification.gbif?.success).length,
@@ -1163,7 +1394,6 @@ Chlorostoma brunnea Brown turban snail`
                 notFound: results.filter(r => r.verification.confidence === 0).length
             };
 
-            // Display summary
             summary.innerHTML = `
                 <div class="summary-card">
                     <h4>${stats.total}</h4>
@@ -1183,7 +1413,6 @@ Chlorostoma brunnea Brown turban snail`
                 </div>
             `;
 
-            // Display species list
             speciesList.innerHTML = '';
             results.forEach(result => {
                 const item = createSpeciesItem(result);
@@ -1198,7 +1427,6 @@ Chlorostoma brunnea Brown turban snail`
             const div = document.createElement('div');
             div.className = 'species-item';
 
-            // Determine status
             let statusText = 'Not Found';
             let statusBadgeClass = 'status-not-found';
             let detailsHTML = '';
@@ -1233,7 +1461,6 @@ Chlorostoma brunnea Brown turban snail`
                 `;
             }
 
-            // Show database coverage
             const databases = result.verification.databases || [];
             const dbIndicators = `
                 <div style="margin-top: 10px; font-size: 0.8rem;">
@@ -1294,17 +1521,8 @@ Chlorostoma brunnea Brown turban snail`
 
         function convertToCSV(data) {
             const headers = [
-                'Scientific Name',
-                'Common Name',
-                'WoRMS Status',
-                'WoRMS ID',
-                'GBIF Status',
-                'GBIF ID',
-                'iNaturalist Status',
-                'OBIS Status',
-                'Confidence',
-                'Family',
-                'Authority'
+                'Scientific Name', 'Common Name', 'WoRMS Status', 'WoRMS ID', 'GBIF Status', 'GBIF ID',
+                'iNaturalist Status', 'OBIS Status', 'Confidence', 'Family', 'Authority'
             ];
 
             const rows = data.map(item => [
