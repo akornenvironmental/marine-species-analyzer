@@ -1040,9 +1040,42 @@
             margin-left: 10px;
         }
 
-        .api-status-dot.online {
-            background: #28a745;
-            animation: pulse 2s infinite;
+        .species-details-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+        }
+
+        .species-details-section h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .species-details-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .description-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .description-section h5 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .species-description {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.4;
+            margin: 0;
         }
     </style>
 </head>
@@ -1474,24 +1507,49 @@
             }
         };
 
-        // Sample data for testing
+                // Sample data for testing with full species information
         const SAMPLE_DATA = {
-            nudibranch: `Eubranchus madapamensis (Rao, 1969)
-Eubranchus steinbecki Behrens, 1987
-Aeolidia loui Kienberger et al., 2016
-Aeolidia papillosa (Linnaeus, 1761)`,
+            nudibranch: `649. Eubranchus madapamensis (Rao, 1969) Madapam Aeolid
+Description: Body color translucent gray brown with brown-yellow, white, clear and dark spots and blotches. Bulbous cerata with tubercles; with a gold and a blue band distally, with 4-6 pinkish orange dots.
+Size: To 0.5 in.
+Habitat: Intertidal and shallow subtidal, to at least 30 ft.
+Distribution: Indo-Pacific, from Tanzania to Hawai'i; in eastern Pacific at Bahía de los Ángeles and Bahía de Banderas.
+
+650. Eubranchus steinbecki Behrens, 1987 Steinbeck's Aeolid
+Description: Irregular, nodular cerata; body color tan with dark olive-green mottling.
+Size: To 0.23 in.
+Habitat: Intertidal and on boat docks.
+Distribution: Palos Verdes and Mission Bay, California, and La Paz, Baja California Sur.
+
+651. Aeolidia loui Kienberger et al., 2016 Lou's Southern Aeolidia
+Description: Body covered with numerous bristly cerata; white, with cream white patches on dorsum, and cream white lines on the cerata. Rhinophores covered with irregular warts.
+Size: To about 1.2 in.
+Habitat: Intertidal and shallow subtidal.
+Distribution: Cape Arago, Oregon, to Punta Baja and northern Isla de Cedros, Baja California.`,
 
             fish: `Sebastes mystinus Blue rockfish
+Description: Dark blue to black coloration with lighter mottling. Elongated body with large pectoral fins.
+Size: To 24 inches.
+Habitat: Rocky reefs and kelp forests, 10-300 feet depth.
+Distribution: British Columbia to Baja California.
+
 Sebastes melanops Black rockfish  
-Sebastes pinniger Canary rockfish
-Ophiodon elongatus Lingcod
-Citharichthys sordidus Pacific sanddab`,
+Description: Dark olive to black with pale blotches. Deep body with prominent dorsal spines.
+Size: To 25 inches.
+Habitat: Rocky bottoms and kelp beds, near surface to 400 feet.
+Distribution: Southeast Alaska to California.`,
 
             mollusks: `Haliotis rufescens Red abalone
+Description: Large gastropod with reddish-brown shell. 3-4 open holes along shell edge.
+Size: To 12 inches diameter.
+Habitat: Rocky intertidal and subtidal zones, to 180 feet depth.
+Distribution: Oregon to Baja California.
+
 Mytilus californianus California mussel
-Strongylocentrotus purpuratus Purple sea urchin
-Pisaster ochraceus Purple sea star
-Tegula funebralis Black turban snail`
+Description: Large bivalve with dark blue-black shell. Strong byssal threads for attachment.
+Size: To 10 inches length.
+Habitat: High to mid intertidal rocky shores, wave-exposed areas.
+Distribution: Alaska to Baja California.`
         };
 
         // Initialize the application
@@ -1718,39 +1776,138 @@ Tegula funebralis Black turban snail`
             const species = [];
             let matches = [];
 
-            // Enhanced regex patterns for scientific names - stricter filtering
+            // Enhanced regex patterns for complete species entries
             const patterns = [
-                // Numbered entries: 649. Eubranchus madapamensis (Rao, 1969)
-                /\b\d+\.\s*([A-Z][a-z]+)\s+([a-z]+)(?:\s+\([^)]+\))?/g,
-                // Direct binomial with authority: Eubranchus madapamensis (Rao, 1969)
-                /\b([A-Z][a-z]{3,})\s+([a-z]{4,})(?:\s+\([^)]+\))?/g
+                // Numbered entries with full descriptions: 649. Eubranchus madapamensis (Rao, 1969) Description: ...
+                /(\d+)\.\s*([A-Z][a-z]+)\s+([a-z]+)(?:\s+\([^)]+\))?\s*(.*?)(?=\d+\.|$)/gs,
+                // Direct species entries with descriptions
+                /([A-Z][a-z]{3,})\s+([a-z]{4,})(?:\s+([^A-Z\n]*?))?(?=\n[A-Z][a-z]+\s+[a-z]+|$)/gs
             ];
 
-            patterns.forEach(pattern => {
-                let match;
-                const textCopy = text;
-                pattern.lastIndex = 0;
-                
-                while ((match = pattern.exec(textCopy)) !== null) {
-                    const genus = match[1];
-                    const speciesName = match[2];
-                    const scientificName = `${genus} ${speciesName}`;
-                    
-                    if (isValidScientificName(genus, speciesName, scientificName)) {
-                        if (!matches.some(m => m.scientificName === scientificName)) {
-                            matches.push({
-                                scientificName: scientificName,
-                                genus: genus,
-                                species: speciesName,
-                                rawText: match[0]
-                            });
-                        }
+            // Split text into manageable sections for better parsing
+            const sections = text.split(/(?=\d+\.\s*[A-Z][a-z]+\s+[a-z]+)/);
+
+            sections.forEach(section => {
+                const speciesData = parseSpeciesSection(section.trim());
+                if (speciesData && isValidScientificName(speciesData.genus, speciesData.species, speciesData.scientificName)) {
+                    // Check for duplicates
+                    if (!matches.some(m => m.scientificName === speciesData.scientificName)) {
+                        matches.push(speciesData);
                     }
                 }
             });
 
-            console.log(`Extracted ${matches.length} potential species:`, matches.map(m => m.scientificName));
+            console.log(`Extracted ${matches.length} complete species entries:`, matches.map(m => m.scientificName));
             return matches.slice(0, 20); // Limit for demo
+        }
+
+        function parseSpeciesSection(section) {
+            if (!section || section.length < 20) return null;
+
+            // Extract scientific name with number and authority
+            const nameMatch = section.match(/(?:(\d+)\.\s*)?([A-Z][a-z]+)\s+([a-z]+)(?:\s+([^,\n]*?))?/);
+            if (!nameMatch) return null;
+
+            const [, number, genus, species, authorYear] = nameMatch;
+            const scientificName = `${genus} ${species}`;
+
+            // Extract common name (usually follows scientific name or is on its own line)
+            const commonNamePatterns = [
+                new RegExp(`${genus}\\s+${species}[^\\n]*?\\n([^\\n]+?)(?:\\s+Description|\\s+Descripción|\\n)`, 'i'),
+                /([A-Z][a-z\s']+(?:Aeolid|Nudibranch|Sea slug|Mussel|Snail|Star|Urchin|Kelp|Algae))/i,
+                /([A-Z][a-z\s']+)\s+(?:Description|Descripción)/i
+            ];
+
+            let commonName = '';
+            for (const pattern of commonNamePatterns) {
+                const match = section.match(pattern);
+                if (match && match[1] && match[1].length < 50) {
+                    commonName = match[1].trim();
+                    break;
+                }
+            }
+
+            // Extract description
+            const descriptionMatch = section.match(/(?:Description|Descripción):\s*([^.]+(?:\.[^.]*){0,3})/i);
+            const description = descriptionMatch ? descriptionMatch[1].trim() : '';
+
+            // Extract author and year
+            const authorMatch = section.match(/\(([^)]+(?:,\s*\d{4})?)\)/);
+            let author = '';
+            let year = '';
+            
+            if (authorMatch) {
+                const authorText = authorMatch[1];
+                const yearMatch = authorText.match(/(\d{4})/);
+                if (yearMatch) {
+                    year = yearMatch[1];
+                    author = authorText.replace(/,?\s*\d{4}/, '').trim();
+                } else {
+                    author = authorText;
+                }
+            }
+
+            // Extract size
+            const sizePatterns = [
+                /Size:\s*([^.\n]+)/i,
+                /Tamaño:\s*([^.\n]+)/i,
+                /To\s+([\d.]+\s*(?:in|mm|cm))/i,
+                /hasta\s+([\d.]+\s*(?:in|mm|cm))/i
+            ];
+
+            let size = '';
+            for (const pattern of sizePatterns) {
+                const match = section.match(pattern);
+                if (match) {
+                    size = match[1].trim();
+                    break;
+                }
+            }
+
+            // Extract habitat
+            const habitatPatterns = [
+                /Habitat:\s*([^.\n]+(?:\.[^.\n]*){0,2})/i,
+                /Hábitat:\s*([^.\n]+(?:\.[^.\n]*){0,2})/i
+            ];
+
+            let habitat = '';
+            for (const pattern of habitatPatterns) {
+                const match = section.match(pattern);
+                if (match) {
+                    habitat = match[1].trim();
+                    break;
+                }
+            }
+
+            // Extract distribution
+            const distributionPatterns = [
+                /Distribution:\s*([^.\n]+(?:\.[^.\n]*){0,3})/i,
+                /Distribución:\s*([^.\n]+(?:\.[^.\n]*){0,3})/i
+            ];
+
+            let distribution = '';
+            for (const pattern of distributionPatterns) {
+                const match = section.match(pattern);
+                if (match) {
+                    distribution = match[1].trim();
+                    break;
+                }
+            }
+
+            return {
+                scientificName,
+                genus,
+                species,
+                commonName: commonName || '',
+                description: description || '',
+                author: author || '',
+                year: year || '',
+                size: size || '',
+                habitat: habitat || '',
+                distribution: distribution || '',
+                rawText: section.substring(0, 200) + '...',
+                number: number || ''
+            };
         }
 
         function isValidScientificName(genus, species, fullName) {
@@ -2167,9 +2324,49 @@ Tegula funebralis Black turban snail`
             let statusText = species.verification.status.replace('_', ' ');
             let detailsHTML = '';
 
+            // Species details section
+            let speciesDetailsHTML = `
+                <div class="species-details-section">
+                    <h4>📋 Species Information</h4>
+                    <div class="species-details-grid">
+                        <div class="detail-row">
+                            <span class="detail-label">Common Name:</span>
+                            <span class="detail-value">${species.commonName || 'Not specified'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Author:</span>
+                            <span class="detail-value">${species.author || 'Unknown'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Year:</span>
+                            <span class="detail-value">${species.year || 'Unknown'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Size:</span>
+                            <span class="detail-value">${species.size || 'Not specified'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Habitat:</span>
+                            <span class="detail-value">${species.habitat || 'Not specified'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Distribution:</span>
+                            <span class="detail-value">${species.distribution || 'Not specified'}</span>
+                        </div>
+                    </div>
+                    ${species.description ? `
+                        <div class="description-section">
+                            <h5>Description:</h5>
+                            <p class="species-description">${species.description}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
             if (species.verification.worms?.success) {
                 const data = species.verification.worms.data;
                 detailsHTML = `
+                    ${speciesDetailsHTML}
                     <div class="database-tabs">
                         <button class="db-tab active" onclick="showDbContent(${index}, 'worms')">WoRMS</button>
                         <button class="db-tab" onclick="showDbContent(${index}, 'gbif')">GBIF</button>
@@ -2193,6 +2390,10 @@ Tegula funebralis Black turban snail`
                             <span class="detail-label">Authority:</span>
                             <span class="detail-value">${data.author || 'N/A'}</span>
                         </div>
+                        <div class="detail-row">
+                            <span class="detail-label">URL:</span>
+                            <span class="detail-value"><a href="${data.wormsUrl}" target="_blank">View in WoRMS</a></span>
+                        </div>
                     </div>
                     <div class="db-content" id="db-${index}-gbif">
                         ${createDatabaseContent(species.verification.gbif)}
@@ -2206,9 +2407,10 @@ Tegula funebralis Black turban snail`
                 `;
             } else {
                 detailsHTML = `
+                    ${speciesDetailsHTML}
                     <div class="detail-row">
-                        <span class="detail-label">Status:</span>
-                        <span class="detail-value">Not found in databases</span>
+                        <span class="detail-label">Database Status:</span>
+                        <span class="detail-value">Not found in verification databases</span>
                     </div>
                 `;
             }
@@ -2344,31 +2546,142 @@ Tegula funebralis Black turban snail`
         function generateCSVData() {
             const headers = [
                 'Scientific Name',
+                'Common Name',
+                'Description',
+                'Author',
+                'Year',
+                'Size',
+                'Habitat',
+                'Distribution',
                 'Verification Status',
                 'Confidence %',
                 'WoRMS Status',
                 'WoRMS ID',
+                'WoRMS Family',
                 'GBIF Status',
                 'GBIF ID',
                 'iNaturalist Status',
-                'OBIS Status'
+                'iNaturalist ID',
+                'OBIS Status',
+                'Databases Found'
             ];
 
             const rows = speciesData.map(species => [
-                species.scientificName,
-                species.verification.status,
-                species.verification.confidence,
+                species.scientificName || '',
+                species.commonName || '',
+                species.description || '',
+                species.author || '',
+                species.year || '',
+                species.size || '',
+                species.habitat || '',
+                species.distribution || '',
+                species.verification.status || '',
+                species.verification.confidence || 0,
                 species.verification.worms?.success ? 'Found' : 'Not Found',
                 species.verification.worms?.data?.aphiaId || '',
+                species.verification.worms?.data?.family || '',
                 species.verification.gbif?.success ? 'Found' : 'Not Found',
                 species.verification.gbif?.data?.gbifId || '',
                 species.verification.inaturalist?.success ? 'Found' : 'Not Found',
-                species.verification.obis?.success ? 'Found' : 'Not Found'
+                species.verification.inaturalist?.data?.inatId || '',
+                species.verification.obis?.success ? 'Found' : 'Not Found',
+                species.verification.databases.join('; ') || 'None'
             ]);
 
             return [headers, ...rows].map(row => 
-                row.map(cell => `"${cell}"`).join(',')
+                row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
             ).join('\n');
+        }
+
+        function generateDetailedReport() {
+            if (!speciesData.length) {
+                showMessage('No data to generate report. Please process a PDF first.', 'error');
+                return;
+            }
+
+            // Create detailed HTML report
+            const reportHTML = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Marine Species Analysis Report</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+                        .summary { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+                        .species-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+                        .species-table th, .species-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                        .species-table th { background: #f8f9fa; font-weight: bold; }
+                        .verified { background: #d4edda; }
+                        .not-found { background: #f8d7da; }
+                        .partial { background: #fff3cd; }
+                        .confidence-high { color: #28a745; font-weight: bold; }
+                        .confidence-medium { color: #ffc107; font-weight: bold; }
+                        .confidence-low { color: #dc3545; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>🐚 Marine Species Analysis Report</h1>
+                        <p>Generated on ${new Date().toLocaleDateString()}</p>
+                        <p>Document: ${uploadedPDFInfo?.originalName || 'Unknown'}</p>
+                    </div>
+
+                    <div class="summary">
+                        <h2>📊 Summary Statistics</h2>
+                        <p><strong>Total Species Processed:</strong> ${speciesData.length}</p>
+                        <p><strong>Successfully Verified:</strong> ${speciesData.filter(s => s.verification.status === 'VERIFIED').length}</p>
+                        <p><strong>Partial Matches:</strong> ${speciesData.filter(s => s.verification.status === 'PARTIAL').length}</p>
+                        <p><strong>Not Found:</strong> ${speciesData.filter(s => s.verification.status === 'NOT_FOUND').length}</p>
+                        <p><strong>Average Confidence:</strong> ${Math.round(speciesData.reduce((sum, s) => sum + s.verification.confidence, 0) / speciesData.length)}%</p>
+                    </div>
+
+                    <h2>📋 Detailed Species Information</h2>
+                    <table class="species-table">
+                        <thead>
+                            <tr>
+                                <th>Scientific Name</th>
+                                <th>Common Name</th>
+                                <th>Author & Year</th>
+                                <th>Size</th>
+                                <th>Habitat</th>
+                                <th>Distribution</th>
+                                <th>Confidence</th>
+                                <th>Databases</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${speciesData.map(species => `
+                                <tr class="${species.verification.status.toLowerCase().replace('_', '-')}">
+                                    <td><em>${species.scientificName}</em></td>
+                                    <td>${species.commonName || '-'}</td>
+                                    <td>${species.author || '-'} ${species.year || ''}</td>
+                                    <td>${species.size || '-'}</td>
+                                    <td>${species.habitat || '-'}</td>
+                                    <td>${species.distribution || '-'}</td>
+                                    <td class="confidence-${species.verification.confidence >= 80 ? 'high' : species.verification.confidence >= 60 ? 'medium' : 'low'}">${species.verification.confidence}%</td>
+                                    <td>${species.verification.databases.join(', ') || 'None'}</td>
+                                    <td>${species.verification.status}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+                        <h3>🗄️ Database Coverage</h3>
+                        <p><strong>WoRMS:</strong> ${speciesData.filter(s => s.verification.worms?.success).length} species found</p>
+                        <p><strong>GBIF:</strong> ${speciesData.filter(s => s.verification.gbif?.success).length} species found</p>
+                        <p><strong>iNaturalist:</strong> ${speciesData.filter(s => s.verification.inaturalist?.success).length} species found</p>
+                        <p><strong>OBIS:</strong> ${speciesData.filter(s => s.verification.obis?.success).length} species found</p>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            // Download as HTML file
+            downloadFile(reportHTML, 'marine_species_detailed_report.html', 'text/html');
+            showMessage('Detailed HTML report generated and downloaded!', 'success');
         }
 
         function downloadFile(content, filename, mimeType) {
@@ -2388,7 +2701,7 @@ Tegula funebralis Black turban snail`
         }
 
         function generateReport() {
-            showMessage('PDF report generation feature coming soon!', 'info');
+            generateDetailedReport();
         }
 
         function delay(ms) {
