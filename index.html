@@ -1128,84 +1128,83 @@
 
             <!-- Upload Tab Content -->
             <div class="tab-content" id="upload-content">
-                <!-- PDF Upload Section -->
-                <div class="upload-section" id="uploadSection">
-                    <div class="upload-icon">📄</div>
-                    <div class="upload-text">Upload Marine Field Guide PDF</div>
-                    <div class="upload-subtext">Drag and drop your PDF here, or click to browse</div>
-                    <button class="upload-button" onclick="document.getElementById('fileInput').click()">
-                        Choose PDF File
-                    </button>
-                    <input type="file" id="fileInput" class="file-input" accept=".pdf">
-                </div>
-
-                <!-- OR Divider -->
-                <div class="divider-section">
-                    <div class="divider-line"></div>
-                    <span class="divider-text">OR</span>
-                    <div class="divider-line"></div>
-                </div>
-
-                <!-- Manual Species Entry Section -->
-                <div class="manual-entry-section">
-                    <div class="manual-entry-header">
-                        <div class="manual-entry-icon">🔍</div>
-                        <div class="manual-entry-title">
-                            <h3>Manual Species Lookup</h3>
-                            <p>Enter one or more species names (scientific or common names) to verify against marine databases</p>
-                        </div>
+                <!-- Two-column layout for upload options -->
+                <div class="upload-options-grid">
+                    <!-- PDF Upload Section -->
+                    <div class="upload-section" id="uploadSection">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">Upload Marine Field Guide PDF</div>
+                        <div class="upload-subtext">Drag and drop your PDF here, or click to browse</div>
+                        <button class="upload-button" onclick="document.getElementById('fileInput').click()">
+                            Choose PDF File
+                        </button>
+                        <input type="file" id="fileInput" class="file-input" accept=".pdf">
                     </div>
-                    
-                    <div class="species-input-container">
-                        <div class="input-header">
-                            <label for="manualSpeciesInput">Species Names (one per line):</label>
-                            <div class="input-examples">
-                                <span class="example-label">Examples:</span>
-                                <span class="example-item">Mytilus californianus</span>
-                                <span class="example-item">California mussel</span>
-                                <span class="example-item">Blue rockfish</span>
+
+                    <!-- Manual Species Entry Section -->
+                    <div class="manual-entry-section">
+                        <div class="manual-entry-header">
+                            <div class="manual-entry-icon">🔍</div>
+                            <div class="manual-entry-title">
+                                <h3>Manual Species Lookup</h3>
+                                <p>Enter species names to verify against marine databases</p>
                             </div>
                         </div>
                         
-                        <textarea id="manualSpeciesInput" class="manual-species-input" 
-                                  placeholder="Enter species names here, one per line:
+                        <div class="species-input-container">
+                            <div class="input-header">
+                                <label for="manualSpeciesInput">Species Names:</label>
+                                <div class="input-examples">
+                                    <span class="example-item">Scientific names</span>
+                                    <span class="example-item">Common names</span>
+                                </div>
+                            </div>
+                            
+                            <textarea id="manualSpeciesInput" class="manual-species-input" 
+                                      placeholder="Enter species names here, one per line:
 
 Mytilus californianus
 California mussel
-Eubranchus steinbecki
-Blue rockfish
-Haliotis rufescens"></textarea>
-                        
-                        <div class="input-controls">
-                            <button class="btn btn-primary" onclick="processManualSpecies()">
-                                <span class="btn-icon">🔍</span>
-                                Verify Species
-                            </button>
-                            <button class="btn btn-secondary" onclick="clearManualInput()">
-                                <span class="btn-icon">🗑️</span>
-                                Clear
-                            </button>
-                            <button class="btn btn-success" onclick="loadSampleSpecies()">
-                                <span class="btn-icon">📋</span>
-                                Load Examples
-                            </button>
-                        </div>
-                        
-                        <div class="input-tips">
-                            <div class="tip-item">
-                                <span class="tip-icon">✅</span>
-                                <span>Accepts both scientific names (e.g., "Mytilus californianus") and common names (e.g., "California mussel")</span>
+Blue rockfish"></textarea>
+                            
+                            <div class="input-controls">
+                                <button class="btn btn-primary" onclick="processManualSpecies()">
+                                    <span class="btn-icon">🔍</span>
+                                    Verify Species
+                                </button>
+                                <button class="btn btn-secondary" onclick="clearManualInput()">
+                                    <span class="btn-icon">🗑️</span>
+                                    Clear
+                                </button>
+                                <button class="btn btn-success" onclick="loadSampleSpecies()">
+                                    <span class="btn-icon">📋</span>
+                                    Examples
+                                </button>
                             </div>
-                            <div class="tip-item">
-                                <span class="tip-icon">🔄</span>
-                                <span>Common names are automatically resolved to scientific names when possible</span>
-                            </div>
-                            <div class="tip-item">
-                                <span class="tip-icon">🌊</span>
-                                <span>Verifies against 4 marine databases: WoRMS, GBIF, iNaturalist, and OBIS</span>
+                            
+                            <div class="input-tips">
+                                <div class="tip-item">
+                                    <span class="tip-icon">✅</span>
+                                    <span>Accepts scientific & common names</span>
+                                </div>
+                                <div class="tip-item">
+                                    <span class="tip-icon">🔄</span>
+                                    <span>Auto-resolves common to scientific names</span>
+                                </div>
+                                <div class="tip-item">
+                                    <span class="tip-icon">🌊</span>
+                                    <span>Verifies against 4 marine databases</span>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- OR Divider - now between the grid and processing steps -->
+                <div class="divider-section">
+                    <div class="divider-line"></div>
+                    <span class="divider-text">PROCESSING WORKFLOW</span>
+                    <div class="divider-line"></div>
                 </div>
 
                 <!-- Processing Steps -->
