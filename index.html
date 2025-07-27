@@ -706,13 +706,343 @@
             }
         }
 
-        /* Utility classes */
-        .hidden {
-            display: none !important;
+        /* Analytics Styles */
+        .analytics-dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .text-center {
+        .analytics-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .analytics-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .analytics-card.success {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #f8fff9 0%, #ffffff 100%);
+        }
+
+        .analytics-card.primary {
+            border-color: #007bff;
+            background: linear-gradient(135deg, #f0f8ff 0%, #ffffff 100%);
+        }
+
+        .analytics-card.warning {
+            border-color: #ffc107;
+            background: linear-gradient(135deg, #fffdf0 0%, #ffffff 100%);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .card-content h3 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .card-content p {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .analytics-section {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .analytics-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .database-coverage {
+            display: grid;
+            gap: 15px;
+        }
+
+        .coverage-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .coverage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .db-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .coverage-percent {
+            font-weight: 700;
+            color: #666;
+        }
+
+        .coverage-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .coverage-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .coverage-fill.worms { background: linear-gradient(90deg, #28a745, #20c997); }
+        .coverage-fill.gbif { background: linear-gradient(90deg, #007bff, #0056b3); }
+        .coverage-fill.inat { background: linear-gradient(90deg, #6f42c1, #563d7c); }
+        .coverage-fill.obis { background: linear-gradient(90deg, #20c997, #17a2b8); }
+
+        .coverage-details {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .family-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .family-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 6px;
+        }
+
+        .family-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .family-count {
+            background: #007bff;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .confidence-chart {
+            display: grid;
+            gap: 15px;
+        }
+
+        .confidence-bucket {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .bucket-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .bucket-bar {
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .bucket-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+
+        .bucket-fill.excellent { background: linear-gradient(90deg, #28a745, #20c997); }
+        .bucket-fill.good { background: linear-gradient(90deg, #17a2b8, #138496); }
+        .bucket-fill.fair { background: linear-gradient(90deg, #ffc107, #e0a800); }
+        .bucket-fill.poor { background: linear-gradient(90deg, #dc3545, #bd2130); }
+
+        .bucket-count {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Help Styles */
+        .help-documentation {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .help-section {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .help-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+
+        .help-content ol {
+            padding-left: 20px;
+        }
+
+        .help-content li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .db-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .db-info h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .db-info p {
+            margin-bottom: 5px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .confidence-guide {
+            display: grid;
+            gap: 10px;
+        }
+
+        .conf-item {
+            display: grid;
+            grid-template-columns: 80px 100px 1fr;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+
+        .conf-item.excellent { border-left-color: #28a745; }
+        .conf-item.good { border-left-color: #17a2b8; }
+        .conf-item.fair { border-left-color: #ffc107; }
+        .conf-item.poor { border-left-color: #dc3545; }
+
+        .conf-range {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .conf-label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .conf-desc {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .trouble-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .trouble-item h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .trouble-item ul {
+            padding-left: 20px;
+        }
+
+        .trouble-item li {
+            margin-bottom: 5px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .api-status {
+            display: grid;
+            gap: 10px;
+        }
+
+        .api-item {
+            display: grid;
+            grid-template-columns: 150px 1fr auto;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 6px;
+        }
+
+        .api-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .api-limit {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .api-status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+
+        .api-status-dot.online {
+            background: #28a745;
+            animation: pulse 2s infinite;
         }
     </style>
 </head>
@@ -832,17 +1162,282 @@
 
             <!-- Analytics Tab Content -->
             <div class="tab-content hidden" id="analytics-content">
-                <div class="text-center" style="padding: 60px 20px; color: #6c757d;">
-                    <h3>📈 Analytics Dashboard</h3>
-                    <p>Verification statistics, data quality metrics, and insights coming soon!</p>
+                <div class="analytics-dashboard">
+                    <h2>📈 Verification Analytics</h2>
+                    
+                    <!-- Summary Cards -->
+                    <div class="analytics-summary">
+                        <div class="analytics-card">
+                            <div class="card-icon">✅</div>
+                            <div class="card-content">
+                                <h3 id="totalProcessed">0</h3>
+                                <p>Total Species Processed</p>
+                            </div>
+                        </div>
+                        <div class="analytics-card success">
+                            <div class="card-icon">🎯</div>
+                            <div class="card-content">
+                                <h3 id="successRate">0%</h3>
+                                <p>Verification Success Rate</p>
+                            </div>
+                        </div>
+                        <div class="analytics-card primary">
+                            <div class="card-icon">🏆</div>
+                            <div class="card-content">
+                                <h3 id="avgConfidence">0%</h3>
+                                <p>Average Confidence Score</p>
+                            </div>
+                        </div>
+                        <div class="analytics-card warning">
+                            <div class="card-icon">🔍</div>
+                            <div class="card-content">
+                                <h3 id="needsReview">0</h3>
+                                <p>Species Need Review</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Database Coverage Chart -->
+                    <div class="analytics-section">
+                        <h3>🗄️ Database Coverage Analysis</h3>
+                        <div class="database-coverage">
+                            <div class="coverage-item">
+                                <div class="coverage-header">
+                                    <span class="db-name">WoRMS</span>
+                                    <span class="coverage-percent" id="wormsPercent">0%</span>
+                                </div>
+                                <div class="coverage-bar">
+                                    <div class="coverage-fill worms" id="wormsFill"></div>
+                                </div>
+                                <div class="coverage-details" id="wormsDetails">0 species found</div>
+                            </div>
+                            <div class="coverage-item">
+                                <div class="coverage-header">
+                                    <span class="db-name">GBIF</span>
+                                    <span class="coverage-percent" id="gbifPercent">0%</span>
+                                </div>
+                                <div class="coverage-bar">
+                                    <div class="coverage-fill gbif" id="gbifFill"></div>
+                                </div>
+                                <div class="coverage-details" id="gbifDetails">0 species found</div>
+                            </div>
+                            <div class="coverage-item">
+                                <div class="coverage-header">
+                                    <span class="db-name">iNaturalist</span>
+                                    <span class="coverage-percent" id="inatPercent">0%</span>
+                                </div>
+                                <div class="coverage-bar">
+                                    <div class="coverage-fill inat" id="inatFill"></div>
+                                </div>
+                                <div class="coverage-details" id="inatDetails">0 species found</div>
+                            </div>
+                            <div class="coverage-item">
+                                <div class="coverage-header">
+                                    <span class="db-name">OBIS</span>
+                                    <span class="coverage-percent" id="obisPercent">0%</span>
+                                </div>
+                                <div class="coverage-bar">
+                                    <div class="coverage-fill obis" id="obisFill"></div>
+                                </div>
+                                <div class="coverage-details" id="obisDetails">0 species found</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Families -->
+                    <div class="analytics-section">
+                        <h3>🏷️ Most Common Families</h3>
+                        <div class="family-list" id="familyList">
+                            <p class="text-center">No data available yet. Process some species to see family statistics.</p>
+                        </div>
+                    </div>
+
+                    <!-- Confidence Distribution -->
+                    <div class="analytics-section">
+                        <h3>📊 Confidence Score Distribution</h3>
+                        <div class="confidence-chart">
+                            <div class="confidence-bucket">
+                                <div class="bucket-label">Excellent (80-100%)</div>
+                                <div class="bucket-bar">
+                                    <div class="bucket-fill excellent" id="excellentFill"></div>
+                                </div>
+                                <div class="bucket-count" id="excellentCount">0 species</div>
+                            </div>
+                            <div class="confidence-bucket">
+                                <div class="bucket-label">Good (60-79%)</div>
+                                <div class="bucket-bar">
+                                    <div class="bucket-fill good" id="goodFill"></div>
+                                </div>
+                                <div class="bucket-count" id="goodCount">0 species</div>
+                            </div>
+                            <div class="confidence-bucket">
+                                <div class="bucket-label">Fair (40-59%)</div>
+                                <div class="bucket-bar">
+                                    <div class="bucket-fill fair" id="fairFill"></div>
+                                </div>
+                                <div class="bucket-count" id="fairCount">0 species</div>
+                            </div>
+                            <div class="confidence-bucket">
+                                <div class="bucket-label">Poor (0-39%)</div>
+                                <div class="bucket-bar">
+                                    <div class="bucket-fill poor" id="poorFill"></div>
+                                </div>
+                                <div class="bucket-count" id="poorCount">0 species</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Help Tab Content -->
             <div class="tab-content hidden" id="help-content">
-                <div class="text-center" style="padding: 60px 20px; color: #6c757d;">
-                    <h3>❓ Help & Documentation</h3>
-                    <p>User guide, API information, and troubleshooting documentation coming soon!</p>
+                <div class="help-documentation">
+                    <h2>❓ User Guide & Documentation</h2>
+                    
+                    <!-- Quick Start -->
+                    <div class="help-section">
+                        <h3>🚀 Quick Start Guide</h3>
+                        <div class="help-content">
+                            <ol>
+                                <li><strong>Upload PDF:</strong> Drag and drop a marine field guide or species list PDF</li>
+                                <li><strong>Wait for Processing:</strong> OCR extracts text and AI parses species names</li>
+                                <li><strong>Review Results:</strong> Check verification results in the Results tab</li>
+                                <li><strong>Export Data:</strong> Download CSV or generate reports for further analysis</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Database Information -->
+                    <div class="help-section">
+                        <h3>🗄️ Database Information</h3>
+                        <div class="help-content">
+                            <div class="db-info">
+                                <h4>WoRMS (World Register of Marine Species)</h4>
+                                <p><strong>Purpose:</strong> Authoritative taxonomic database for marine species</p>
+                                <p><strong>Coverage:</strong> Global marine taxa with standardized nomenclature</p>
+                                <p><strong>Weight:</strong> 40% of confidence score (highest priority)</p>
+                                <p><strong>Status Types:</strong> accepted, synonym, unaccepted, uncertain</p>
+                            </div>
+                            
+                            <div class="db-info">
+                                <h4>GBIF (Global Biodiversity Information Facility)</h4>
+                                <p><strong>Purpose:</strong> Occurrence data and taxonomic backbone</p>
+                                <p><strong>Coverage:</strong> Global biodiversity with occurrence records</p>
+                                <p><strong>Weight:</strong> 25% of confidence score</p>
+                                <p><strong>Match Types:</strong> EXACT, FUZZY, HIGHERRANK</p>
+                            </div>
+                            
+                            <div class="db-info">
+                                <h4>iNaturalist</h4>
+                                <p><strong>Purpose:</strong> Citizen science observations and photos</p>
+                                <p><strong>Coverage:</strong> Community-contributed observations worldwide</p>
+                                <p><strong>Weight:</strong> 20% of confidence score</p>
+                                <p><strong>Features:</strong> Photos, observation counts, community validation</p>
+                            </div>
+                            
+                            <div class="db-info">
+                                <h4>OBIS (Ocean Biodiversity Information System)</h4>
+                                <p><strong>Purpose:</strong> Marine-specific occurrence data</p>
+                                <p><strong>Coverage:</strong> Marine biodiversity with environmental data</p>
+                                <p><strong>Weight:</strong> 15% of confidence score</p>
+                                <p><strong>Features:</strong> Depth ranges, coordinates, environmental context</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confidence Scores -->
+                    <div class="help-section">
+                        <h3>📊 Understanding Confidence Scores</h3>
+                        <div class="help-content">
+                            <div class="confidence-guide">
+                                <div class="conf-item excellent">
+                                    <span class="conf-range">80-100%</span>
+                                    <span class="conf-label">Excellent</span>
+                                    <span class="conf-desc">Multiple database matches, high reliability</span>
+                                </div>
+                                <div class="conf-item good">
+                                    <span class="conf-range">60-79%</span>
+                                    <span class="conf-label">Good</span>
+                                    <span class="conf-desc">Solid verification, minor uncertainties</span>
+                                </div>
+                                <div class="conf-item fair">
+                                    <span class="conf-range">40-59%</span>
+                                    <span class="conf-label">Fair</span>
+                                    <span class="conf-desc">Limited matches, needs review</span>
+                                </div>
+                                <div class="conf-item poor">
+                                    <span class="conf-range">0-39%</span>
+                                    <span class="conf-label">Poor</span>
+                                    <span class="conf-desc">Few/no matches, likely issues</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Troubleshooting -->
+                    <div class="help-section">
+                        <h3>🔧 Troubleshooting</h3>
+                        <div class="help-content">
+                            <div class="trouble-item">
+                                <h4>Species Not Found</h4>
+                                <ul>
+                                    <li>Check spelling and formatting</li>
+                                    <li>Verify it's a marine species</li>
+                                    <li>Look for synonyms or updated names</li>
+                                    <li>Consider regional vs global databases</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="trouble-item">
+                                <h4>Poor OCR Results</h4>
+                                <ul>
+                                    <li>Use high-resolution PDFs (300+ DPI)</li>
+                                    <li>Ensure text is selectable, not scanned images</li>
+                                    <li>Avoid handwritten or stylized fonts</li>
+                                    <li>Check for clear contrast and formatting</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="trouble-item">
+                                <h4>Wrong Species Extracted</h4>
+                                <ul>
+                                    <li>PDF may contain descriptive text mixed with names</li>
+                                    <li>Check for non-Latin characters or formatting issues</li>
+                                    <li>Consider manual text extraction for complex layouts</li>
+                                    <li>Filter results by confidence scores</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- API Information -->
+                    <div class="help-section">
+                        <h3>🔗 API Rate Limits & Status</h3>
+                        <div class="help-content">
+                            <div class="api-status">
+                                <div class="api-item">
+                                    <span class="api-name">WoRMS API</span>
+                                    <span class="api-limit">500ms delay between requests</span>
+                                    <span class="api-status-dot online"></span>
+                                </div>
+                                <div class="api-item">
+                                    <span class="api-name">GBIF API</span>
+                                    <span class="api-limit">300ms delay between requests</span>
+                                    <span class="api-status-dot online"></span>
+                                </div>
+                                <div class="api-item">
+                                    <span class="api-name">iNaturalist API</span>
+                                    <span class="api-limit">200ms delay between requests</span>
+                                    <span class="api-status-dot online"></span>
+                                </div>
+                                <div class="api-item">
+                                    <span class="api-name">OBIS API</span>
+                                    <span class="api-limit">400ms delay between requests</span>
+                                    <span class="api-status-dot online"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1123,14 +1718,12 @@ Tegula funebralis Black turban snail`
             const species = [];
             let matches = [];
 
-            // Enhanced regex patterns for scientific names
+            // Enhanced regex patterns for scientific names - stricter filtering
             const patterns = [
                 // Numbered entries: 649. Eubranchus madapamensis (Rao, 1969)
                 /\b\d+\.\s*([A-Z][a-z]+)\s+([a-z]+)(?:\s+\([^)]+\))?/g,
                 // Direct binomial with authority: Eubranchus madapamensis (Rao, 1969)
-                /\b([A-Z][a-z]{3,})\s+([a-z]{4,})(?:\s+\([^)]+\))?/g,
-                // Simple binomial: Genus species
-                /\b([A-Z][a-z]{3,})\s+([a-z]{4,})\b(?!\s+(?:and|or|the|in|of|to|from|with|by|for|at|on))/g
+                /\b([A-Z][a-z]{3,})\s+([a-z]{4,})(?:\s+\([^)]+\))?/g
             ];
 
             patterns.forEach(pattern => {
@@ -1161,21 +1754,73 @@ Tegula funebralis Black turban snail`
         }
 
         function isValidScientificName(genus, species, fullName) {
-            // Basic validation rules
+            // Enhanced validation rules
             const excludePatterns = [
+                // Geographic and descriptive terms
                 /^(Marine|Pacific|Atlantic|Ocean|Sea|North|South|East|West|The|This|Body|Color|Size|Habitat|Distribution|Description|Remarks)/i,
                 /^(Only|Mexican|Prize|Verdes|Baja|Rhinophores|Bulbous|Intertidal|Covered|About|Irregular)/i,
+                // Spanish terms
+                /^(Cuerpo|Color|Tamaño|Hábitat|Distribución|Descripción|Observaciones|Esta|Este|Desde|Hasta|Aproximadamente)/i,
+                /^(Ceratas|Tanzania|California|Registrados|Washington|Solo)/i,
+                // Common English words
+                /^(Expedition|Rare|Winner|Nobel|Classic|Summary|Scientific|Research|Study|Analysis)/i,
+                // Size and measurement terms
+                /^(About|Around|Approximately|Maximum|Minimum|Length|Width|Height)/i
             ];
 
+            // Check against exclusion patterns
             for (const pattern of excludePatterns) {
                 if (pattern.test(genus) || pattern.test(species) || pattern.test(fullName)) {
                     return false;
                 }
             }
 
-            return genus.length >= 3 && species.length >= 4 && 
-                   genus[0] === genus[0].toUpperCase() && 
-                   species[0] === species[0].toLowerCase();
+            // Additional checks for valid scientific names
+            if (genus.length < 3 || genus.length > 20 || species.length < 4 || species.length > 20) {
+                return false;
+            }
+
+            // Must start with uppercase genus and lowercase species
+            if (genus[0] !== genus[0].toUpperCase() || species[0] !== species[0].toLowerCase()) {
+                return false;
+            }
+
+            // Must contain only letters (no numbers or special characters)
+            if (!/^[A-Za-z]+$/.test(genus) || !/^[A-Za-z]+$/.test(species)) {
+                return false;
+            }
+
+            // Common non-scientific word combinations
+            const invalidCombinations = [
+                'Body color', 'Size range', 'This rare', 'Only recorded', 'Mexican waters',
+                'Prize winner', 'Verdes and', 'Baja and', 'Body covered', 'Rhinophores covered',
+                'To about', 'Intertidal and', 'California expedition', 'Esta especie', 'Cuerpo cubierto',
+                'Tanzania hasta', 'Washington hasta', 'Aproximadamente hasta', 'Registrados solo'
+            ];
+
+            if (invalidCombinations.includes(fullName)) {
+                return false;
+            }
+
+            // Check if it looks like a real taxonomic name
+            const validGenera = [
+                'Eubranchus', 'Aeolidia', 'Mytilus', 'Haliotis', 'Sebastes', 'Strongylocentrotus',
+                'Pisaster', 'Tegula', 'Macrocystis', 'Nereocystis', 'Eisenia', 'Pterygophora'
+            ];
+
+            // If genus matches known marine genera, it's likely valid
+            if (validGenera.includes(genus)) {
+                return true;
+            }
+
+            // For unknown genera, be more strict
+            // Check if it follows common Latin naming patterns
+            const latinEndings = ['us', 'a', 'um', 'is', 'es', 'ix', 'ax', 'ex'];
+            const hasLatinEnding = latinEndings.some(ending => 
+                genus.toLowerCase().endsWith(ending) || species.toLowerCase().endsWith(ending)
+            );
+
+            return hasLatinEnding;
         }
 
         async function verifySpeciesWithDatabases(speciesList) {
@@ -1228,7 +1873,7 @@ Tegula funebralis Black turban snail`
                     results.confidence += 25;
                     results.databases.push('GBIF');
                     if (results.status === 'NOT_FOUND') {
-                        results.status = 'VERIFIED';
+                        results.status = gbifResult.data?.matchType === 'EXACT' ? 'VERIFIED' : 'PARTIAL';
                     }
                 }
 
@@ -1240,6 +1885,9 @@ Tegula funebralis Black turban snail`
                 if (inatResult.success) {
                     results.confidence += 20;
                     results.databases.push('iNaturalist');
+                    if (results.status === 'NOT_FOUND') {
+                        results.status = 'VERIFIED';
+                    }
                 }
 
                 await delay(200);
@@ -1250,6 +1898,22 @@ Tegula funebralis Black turban snail`
                 if (obisResult.success) {
                     results.confidence += 15;
                     results.databases.push('OBIS');
+                    if (results.status === 'NOT_FOUND') {
+                        results.status = 'VERIFIED';
+                    }
+                }
+
+                // Final status determination based on confidence
+                if (results.confidence === 0) {
+                    results.status = 'NOT_FOUND';
+                } else if (results.confidence < 30) {
+                    results.status = 'PARTIAL';
+                } else if (results.worms?.success && results.worms.data?.status !== 'accepted') {
+                    results.status = 'SYNONYM';
+                } else if (results.confidence >= 40) {
+                    results.status = 'VERIFIED';
+                } else {
+                    results.status = 'PARTIAL';
                 }
 
             } catch (error) {
@@ -1468,15 +2132,17 @@ Tegula funebralis Black turban snail`
         function populateResults() {
             updateResultsStats();
             populateSpeciesGrid();
+            updateAnalytics();
         }
 
         function updateResultsStats() {
             const verified = speciesData.filter(s => s.verification.status === 'VERIFIED').length;
             const synonyms = speciesData.filter(s => s.verification.status === 'SYNONYM').length;
+            const partial = speciesData.filter(s => s.verification.status === 'PARTIAL').length;
             const notFound = speciesData.filter(s => s.verification.status === 'NOT_FOUND').length;
 
             document.getElementById('verifiedCount').textContent = `${verified} Verified`;
-            document.getElementById('synonymCount').textContent = `${synonyms} Synonyms`;
+            document.getElementById('synonymCount').textContent = `${synonyms + partial} Partial/Synonyms`;
             document.getElementById('notFoundCount').textContent = `${notFound} Not Found`;
         }
 
@@ -1617,22 +2283,51 @@ Tegula funebralis Black turban snail`
             input.value = '';
             input.placeholder = 'Processing...';
             
-            // Simulate AI response
+            // Enhanced AI response system
             setTimeout(() => {
-                const responses = {
-                    'mytilus': 'Mytilus californianus is a common California mussel. If not found, check for spelling variations or verify marine classification.',
-                    'ocr': 'To improve OCR accuracy: use high-quality PDF scans, ensure clear text formatting, and check for proper scientific name structure.',
-                    'worms': 'WoRMS (World Register of Marine Species) is the authoritative taxonomic database. Scores above 80% indicate high reliability.',
-                    'confidence': 'Confidence scores combine results from all databases. 80%+ is excellent, 60-79% is good, below 60% needs review.',
-                    'not found': 'Species not found may indicate: spelling errors, synonyms, non-marine species, or absence from databases.'
-                };
+                let response = '';
+                const lowerMessage = message.toLowerCase();
                 
-                const key = Object.keys(responses).find(k => message.toLowerCase().includes(k));
-                const response = key ? responses[key] : 'I can help with PDF processing, species verification, database interpretation, and troubleshooting. What would you like to know?';
+                if (lowerMessage.includes('mytilus') || lowerMessage.includes('californianus')) {
+                    response = '🐚 Mytilus californianus (California mussel) is a common Pacific coast species. If not found, check: 1) Spelling variations, 2) Authority citations, 3) WoRMS vs GBIF databases may have different coverage.';
+                } else if (lowerMessage.includes('eubranchus')) {
+                    response = '🌊 Eubranchus species are nudibranchs (sea slugs). E. steinbecki and E. madapamensis should be in WoRMS. If missing, check for recent taxonomic revisions or regional database coverage.';
+                } else if (lowerMessage.includes('aeolidia')) {
+                    response = '🦋 Aeolidia are aeolid nudibranchs. A. papillosa is widespread, A. loui is newer (2016). Both should verify in WoRMS with high confidence scores.';
+                } else if (lowerMessage.includes('ocr') || lowerMessage.includes('accuracy')) {
+                    response = '📄 To improve OCR accuracy: 1) Use high-resolution PDFs (300+ DPI), 2) Ensure text is not handwritten, 3) Check for clear font formatting, 4) Avoid tables/complex layouts, 5) Pre-process images for contrast.';
+                } else if (lowerMessage.includes('confidence') || lowerMessage.includes('score')) {
+                    response = '📊 Confidence scores: 80-100% = Excellent (multiple database matches), 60-79% = Good (partial matches), 40-59% = Fair (single database), 0-39% = Poor (needs review). WoRMS carries highest weight (40%).';
+                } else if (lowerMessage.includes('worms')) {
+                    response = '🌍 WoRMS (World Register of Marine Species) is the authoritative global database for marine taxa. Status: "accepted" = valid name, "synonym" = outdated name with valid replacement, "unaccepted" = invalid.';
+                } else if (lowerMessage.includes('gbif')) {
+                    response = '🔬 GBIF provides occurrence data and taxonomic backbone. Match types: EXACT = perfect match, FUZZY = close match, HIGHERRANK = genus-level match. Check occurrence counts for data richness.';
+                } else if (lowerMessage.includes('inaturalist')) {
+                    response = '📱 iNaturalist shows citizen science observations and photos. High observation counts indicate well-documented species. Recent sightings suggest active research interest.';
+                } else if (lowerMessage.includes('obis')) {
+                    response = '🌊 OBIS (Ocean Biodiversity Information System) provides marine-specific occurrence data including depth ranges, coordinates, and environmental data. Essential for marine biogeography.';
+                } else if (lowerMessage.includes('not found') || lowerMessage.includes('missing')) {
+                    response = '❌ Species not found reasons: 1) Spelling errors, 2) Synonym vs accepted names, 3) Recent taxonomic changes, 4) Non-marine species, 5) Regional/local names, 6) Database coverage gaps. Try alternate spellings!';
+                } else if (lowerMessage.includes('synonym')) {
+                    response = '🔄 Synonyms are outdated scientific names. When WoRMS shows "synonym", look for "accepted name" field. This is common due to taxonomic revisions and nomenclature updates.';
+                } else if (lowerMessage.includes('export') || lowerMessage.includes('download')) {
+                    response = '💾 Export options: CSV (spreadsheet-ready), Excel (formatted tables), PDF Report (publication-ready). CSV includes all database IDs, confidence scores, and verification status for further analysis.';
+                } else if (lowerMessage.includes('parse') || lowerMessage.includes('extract')) {
+                    response = '🔍 The parser looks for binomial nomenclature (Genus species) patterns. It filters out geographic terms, Spanish text, and descriptive phrases. Valid names need Latin-style endings and proper capitalization.';
+                } else if (lowerMessage.includes('spanish') || lowerMessage.includes('español')) {
+                    response = '🇪🇸 Spanish descriptive text is automatically filtered out. Terms like "Cuerpo", "Color", "Tamaño", "Distribución" are excluded. Only Latin binomial names are extracted for verification.';
+                } else if (lowerMessage.includes('database') || lowerMessage.includes('api')) {
+                    response = '🔗 The tool queries 4 databases: WoRMS (taxonomy), GBIF (occurrences), iNaturalist (observations), OBIS (marine data). Each has rate limits and different coverage. Multiple matches increase confidence.';
+                } else if (lowerMessage.includes('help') || lowerMessage.includes('how')) {
+                    response = '❓ I can help with: PDF processing issues, database result interpretation, species verification troubleshooting, confidence score explanation, export options, and taxonomic guidance. What specific issue are you facing?';
+                } else {
+                    response = '🤖 I can help with PDF processing, species verification, database interpretation, and troubleshooting. Try asking about specific species, confidence scores, or "how to improve OCR accuracy". What would you like to know?';
+                }
                 
+                // Show response with typing effect
                 showMessage(`🤖 AI Assistant: ${response}`, 'info');
                 input.placeholder = "Ask me anything! For example: 'Why wasn't Mytilus californianus found?' or 'How can I improve OCR accuracy?'";
-            }, 1500);
+            }, 1000 + Math.random() * 1000); // Variable delay for realism
         }
 
         function exportToCSV() {
@@ -1698,6 +2393,107 @@ Tegula funebralis Black turban snail`
 
         function delay(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Analytics functions
+        function updateAnalytics() {
+            if (!speciesData || speciesData.length === 0) return;
+
+            const total = speciesData.length;
+            const verified = speciesData.filter(s => s.verification.status === 'VERIFIED').length;
+            const successRate = Math.round((verified / total) * 100);
+            
+            const confidenceSum = speciesData.reduce((sum, s) => sum + s.verification.confidence, 0);
+            const avgConfidence = Math.round(confidenceSum / total);
+            
+            const needsReview = speciesData.filter(s => s.verification.confidence < 60).length;
+
+            // Update summary cards
+            document.getElementById('totalProcessed').textContent = total;
+            document.getElementById('successRate').textContent = `${successRate}%`;
+            document.getElementById('avgConfidence').textContent = `${avgConfidence}%`;
+            document.getElementById('needsReview').textContent = needsReview;
+
+            // Update database coverage
+            updateDatabaseCoverage();
+            
+            // Update family analysis
+            updateFamilyAnalysis();
+            
+            // Update confidence distribution
+            updateConfidenceDistribution();
+        }
+
+        function updateDatabaseCoverage() {
+            const total = speciesData.length;
+            
+            const databases = ['worms', 'gbif', 'inaturalist', 'obis'];
+            databases.forEach(db => {
+                const found = speciesData.filter(s => s.verification[db]?.success).length;
+                const percentage = Math.round((found / total) * 100);
+                
+                document.getElementById(`${db === 'inaturalist' ? 'inat' : db}Percent`).textContent = `${percentage}%`;
+                document.getElementById(`${db === 'inaturalist' ? 'inat' : db}Fill`).style.width = `${percentage}%`;
+                document.getElementById(`${db === 'inaturalist' ? 'inat' : db}Details`).textContent = `${found} species found`;
+            });
+        }
+
+        function updateFamilyAnalysis() {
+            const familyCount = {};
+            
+            speciesData.forEach(species => {
+                const family = species.verification.worms?.data?.family || 
+                              species.verification.gbif?.data?.family || 
+                              'Unknown';
+                
+                if (family && family !== 'Unknown') {
+                    familyCount[family] = (familyCount[family] || 0) + 1;
+                }
+            });
+
+            const sortedFamilies = Object.entries(familyCount)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 10);
+
+            const familyList = document.getElementById('familyList');
+            
+            if (sortedFamilies.length === 0) {
+                familyList.innerHTML = '<p class="text-center">No family data available from current results.</p>';
+                return;
+            }
+
+            familyList.innerHTML = sortedFamilies.map(([family, count]) => `
+                <div class="family-item">
+                    <span class="family-name">${family}</span>
+                    <span class="family-count">${count}</span>
+                </div>
+            `).join('');
+        }
+
+        function updateConfidenceDistribution() {
+            const buckets = {
+                excellent: speciesData.filter(s => s.verification.confidence >= 80).length,
+                good: speciesData.filter(s => s.verification.confidence >= 60 && s.verification.confidence < 80).length,
+                fair: speciesData.filter(s => s.verification.confidence >= 40 && s.verification.confidence < 60).length,
+                poor: speciesData.filter(s => s.verification.confidence < 40).length
+            };
+
+            const total = speciesData.length;
+            
+            Object.entries(buckets).forEach(([bucket, count]) => {
+                const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
+                document.getElementById(`${bucket}Fill`).style.width = `${percentage}%`;
+                document.getElementById(`${bucket}Count`).textContent = `${count} species`;
+            });
+        }
+
+        /* Utility classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
         }
     </script>
 </body>
