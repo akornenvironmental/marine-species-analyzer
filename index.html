@@ -9,6 +9,17 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        /* Utility classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
         }
 
         body {
@@ -1904,7 +1915,7 @@ Aeolidia loui`;
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.querySelector(`[onclick*="${tabName}"]`).classList.add('active');
 
             // Update tab content
             document.querySelectorAll('.tab-content').forEach(content => {
@@ -3023,10 +3034,6 @@ Aeolidia loui`;
             generateDetailedReport();
         }
 
-        function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
         // Analytics functions
         function updateAnalytics() {
             if (!speciesData || speciesData.length === 0) return;
@@ -3061,12 +3068,17 @@ Aeolidia loui`;
             
             const databases = ['worms', 'gbif', 'inaturalist', 'obis'];
             databases.forEach(db => {
-                const found = speciesData.filter(s => s.verification[db]?.success).length;
+                const found = speciesData.filter(s => s.verification[db] && s.verification[db].success).length;
                 const percentage = Math.round((found / total) * 100);
                 
-                document.getElementById(`${db === 'inaturalist' ? 'inat' : db}Percent`).textContent = `${percentage}%`;
-                document.getElementById(`${db === 'inaturalist' ? 'inat' : db}Fill`).style.width = `${percentage}%`;
-                document.getElementById(`${db === 'inaturalist' ? 'inat' : db}Details`).textContent = `${found} species found`;
+                const dbName = db === 'inaturalist' ? 'inat' : db;
+                const percentElement = document.getElementById(`${dbName}Percent`);
+                const fillElement = document.getElementById(`${dbName}Fill`);
+                const detailsElement = document.getElementById(`${dbName}Details`);
+                
+                if (percentElement) percentElement.textContent = `${percentage}%`;
+                if (fillElement) fillElement.style.width = `${percentage}%`;
+                if (detailsElement) detailsElement.textContent = `${found} species found`;
             });
         }
 
@@ -3074,8 +3086,8 @@ Aeolidia loui`;
             const familyCount = {};
             
             speciesData.forEach(species => {
-                const family = species.verification.worms?.data?.family || 
-                              species.verification.gbif?.data?.family || 
+                const family = (species.verification.worms && species.verification.worms.data && species.verification.worms.data.family) || 
+                              (species.verification.gbif && species.verification.gbif.data && species.verification.gbif.data.family) || 
                               'Unknown';
                 
                 if (family && family !== 'Unknown') {
@@ -3114,18 +3126,12 @@ Aeolidia loui`;
             
             Object.entries(buckets).forEach(([bucket, count]) => {
                 const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
-                document.getElementById(`${bucket}Fill`).style.width = `${percentage}%`;
-                document.getElementById(`${bucket}Count`).textContent = `${count} species`;
+                const fillElement = document.getElementById(`${bucket}Fill`);
+                const countElement = document.getElementById(`${bucket}Count`);
+                
+                if (fillElement) fillElement.style.width = `${percentage}%`;
+                if (countElement) countElement.textContent = `${count} species`;
             });
-        }
-
-        /* Utility classes */
-        .hidden {
-            display: none !important;
-        }
-
-        .text-center {
-            text-align: center;
         }
     </script>
 </body>
