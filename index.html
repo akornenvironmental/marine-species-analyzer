@@ -1640,6 +1640,11 @@ Distribution: Alaska to Baja California.`
             initializePDFJS();
         });
 
+        // Utility functions first
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         function initializeApp() {
             console.log('Marine Species Analyzer initialized');
             showMessage('Welcome! Ready to analyze marine species data.', 'success');
