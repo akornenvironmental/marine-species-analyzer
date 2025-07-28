@@ -224,15 +224,9 @@
             align-items: center;
         }
 
-        /* Theme Selector */
-        .theme-selector {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
+        /* Dark theme button contrast fix */
         .theme-btn {
-            background: none;
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
             padding: 5px 10px;
             border-radius: 4px;
@@ -250,10 +244,11 @@
 
         .theme-btn:hover:not(.active) {
             background: var(--light-bg);
+            border-color: var(--accent-color);
         }
 
         .lang-btn {
-            background: none;
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
             padding: 5px 10px;
             border-radius: 4px;
@@ -271,6 +266,7 @@
 
         .lang-btn:hover:not(.active) {
             background: var(--light-bg);
+            border-color: var(--accent-color);
         }
 
         .content-title h1 {
@@ -962,7 +958,7 @@
         <div class="main-content">
             <div class="content-header">
                 <div class="header-main">
-                    <h1 style="font-size: 28px; color: var(--text-color); margin-bottom: 5px; font-weight: 700;">🐚 Marine Species Analyzer</h1>
+                    <h1 style="font-size: 28px; color: var(--text-color); margin-bottom: 5px; font-weight: 700;">🐚 MarineID Pro</h1>
                     <p style="color: var(--text-color); opacity: 0.7; font-size: 16px; font-weight: 400; margin-bottom: 10px;">
                         Advanced AI-powered marine species identification and verification system
                     </p>
@@ -986,13 +982,6 @@
                             <button class="lang-btn active" onclick="setLanguage('en')" data-lang="en">English</button>
                             <button class="lang-btn" onclick="setLanguage('es')" data-lang="es">Español</button>
                             <button class="lang-btn" onclick="setLanguage('fr')" data-lang="fr">Français</button>
-                        </div>
-                    </div>
-                    <div class="controls-row">
-                        <!-- Status Indicator -->
-                        <div class="status-indicator">
-                            <div class="status-dot"></div>
-                            <span>System Online</span>
                         </div>
                     </div>
                 </div>
@@ -1040,7 +1029,7 @@
                         
                         <div>
                             
-                            <textarea id="manualSpeciesInput" style="width: 100%; height: 150px; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 14px; background: var(--card-bg); color: var(--text-color); resize: vertical;"
+                            <textarea id="manualSpeciesInput" style="width: 100%; height: 100px; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: inherit; font-size: 14px; background: var(--card-bg); color: var(--text-color); resize: vertical;"
                                       placeholder="Enter species name(s) here, one per line or separated by commas"></textarea>
                             
                             <div style="display: flex; gap: 10px; margin-top: 15px;">
@@ -1594,11 +1583,11 @@
             setLanguage(savedLanguage);
         }
 
-        // Language functions
+        // Language functions (fixed functionality)
         function setLanguage(lang) {
             currentLanguage = lang;
             
-            // Update active button in top nav
+            // Update active button in header
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -1612,8 +1601,32 @@
         }
 
         function updateLanguage() {
-            // Translation functionality would go here
+            // Add basic translations for the tool
+            const translations = {
+                en: {
+                    'tool.title': 'MarineID Pro',
+                    'tool.subtitle': 'Advanced AI-powered marine species identification and verification system'
+                },
+                es: {
+                    'tool.title': 'MarineID Pro',
+                    'tool.subtitle': 'Sistema avanzado de identificación y verificación de especies marinas con IA'
+                },
+                fr: {
+                    'tool.title': 'MarineID Pro',
+                    'tool.subtitle': 'Système avancé d\'identification et de vérification d\'espèces marines alimenté par IA'
+                }
+            };
+            
+            const texts = translations[currentLanguage] || translations.en;
             console.log('Language updated to:', currentLanguage);
+            
+            // Update visible text elements if they have translation keys
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (texts[key]) {
+                    element.textContent = texts[key];
+                }
+            });
         }
 
         // Tab navigation
@@ -2369,11 +2382,10 @@
             input.value = '';
         }
 
-        // Support email functions
         function sendSupportEmail(type) {
             const subject = type === 'technical' ? 
-                'Marine Species Analyzer - Technical Support Request' : 
-                'Marine Species Analyzer - Development Support Request';
+                'MarineID Pro - Technical Support Request' : 
+                'MarineID Pro - Development Support Request';
             
             const recipient = type === 'technical' ? 
                 'aaron.kornbluth@gmail.com' : 
@@ -2381,7 +2393,7 @@
             
             const body = `Hello ${type === 'technical' ? 'Aaron' : 'Jake'},
 
-I need help with the Marine Species Analyzer tool. 
+I need help with the MarineID Pro tool. 
 
 Issue Description:
 [Please describe your issue or question here]
