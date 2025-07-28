@@ -57,6 +57,12 @@
             display: flex;
             flex-direction: column;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .ai-header {
+            padding: 20px 15px 10px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .ai-body {
@@ -191,6 +197,8 @@
             padding: 15px 20px;
             cursor: pointer;
             font-size: 14px;
+            font-family: 'Orpheus Pro', serif;
+            font-weight: 600;
             color: var(--text-color);
             opacity: 0.7;
             transition: all 0.3s ease;
@@ -469,9 +477,12 @@
     <div class="main-layout">
         <!-- AI Assistant Panel -->
         <div class="ai-assistant">
+            <div class="ai-header">
+                <h3 style="font-family: 'Orpheus Pro', serif; margin: 0; color: var(--text-color); font-size: 18px;">🤖 AI Research Assistant</h3>
+            </div>
             <div class="ai-body">
                 <div class="ai-intro">
-                    <p>🤖 AI Research Assistant</p>
+                    <p>Advanced marine species analysis</p>
                     <ul>
                         <li>Advanced PDF species extraction</li>
                         <li>Multilingual support (EN/ES/FR)</li>
@@ -630,8 +641,9 @@
             <!-- Results Tab Content -->
             <div class="tab-content" id="results-content">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2>Species Verification Results</h2>
+                    <h2 style="font-family: 'Orpheus Pro', serif; font-size: 24px; color: var(--text-color); margin: 0;">Species Verification Results</h2>
                     <div style="display: flex; gap: 10px;">
+                        <button class="button" onclick="resetAll()" style="background: var(--error-color);">🔄 Reset All</button>
                         <button class="button" onclick="exportToCSV()">📥 Export CSV</button>
                         <button class="button" onclick="exportToJSON()">📥 Export JSON</button>
                     </div>
@@ -665,7 +677,10 @@
 
             <!-- Analytics Tab Content -->
             <div class="tab-content" id="analytics-content">
-                <h2>Processing Analytics</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-family: 'Orpheus Pro', serif; font-size: 24px; color: var(--text-color); margin: 0;">Processing Analytics</h2>
+                    <button class="button" onclick="resetAll()" style="background: var(--error-color);">🔄 Reset All</button>
+                </div>
                 
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
                     <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; text-align: center;">
@@ -696,7 +711,10 @@
 
             <!-- Help Tab Content -->
             <div class="tab-content" id="help-content">
-                <h2>MarineID Pro Documentation</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-family: 'Orpheus Pro', serif; font-size: 24px; color: var(--text-color); margin: 0;">MarineID Pro Documentation</h2>
+                    <button class="button" onclick="resetAll()" style="background: var(--error-color);">🔄 Reset All</button>
+                </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
                     <div style="background: var(--light-bg); padding: 20px; border-radius: 12px;">
@@ -1313,6 +1331,46 @@ Callorhinus ursinus`;
         function showProcessingMessage(message, type = 'info') {
             const resultsDiv = document.getElementById('processingResults');
             resultsDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
+        }
+
+        // Reset function
+        function resetAll() {
+            if (confirm('Are you sure you want to reset all data? This will clear all processed species and start fresh.')) {
+                // Clear all data
+                speciesData = [];
+                processingStats = {
+                    totalSpecies: 0,
+                    verified: 0,
+                    synonyms: 0,
+                    notFound: 0,
+                    processingTime: 0
+                };
+                
+                // Clear UI
+                document.getElementById('manualSpeciesInput').value = '';
+                document.getElementById('fileInput').value = '';
+                document.getElementById('processingResults').innerHTML = '';
+                document.getElementById('messages').innerHTML = '';
+                
+                // Reset processing steps
+                document.querySelectorAll('.step-card').forEach(card => {
+                    card.classList.remove('active');
+                    const stepNum = card.querySelector('.step-number');
+                    if (stepNum) {
+                        stepNum.style.background = '#6c757d';
+                    }
+                });
+                
+                // Update displays
+                updateResultsStats();
+                populateSpeciesCards();
+                updateAnalytics();
+                
+                // Switch to upload tab
+                document.querySelector('[onclick="switchTab(\'upload\')"]').click();
+                
+                showMessage('All data has been reset successfully!', 'success');
+            }
         }
 
         // AI helper function (placeholder)
