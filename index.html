@@ -569,7 +569,7 @@
         <!-- AI Assistant Panel -->
         <div class="ai-assistant">
             <div class="ai-header">
-                <h3 style="font-family: 'Orpheus Pro', serif; margin: 0; color: var(--text-color); font-size: 18px;">🤖 AI Research Assistant</h3>
+                <h3 style="font-family: 'Orpheus Pro', serif; margin: 0; color: var(--text-color); font-size: 18px;">🤖 MarineID Pro AI Assistant</h3>
             </div>
             <div class="ai-body">
                 <div class="ai-intro">
@@ -587,7 +587,10 @@
                 </div>
                 <div class="ai-input-section">
                     <textarea class="ai-input-box" id="aiInput" placeholder="Ask about PDF processing, species extraction, or any technical questions..."></textarea>
-                    <button class="button success" onclick="sendAIMessage()">Ask AI Helper</button>
+                    <button class="button success" onclick="sendAIMessage()">
+                        <span>Ask AI Helper</span>
+                        <span>→</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -635,6 +638,26 @@
             <!-- Upload Tab Content -->
             <div class="tab-content active" id="upload-content">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                    <div style="background: var(--light-bg); padding: 20px; border-radius: 12px;">
+                        <h3 style="color: var(--text-color); font-family: 'Orpheus Pro', serif;">📊 Confidence Scoring</h3>
+                        <ul style="margin: 15px 0; padding-left: 20px; line-height: 1.6; color: var(--text-color);">
+                            <li><strong>85-100%:</strong> Verified species with exact database match</li>
+                            <li><strong>70-84%:</strong> Synonyms or alternative names found</li>
+                            <li><strong>50-69%:</strong> Partial match or uncertain identification</li>
+                            <li><strong>0-49%:</strong> Not found in marine databases</li>
+                        </ul>
+                    </div>
+
+                    <div style="background: var(--light-bg); padding: 20px; border-radius: 12px;">
+                        <h3 style="color: var(--text-color); font-family: 'Orpheus Pro', serif;">🔍 Extraction Methods</h3>
+                        <ul style="margin: 15px 0; padding-left: 20px; line-height: 1.6; color: var(--text-color);">
+                            <li><strong>pdf_pattern_1:</strong> Numbered entries with author citations</li>
+                            <li><strong>pdf_pattern_2:</strong> Numbered entries without parentheses</li>
+                            <li><strong>manual_scientific:</strong> Manually entered binomial names</li>
+                            <li><strong>manual_common:</strong> Common names resolved to scientific</li>
+                        </ul>
+                    </div>
+                </div>
                     <!-- PDF Upload Section -->
                     <div class="upload-section" id="uploadSection" 
                          ondragover="handleDragOver(event)" 
@@ -828,10 +851,10 @@ Eubranchus madapamensis"></textarea>
                     <div style="background: var(--light-bg); padding: 20px; border-radius: 12px;">
                         <h3 style="color: var(--text-color); font-family: 'Orpheus Pro', serif;">🌊 Database Integration</h3>
                         <ul style="margin: 15px 0; padding-left: 20px; line-height: 1.6; color: var(--text-color);">
-                            <li><strong>WoRMS:</strong> Primary taxonomic authority</li>
-                            <li><strong>GBIF:</strong> Global occurrence data</li>
-                            <li><strong>iNaturalist:</strong> Community observations</li>  
-                            <li><strong>OBIS:</strong> Ocean biodiversity records</li>
+                            <li><strong><a href="https://www.marinespecies.org/" target="_blank" style="color: var(--accent-color); text-decoration: none;">WoRMS</a>:</strong> Primary taxonomic authority</li>
+                            <li><strong><a href="https://www.gbif.org/" target="_blank" style="color: var(--accent-color); text-decoration: none;">GBIF</a>:</strong> Global occurrence data</li>
+                            <li><strong><a href="https://www.inaturalist.org/" target="_blank" style="color: var(--accent-color); text-decoration: none;">iNaturalist</a>:</strong> Community observations</li>  
+                            <li><strong><a href="https://obis.org/" target="_blank" style="color: var(--accent-color); text-decoration: none;">OBIS</a>:</strong> Ocean biodiversity records</li>
                         </ul>
                     </div>
                 </div>
@@ -1089,11 +1112,13 @@ Eubranchus madapamensis"></textarea>
             
             console.log("Extracting species from text...");
             
+            // Enhanced patterns - FIXED to avoid random words
             const patterns = [
+                // Pattern 1: Numbered entries with parentheses (649. Eubranchus madapamensis (Rao, 1969))
                 /(\d+)\.\s+([A-Z][a-z]+\s+[a-z]+(?:\s+[a-z]+)?)\s*\(([^)]+)\)/gm,
-                /(\d+)\.\s+([A-Z][a-z]+\s+[a-z]+(?:\s+[a-z]+)?)\s+([A-Z][a-z]+(?:\s+et\s+al\.?)?,?\s+\d{4})/gm,
-                /\b([A-Z][a-z]{3,}\s+[a-z]{3,}(?:\s+[a-z]+)?)\s+([A-Z][a-z]+(?:\s+et\s+al\.?)?,?\s+\d{4})/g,
-                /\b([A-Z][a-z]{3,})\s+([a-z]{3,})\b/g
+                
+                // Pattern 2: Numbered entries with author but no parentheses
+                /(\d+)\.\s+([A-Z][a-z]+\s+[a-z]+(?:\s+[a-z]+)?)\s+([A-Z][a-z]+(?:\s+et\s+al\.?)?,?\s+\d{4})/gm
             ];
             
             patterns.forEach((pattern, index) => {
@@ -1104,24 +1129,21 @@ Eubranchus madapamensis"></textarea>
                     let scientificName, authorYear;
                     
                     if (index === 0) {
-                        scientificName = match[2];
+                        // Pattern 1: 649. Eubranchus madapamensis (Rao, 1969)
+                        scientificName = match[2].trim();
                         authorYear = match[3];
                     } else if (index === 1) {
-                        scientificName = match[2];
+                        // Pattern 2: 650. Eubranchus steinbecki Behrens, 1987
+                        scientificName = match[2].trim();
                         authorYear = match[3];
-                    } else if (index === 2) {
-                        scientificName = match[1];
-                        authorYear = match[2];
-                    } else {
-                        scientificName = `${match[1]} ${match[2]}`;
-                        authorYear = 'Unknown';
                     }
                     
-                    if (scientificName && isValidMarineSpecies(scientificName) && !processedNames.has(scientificName)) {
-                        const parts = scientificName.trim().split(' ');
+                    // Strict validation - only accept proper binomial names
+                    if (scientificName && isValidBinomialName(scientificName) && !processedNames.has(scientificName)) {
+                        const parts = scientificName.split(' ');
                         
                         species.push({
-                            scientificName: scientificName.trim(),
+                            scientificName: scientificName,
                             genus: parts[0],
                             species: parts.slice(1).join(' '),
                             authorYear: authorYear || 'Unknown',
@@ -1129,29 +1151,68 @@ Eubranchus madapamensis"></textarea>
                             context: match[0].substring(0, 100)
                         });
                         processedNames.add(scientificName);
+                        console.log(`✅ Added valid species: ${scientificName} (${authorYear})`);
                     }
                 });
             });
             
-            console.log(`Total species extracted: ${species.length}`);
-            return species.slice(0, 100);
+            // Additional manual check for known marine genera
+            const marineGenera = ['Eubranchus', 'Aeolidia', 'Mytilus', 'Octopus', 'Strongylocentrotus', 'Haliotis', 'Callorhinus'];
+            const simplePattern = new RegExp(`\\b(${marineGenera.join('|')})\\s+([a-z]+)\\b`, 'gi');
+            
+            let match;
+            while ((match = simplePattern.exec(text)) !== null) {
+                const scientificName = `${match[1]} ${match[2]}`;
+                if (!processedNames.has(scientificName)) {
+                    const parts = scientificName.split(' ');
+                    species.push({
+                        scientificName: scientificName,
+                        genus: parts[0],
+                        species: parts[1],
+                        authorYear: 'Unknown',
+                        extractionMethod: 'known_genera',
+                        context: match[0]
+                    });
+                    processedNames.add(scientificName);
+                    console.log(`✅ Added known genus species: ${scientificName}`);
+                }
+            }
+            
+            console.log(`Total valid species extracted: ${species.length}`);
+            return species.slice(0, 50); // Limit for performance
         }
 
-        function isValidMarineSpecies(name) {
+        function isValidBinomialName(name) {
             if (!name || typeof name !== 'string') return false;
             
             const parts = name.trim().split(' ');
-            if (parts.length < 2) return false;
+            
+            // Must be exactly 2 or 3 parts (Genus species [subspecies])
+            if (parts.length < 2 || parts.length > 3) return false;
             
             const genus = parts[0];
             const species = parts[1];
             
-            if (genus.length < 3 || species.length < 3) return false;
-            if (!/^[A-Z][a-z]+$/.test(genus)) return false;
-            if (!/^[a-z]+$/.test(species)) return false;
+            // Genus must start with capital letter, 3+ chars, only letters
+            if (!/^[A-Z][a-z]{2,}$/.test(genus)) return false;
             
-            const excludeWords = ['Description', 'Habitat', 'Distribution', 'Size', 'Color'];
+            // Species must be lowercase, 3+ chars, only letters
+            if (!/^[a-z]{3,}$/.test(species)) return false;
+            
+            // Exclude common descriptive words that aren't species
+            const excludeWords = [
+                'Description', 'Habitat', 'Distribution', 'Size', 'Color', 'Body', 'Remarks',
+                'Descripción', 'Hábitat', 'Distribución', 'Tamaño', 'Observaciones',
+                'Bulbous', 'Intertidal', 'Mexican', 'Ceratas', 'Tanzania', 'Registrados',
+                'Verdes', 'Prize', 'Ricketts', 'California', 'Cuerpo', 'Este', 'Baja',
+                'Aproximadamente', 'Washington', 'Only', 'This', 'Rhinophores'
+            ];
+            
             if (excludeWords.includes(genus)) return false;
+            
+            // Additional validation: avoid common English/Spanish words
+            const commonWords = ['Body', 'Color', 'Size', 'From', 'With', 'This', 'That', 'Only', 'Este', 'Esta', 'Solo', 'Hasta', 'Desde'];
+            if (commonWords.includes(genus)) return false;
             
             return true;
         }
