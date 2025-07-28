@@ -1374,91 +1374,96 @@
             const species = [];
             const seenNames = new Set();
             
-            // Extract numbered species entries
-            const numberedMatches = [...text.matchAll(SPECIES_PATTERNS.numbered)];
-            console.log(`Found ${numberedMatches.length} numbered species entries`);
+            console.log('Starting species extraction...');
             
-            numberedMatches.forEach(match => {
-                const [fullMatch, number, scientificName] = match;
-                const normalizedName = scientificName.trim();
+            // Split text into lines for better processing
+            const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            
+            // Process each line looking for numbered species entries
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
                 
-                if (!seenNames.has(normalizedName)) {
-                    seenNames.add(normalizedName);
-                    const nameParts = normalizedName.split(' ');
-                    
-                    species.push({
-                        number: parseInt(number),
-                        scientificName: normalizedName,
-                        genus: nameParts[0],
-                        species: nameParts.slice(1).join(' '),
-                        commonNames: [],
-                        fullMatch: fullMatch,
-                        extractionMethod: 'numbered',
-                        sourceText: text.substring(match.index, match.index + 500).trim()
-                    });
-                }
-            });
-            
-            // Extract scientific names with authors
-            const scientificMatches = [...text.matchAll(SPECIES_PATTERNS.scientific)];
-            console.log(`Found ${scientificMatches.length} scientific name matches`);
-            
-            scientificMatches.forEach(match => {
-                const [fullMatch, genus, speciesName, author] = match;
-                const scientificName = `${genus} ${speciesName}`;
+                // Look for numbered species entries like "1. Craniella arb (de Laubenfels, 1930)"
+                const numberedMatch = line.match(/^(\d+)\.\s+([A-Z][a-z]+)\s+([a-z]+(?:\s+[a-z]+)*)\s*(\([^)]+\))?/);
                 
-                if (!seenNames.has(scientificName)) {
-                    seenNames.add(scientificName);
+                if (numberedMatch) {
+                    const [fullMatch, number, genus, speciesName, author] = numberedMatch;
+                    const scientificName = `${genus} ${speciesName}`;
                     
-                    species.push({
-                        scientificName: scientificName,
-                        genus: genus,
-                        species: speciesName,
-                        author: author.trim(),
-                        commonNames: [],
-                        fullMatch: fullMatch,
-                        extractionMethod: 'scientific',
-                        sourceText: text.substring(match.index, match.index + 500).trim()
-                    });
+                    if (!seenNames.has(scientificName)) {
+                        seenNames.add(scientificName);
+                        
+                        // Look ahead for common name and description
+                        let commonName = '';
+                        let description = '';
+                        let size = '';
+                        let habitat = '';
+                        let distribution = '';
+                        
+                        // Check next few lines for additional data
+                        for (let j = i + 1; j < Math.min(i + 10, lines.length); j++) {
+                            const nextLine = lines[j];
+                            
+                            // Common name is usually the next line
+                            if (j === i + 1 && !nextLine.match(/^(Description|Size|Habitat|Distribution):/)) {
+                                commonName = nextLine;
+                            }
+                            
+                            // Look for data fields
+                            if (nextLine.startsWith('Description:')) {
+                                description = nextLine.replace('Description:', '').trim();
+                            } else if (nextLine.startsWith('Size:')) {
+                                size = nextLine.replace('Size:', '').trim();
+                            } else if (nextLine.startsWith('Habitat:')) {
+                                habitat = nextLine.replace('Habitat:', '').trim();
+                            } else if (nextLine.startsWith('Distribution:')) {
+                                distribution = nextLine.replace('Distribution:', '').trim();
+                            }
+                            
+                            // Stop if we hit another numbered entry
+                            if (nextLine.match(/^\d+\.\s+[A-Z][a-z]+\s+[a-z]/)) {
+                                break;
+                            }
+                        }
+                        
+                        species.push({
+                            number: parseInt(number),
+                            scientificName: scientificName,
+                            genus: genus,
+                            species: speciesName,
+                            author: author ? author.replace(/[()]/g, '') : '',
+                            commonNames: commonName ? [commonName] : [],
+                            size: size,
+                            habitat: habitat,
+                            distribution: distribution,
+                            description: description,
+                            fullMatch: fullMatch,
+                            extractionMethod: 'numbered',
+                            hasAdditionalData: !!(size || habitat || distribution || description),
+                            sourceText: line
+                        });
+                        
+                        console.log(`Found species: ${scientificName} (${commonName})`);
+                    }
                 }
-            });
+            }
             
+            console.log(`Total species extracted: ${species.length}`);
             return species;
         }
 
         async function enrichSpeciesData(species, fullText) {
             console.log(`Enriching data for ${species.length} species...`);
             
+            // Species already have their basic data from extraction
+            // This function can add additional processing if needed
             return species.map(sp => {
-                // Extract size information
-                const sizeRegex = new RegExp(`${sp.scientificName}[\\s\\S]{0,500}Size:\\s*([^\\n\\.]+)`, 'i');
-                const sizeMatch = fullText.match(sizeRegex);
-                
-                // Extract habitat information
-                const habitatRegex = new RegExp(`${sp.scientificName}[\\s\\S]{0,500}Habitat:\\s*([^\\n\\.]+)`, 'i');
-                const habitatMatch = fullText.match(habitatRegex);
-                
-                // Extract distribution information
-                const distributionRegex = new RegExp(`${sp.scientificName}[\\s\\S]{0,500}Distribution:\\s*([^\\n\\.]+)`, 'i');
-                const distributionMatch = fullText.match(distributionRegex);
-                
-                // Extract description
-                const descriptionRegex = new RegExp(`${sp.scientificName}[\\s\\S]{0,500}Description:\\s*([^\\n\\.]+)`, 'i');
-                const descriptionMatch = fullText.match(descriptionRegex);
-                
-                // Extract common name (look for text immediately after scientific name)
-                const commonNameRegex = new RegExp(`${sp.scientificName}[\\s\\n]*([A-Z][A-Za-z\\s-]+(?:Sponge|Crab|Star|Urchin|Anemone|Coral|Worm|Clam|Snail|Slug|Fish))`, 'i');
-                const commonNameMatch = fullText.match(commonNameRegex);
-                
                 return {
                     ...sp,
-                    size: sizeMatch ? sizeMatch[1].trim() : '',
-                    habitat: habitatMatch ? habitatMatch[1].trim() : '',
-                    distribution: distributionMatch ? distributionMatch[1].trim() : '',
-                    description: descriptionMatch ? descriptionMatch[1].trim() : '',
-                    commonNames: commonNameMatch ? [commonNameMatch[1].trim()] : [],
-                    hasAdditionalData: !!(sizeMatch || habitatMatch || distributionMatch || descriptionMatch),
-                    extractedAt: new Date().toISOString()
+                    extractedAt: new Date().toISOString(),
+                    // Additional enrichment could go here
+                    confidence: sp.hasAdditionalData ? 85 : 65,
+                    status: sp.hasAdditionalData ? 'verified' : 'partial'
                 };
             });
         }
