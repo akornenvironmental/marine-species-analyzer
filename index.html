@@ -1113,22 +1113,24 @@
                     </div>
                 </div>
                 
-                <div class="results-stats" id="resultsStats">
-                    <span class="stat-badge stat-verified" id="verifiedCount">0 Verified</span>
-                    <span class="stat-badge stat-synonyms" id="synonymCount">0 Synonyms</span>
-                    <span class="stat-badge stat-not-found" id="notFoundCount">0 Not Found</span>
-                </div>
-
-                <!-- Results Pagination -->
-                <div class="results-pagination">
-                    <span class="pagination-label">Show:</span>
-                    <select class="pagination-select" id="resultsPerPage" onchange="updateResultsDisplay()">
-                        <option value="20">20 species</option>
-                        <option value="50">50 species</option>
-                        <option value="100">100 species</option>
-                        <option value="all">All species</option>
-                    </select>
-                    <span class="pagination-label" id="resultsInfo">Showing 0 of 0 species</span>
+                <!-- Results Stats and Pagination on same row -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                    <div class="results-stats" id="resultsStats">
+                        <span class="stat-badge stat-verified" id="verifiedCount">0 Verified</span>
+                        <span class="stat-badge stat-synonyms" id="synonymCount">0 Synonyms</span>
+                        <span class="stat-badge stat-not-found" id="notFoundCount">0 Not Found</span>
+                    </div>
+                    
+                    <div class="results-pagination">
+                        <span class="pagination-label">Show:</span>
+                        <select class="pagination-select" id="resultsPerPage" onchange="updateResultsDisplay()">
+                            <option value="20">20 species</option>
+                            <option value="50">50 species</option>
+                            <option value="100">100 species</option>
+                            <option value="all">All species</option>
+                        </select>
+                        <span class="pagination-label" id="resultsInfo">Showing 0 of 0 species</span>
+                    </div>
                 </div>
                 
                 <!-- Cards View -->
@@ -1542,7 +1544,11 @@
 
         // Sample data
         const SAMPLE_DATA = {
-            species: `Mytilus californianus, California mussel, Sebastes mystinus, Blue rockfish, Haliotis rufescens, Red abalone, Pisaster ochraceus, Purple sea star`
+            species: `Mytilus californianus
+California mussel, Blue rockfish
+Sebastes mystinus, Haliotis rufescens
+Red abalone
+Pisaster ochraceus, Purple sea star`
         };
 
         // Initialize app with theme and language selection
@@ -2072,33 +2078,71 @@
                 return;
             }
 
-            // Parse species names from input
-            const lines = input.split('\n').filter(line => line.trim());
-            const species = lines.map((line, index) => {
-                const trimmed = line.trim();
-                // Simple parsing - assume scientific name if it has two words, otherwise common name
-                const words = trimmed.split(' ');
-                if (words.length >= 2 && words[0][0].toUpperCase() === words[0][0]) {
+            // Parse species names from input - handle both line breaks and commas
+            const species = parseSpeciesFromInput(input);
+            
+            if (species.length === 0) {
+                showMessage('No valid species names found in the input.', 'error');
+                return;
+            }
+
+            // Process the species
+            processSpeciesList(species);
+        }
+
+        function parseSpeciesFromInput(input) {
+            // First split by line breaks, then by commas, then clean up
+            let names = [];
+            
+            // Split by line breaks first
+            const lines = input.split(/\r?\n/);
+            
+            lines.forEach(line => {
+                if (line.trim()) {
+                    // Check if line contains commas
+                    if (line.includes(',')) {
+                        // Split by commas and add each part
+                        const commaSplit = line.split(',');
+                        commaSplit.forEach(part => {
+                            const trimmed = part.trim();
+                            if (trimmed) {
+                                names.push(trimmed);
+                            }
+                        });
+                    } else {
+                        // Add the whole line
+                        names.push(line.trim());
+                    }
+                }
+            });
+            
+            // Convert to species objects
+            return names.map((name, index) => {
+                const trimmed = name.trim();
+                const words = trimmed.split(' ').filter(w => w.length > 0);
+                
+                // Determine if it's likely a scientific name (starts with capital, has 2+ words)
+                if (words.length >= 2 && words[0][0] === words[0][0].toUpperCase()) {
                     return {
-                        scientificName: trimmed,
+                        scientificName: words.slice(0, 2).join(' '), // Take first two words
                         genus: words[0],
                         species: words[1],
                         commonName: '',
-                        sourcePage: 'Manual Entry'
+                        sourcePage: 'Manual Entry',
+                        originalInput: trimmed
                     };
                 } else {
+                    // Treat as common name
                     return {
                         scientificName: `Unknown species ${index + 1}`,
                         genus: 'Unknown',
                         species: 'species',
                         commonName: trimmed,
-                        sourcePage: 'Manual Entry'
+                        sourcePage: 'Manual Entry',
+                        originalInput: trimmed
                     };
                 }
             });
-
-            // Process the species
-            processSpeciesList(species);
         }
 
         function clearManualInput() {
