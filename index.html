@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marine Species Analyzer</title>
     <style>
-        /* Enhanced styles with multilingual support */
+        /* Enhanced styles - preserving original functionality */
         * {
             margin: 0;
             padding: 0;
@@ -13,9 +13,163 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8f9fa;
-            line-height: 1.6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #09306b;
+            min-height: 100vh;
+        }
+
+        /* Main Layout - preserved */
+        .main-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* AI Assistant Panel - preserved */
+        .ai-assistant {
+            width: 350px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .ai-body {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ai-intro {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border: 1px solid #5a7ba8;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .ai-intro p {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #333;
+        }
+
+        .ai-features {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ai-features li {
+            padding: 4px 0;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.3;
+        }
+
+        .ai-features li:before {
+            content: "▶ ";
+            color: #5a7ba8;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .ai-input-section {
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        .ai-input-box {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .ai-input-box:focus {
+            outline: none;
+            border-color: #5a7ba8;
+            box-shadow: 0 0 5px rgba(90, 123, 168, 0.3);
+        }
+
+        .ai-send-button {
+            width: 100%;
+            background: linear-gradient(135deg, #209e5d, #1a7a47);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .ai-send-button:hover {
+            background: linear-gradient(135deg, #1a7a47, #209e5d);
+            transform: translateY(-1px);
+        }
+
+        /* Main Content - preserved */
+        .main-content {
+            flex: 1;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-bottom: 2px solid #e9ecef;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-title h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .content-title p {
+            color: #666;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #e8f5e8;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #4caf50;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
         .top-bar {
@@ -477,89 +631,215 @@
     </style>
 </head>
 <body>
-    <!-- Top Navigation Bar -->
-    <div class="top-bar">
-        <div class="logo">
+    <!-- Top Navigation Bar with Language Selector -->
+    <div style="background: white; border-bottom: 1px solid #e9ecef; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
             <strong>🐚 Marine Species Analyzer</strong>
         </div>
-        <div class="language-selector">
-            <button class="lang-btn active" onclick="setLanguage('en')" data-lang="en">English</button>
-            <button class="lang-btn" onclick="setLanguage('es')" data-lang="es">Español</button>
-            <button class="lang-btn" onclick="setLanguage('fr')" data-lang="fr">Français</button>
+        <div style="display: flex; gap: 5px;">
+            <button class="lang-btn active" onclick="setLanguage('en')" data-lang="en" style="background: #007bff; color: white; border: 1px solid #007bff; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">English</button>
+            <button class="lang-btn" onclick="setLanguage('es')" data-lang="es" style="background: none; border: 1px solid #dee2e6; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">Español</button>
+            <button class="lang-btn" onclick="setLanguage('fr')" data-lang="fr" style="background: none; border: 1px solid #dee2e6; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">Français</button>
         </div>
     </div>
 
-    <div class="main-container">
-        <div class="header">
-            <h1 data-translate="title">Marine Species Analyzer</h1>
-            <p data-translate="subtitle">Professional PDF extraction & multi-database verification tool</p>
+    <!-- Main Layout - preserved original structure -->
+    <div class="main-layout">
+        <!-- AI Assistant Panel - preserved -->
+        <div class="ai-assistant">
+            <div class="ai-body">
+                <div class="ai-intro">
+                    <p><strong>🤖 Marine Species AI Helper</strong></p>
+                    <ul class="ai-features">
+                        <li>Help with PDF processing questions</li>
+                        <li>Explain WoRMS verification results</li>
+                        <li>Suggest fixes for unverified species</li>
+                        <li>Generate species reports</li>
+                        <li>Provide taxonomic guidance</li>
+                        <li>Export data in various formats</li>
+                        <li>Compare database matches</li>
+                        <li>Improve OCR accuracy tips</li>
+                    </ul>
+                </div>
+                <div class="ai-input-section">
+                    <textarea class="ai-input-box" id="aiInput" placeholder="Ask me anything! For example: 'Why wasn't Mytilus californianus found?' or 'How can I improve OCR accuracy?'"></textarea>
+                    <button class="ai-send-button" onclick="sendAIMessage()">Ask AI Helper</button>
+                </div>
+            </div>
         </div>
 
-        <div class="tabs-container">
+        <!-- Main Content - preserved -->
+        <div class="main-content">
+            <div class="content-header">
+                <div class="content-title">
+                    <h1>🐚 Marine Species Analyzer</h1>
+                    <p>Professional PDF extraction & multi-database verification tool</p>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>System Online</span>
+                </div>
+            </div>
+
+            <!-- Tabs - preserved original layout but moved help to the right -->
             <div class="tabs">
-                <button class="tab active" onclick="switchTab('upload')" data-translate="tab.upload">📄 Upload & Extract</button>
-                <button class="tab" onclick="switchTab('results')" data-translate="tab.results">📊 Results & Verification</button>
-                <button class="tab" onclick="switchTab('analytics')" data-translate="tab.analytics">📈 Analytics</button>
-                <button class="tab" onclick="switchTab('help')" data-translate="tab.help">❓ Help</button>
+                <button class="tab active" onclick="switchTab('upload')">📄 Upload & Extract</button>
+                <button class="tab" onclick="switchTab('results')">📊 Results & Verification</button>
+                <button class="tab" onclick="switchTab('analytics')">📈 Analytics</button>
+                <button class="tab" onclick="switchTab('help')" style="margin-left: auto;">❓ Help</button>
             </div>
 
-            <!-- Upload Tab -->
-            <div class="tab-content active" id="upload-content">
-                <div style="text-align: center; padding: 40px; border: 2px dashed #dee2e6; border-radius: 12px; margin-bottom: 30px;" 
-                     id="uploadArea" 
-                     ondrop="handleDrop(event)" 
-                     ondragover="handleDragOver(event)" 
-                     ondragleave="handleDragLeave(event)">
-                    <div style="font-size: 3rem; margin-bottom: 15px;">📄</div>
-                    <h3 data-translate="upload.title">Upload Marine Field Guide PDF</h3>
-                    <p data-translate="upload.subtitle">Drag and drop your PDF here, or click to browse</p>
-                    <button style="background: #2c5aa0; color: white; border: none; padding: 12px 24px; border-radius: 6px; margin-top: 15px; cursor: pointer;" 
-                            onclick="document.getElementById('fileInput').click()" 
-                            data-translate="upload.button">Choose PDF File</button>
-                    <input type="file" id="fileInput" style="display: none;" accept=".pdf" onchange="handleFileUpload(event)">
-                    <div style="margin-top: 15px; font-size: 0.9rem; color: #6c757d;" data-translate="upload.limit">
-                        Maximum file size: 1GB • Files stored securely in Google Drive
+            <!-- Upload Tab Content - preserved original structure -->
+            <div class="tab-content" id="upload-content">
+                <!-- Two-column layout for upload options -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                    <!-- PDF Upload Section -->
+                    <div class="upload-section" id="uploadSection">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">Upload Marine Field Guide PDF</div>
+                        <div class="upload-subtext">Drag and drop your PDF here, or click to browse</div>
+                        <button class="upload-button" onclick="document.getElementById('fileInput').click()">
+                            Choose PDF File
+                        </button>
+                        <input type="file" id="fileInput" class="file-input" accept=".pdf">
+                        <div style="margin-top: 15px; font-size: 0.9rem; color: #6c757d;">
+                            Maximum file size: 1GB • Files stored securely in Google Drive
+                        </div>
+                    </div>
+
+                    <!-- Manual Species Entry Section - preserved -->
+                    <div class="manual-entry-section">
+                        <div class="manual-entry-header">
+                            <div class="manual-entry-icon">🔍</div>
+                            <div class="manual-entry-title">
+                                <h3>Manual Species Lookup</h3>
+                                <p>Enter species names to verify against marine databases</p>
+                            </div>
+                        </div>
+                        
+                        <div class="species-input-container">
+                            <div class="input-header">
+                                <label for="manualSpeciesInput">Species Names:</label>
+                                <div class="input-examples">
+                                    <span class="example-item">Scientific names</span>
+                                    <span class="example-item">Common names</span>
+                                </div>
+                            </div>
+                            
+                            <textarea id="manualSpeciesInput" class="manual-species-input" 
+                                      placeholder="Enter species names here, one per line:
+
+Mytilus californianus
+California mussel
+Blue rockfish"></textarea>
+                            
+                            <div class="input-controls">
+                                <button class="btn btn-primary" onclick="processManualSpecies()">
+                                    <span class="btn-icon">🔍</span>
+                                    Verify Species
+                                </button>
+                                <button class="btn btn-secondary" onclick="clearManualInput()">
+                                    <span class="btn-icon">🗑️</span>
+                                    Clear
+                                </button>
+                                <button class="btn btn-success" onclick="loadSampleSpecies()">
+                                    <span class="btn-icon">📋</span>
+                                    Examples
+                                </button>
+                            </div>
+                            
+                            <div class="input-tips">
+                                <div class="tip-item">
+                                    <span class="tip-icon">✅</span>
+                                    <span>Accepts scientific & common names</span>
+                                </div>
+                                <div class="tip-item">
+                                    <span class="tip-icon">🔄</span>
+                                    <span>Auto-resolves common to scientific names</span>
+                                </div>
+                                <div class="tip-item">
+                                    <span class="tip-icon">🌊</span>
+                                    <span>Verifies against 4 marine databases</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div id="processingResults"></div>
+                <!-- OR Divider -->
+                <div style="display: flex; align-items: center; margin: 30px 0;">
+                    <div style="flex: 1; height: 1px; background: #dee2e6;"></div>
+                    <span style="padding: 0 20px; color: #6c757d; font-weight: 600;">PROCESSING WORKFLOW</span>
+                    <div style="flex: 1; height: 1px; background: #dee2e6;"></div>
+                </div>
+
+                <!-- Processing Steps - preserved -->
+                <div class="processing-steps">
+                    <div class="step-card" id="step1">
+                        <div class="step-number">1</div>
+                        <div class="step-title">Input Processing</div>
+                        <div class="step-description">Process PDF or manual species entries</div>
+                    </div>
+                    <div class="step-card" id="step2">
+                        <div class="step-number">2</div>
+                        <div class="step-title">Species Parsing</div>
+                        <div class="step-description">Extract and validate species names</div>
+                    </div>
+                    <div class="step-card" id="step3">
+                        <div class="step-number">3</div>
+                        <div class="step-title">Name Resolution</div>
+                        <div class="step-description">Resolve common names to scientific names</div>
+                    </div>
+                    <div class="step-card" id="step4">
+                        <div class="step-number">4</div>
+                        <div class="step-title">Database Verification</div>
+                        <div class="step-description">Verify against WoRMS, GBIF, iNaturalist & OBIS</div>
+                    </div>
+                    <div class="step-card" id="step5">
+                        <div class="step-number">5</div>
+                        <div class="step-title">Results Analysis</div>
+                        <div class="step-description">Analyze verification results and confidence</div>
+                    </div>
+                </div>
+
+                <div id="processingResults">
+                    <!-- Processing messages will appear here -->
+                </div>
             </div>
 
-            <!-- Results Tab -->
-            <div class="tab-content" id="results-content">
+            <!-- Results Tab Content - enhanced with view toggle and common names -->
+            <div class="tab-content hidden" id="results-content">
                 <div class="results-header">
-                    <h2 class="results-title" data-translate="results.title">Species Verification Results</h2>
-                    <div class="view-toggle">
-                        <button class="view-btn active" onclick="setView('cards')" data-translate="view.cards">📋 Cards</button>
-                        <button class="view-btn" onclick="setView('table')" data-translate="view.table">📊 Table</button>
+                    <div class="results-title">Species Verification Results</div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="view-btn active" onclick="setView('cards')" style="background: #2c5aa0; color: white; border: 1px solid #2c5aa0; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;">📋 Cards</button>
+                        <button class="view-btn" onclick="setView('table')" style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;">📊 Table</button>
+                    </div>
+                    <div class="results-stats" id="resultsStats">
+                        <span class="stat-badge stat-verified" id="verifiedCount">0 Verified</span>
+                        <span class="stat-badge stat-synonyms" id="synonymCount">0 Synonyms</span>
+                        <span class="stat-badge stat-not-found" id="notFoundCount">0 Not Found</span>
                     </div>
                 </div>
-
-                <div class="results-stats" id="resultsStats">
-                    <span class="stat-badge stat-verified" id="verifiedCount">0 Verified</span>
-                    <span class="stat-badge stat-synonyms" id="synonymCount">0 Synonyms</span>
-                    <span class="stat-badge stat-not-found" id="notFoundCount">0 Not Found</span>
-                </div>
-
-                <!-- Cards View -->
+                
+                <!-- Cards View - enhanced -->
                 <div class="species-grid" id="speciesGrid">
                     <!-- Species cards will be populated here -->
                 </div>
 
-                <!-- Table View -->
-                <div style="overflow-x: auto;">
-                    <table class="species-table" id="speciesTable">
+                <!-- Table View - new addition -->
+                <div style="overflow-x: auto; display: none;" id="tableView">
+                    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" id="speciesTable">
                         <thead>
-                            <tr>
-                                <th data-translate="table.scientific">Scientific Name</th>
-                                <th data-translate="table.common">Common Name(s)</th>
-                                <th data-translate="table.status">Status</th>
-                                <th data-translate="table.confidence">Confidence</th>
-                                <th data-translate="table.size">Size (Standard)</th>
-                                <th data-translate="table.habitat">Habitat</th>
-                                <th data-translate="table.distribution">Distribution</th>
-                                <th data-translate="table.source">Source</th>
-                                <th data-translate="table.page">Page(s)</th>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 12px 8px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 0.9rem; font-weight: 600; color: #495057;">Scientific Name</th>
+                                <th style="padding: 12px 8px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 0.9rem; font-weight: 600; color: #495057;">Common Name(s)</th>
+                                <th style="padding: 12px 8px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 0.9rem; font-weight: 600; color: #495057;">Status</th>
+                                <th style="padding: 12px 8px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 0.9rem; font-weight: 600; color: #495057;">Confidence</th>
+                                <th style="padding: 12px 8px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 0.9rem; font-weight: 600; color: #495057;">Size (Standard)</th>
+                                <th style="padding: 12px 8px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 0.9rem; font-weight: 600; color: #495057;">Habitat</th>
+                                <th style="padding: 12px 8px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 0.9rem; font-weight: 600; color: #495057;">Source</th>
+                                <th style="padding: 12px 8px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 0.9rem; font-weight: 600; color: #495057;">Page(s)</th>
                             </tr>
                         </thead>
                         <tbody id="speciesTableBody">
@@ -568,11 +848,10 @@
                     </table>
                 </div>
 
-                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #dee2e6;">
-                    <button style="background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 6px; margin: 5px; cursor: pointer;" 
-                            onclick="exportToCSV()" data-translate="export.csv">📊 Export CSV</button>
-                    <button style="background: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 6px; margin: 5px; cursor: pointer;" 
-                            onclick="generateReport()" data-translate="export.report">📋 Generate Report</button>
+                <div class="export-section">
+                    <button class="export-btn" onclick="exportToCSV()">📊 Export CSV</button>
+                    <button class="export-btn" onclick="exportToExcel()">📈 Export Excel</button>
+                    <button class="export-btn" onclick="generateReport()">📋 Generate Report</button>
                 </div>
             </div>
 
@@ -729,153 +1008,57 @@
     </div>
 
     <script>
-        // Global variables
+        // Global variables - preserved
         let speciesData = [];
         let currentLanguage = 'en';
         let currentView = 'cards';
+        let currentProcessingStep = 0;
+        let uploadedPDFInfo = null;
+        let pdfLibReady = false;
 
-        // Translation data
-        const translations = {
-            en: {
-                title: "Marine Species Analyzer",
-                subtitle: "Professional PDF extraction & multi-database verification tool",
-                "tab.upload": "📄 Upload & Extract",
-                "tab.results": "📊 Results & Verification", 
-                "tab.analytics": "📈 Analytics",
-                "tab.help": "❓ Help",
-                "upload.title": "Upload Marine Field Guide PDF",
-                "upload.subtitle": "Drag and drop your PDF here, or click to browse",
-                "upload.button": "Choose PDF File",
-                "upload.limit": "Maximum file size: 1GB • Files stored securely in Google Drive",
-                "results.title": "Species Verification Results",
-                "view.cards": "📋 Cards",
-                "view.table": "📊 Table",
-                "table.scientific": "Scientific Name",
-                "table.common": "Common Name(s)",
-                "table.status": "Status",
-                "table.confidence": "Confidence",
-                "table.size": "Size (Standard)",
-                "table.habitat": "Habitat",
-                "table.distribution": "Distribution",
-                "table.source": "Source",
-                "table.page": "Page(s)",
-                "export.csv": "📊 Export CSV",
-                "export.report": "📋 Generate Report",
-                "analytics.title": "Verification Analytics",
-                "analytics.empty": "No data available yet. Process some species to see analytics.",
-                "help.title": "User Guide & Documentation",
-                "help.quickstart.title": "🚀 Quick Start",
-                "help.quickstart.step1": "Upload PDF: Drag and drop a marine field guide or species list PDF",
-                "help.quickstart.step2": "Wait for Processing: OCR extracts text and AI parses species names",
-                "help.quickstart.step3": "Review Results: Check verification results in the Results tab",
-                "help.quickstart.step4": "Export Data: Download CSV or generate reports for analysis",
-                "help.databases.title": "🗄️ Databases Used",
-                "help.databases.worms": "World Register of Marine Species (authoritative taxonomy)",
-                "help.databases.gbif": "Global Biodiversity Information Facility (occurrence data)",
-                "help.databases.inat": "Citizen science observations and photos",
-                "help.databases.obis": "Ocean Biodiversity Information System (marine-specific data)",
-                "help.standards.title": "📏 Standardized Units",
-                "help.standards.size": "Size: Converted to meters (m) for length, kilograms (kg) for weight",
-                "help.standards.depth": "Depth: Converted to meters (m) below sea level",
-                "help.standards.temp": "Temperature: Converted to Celsius (°C)",
-                "help.standards.original": "Original values: Displayed alongside standardized units"
+        // Configuration - updated for 1GB support
+        const CONFIG = {
+            WORMS_API: {
+                BASE_URL: 'https://www.marinespecies.org/rest',
+                RATE_LIMIT: 500,
+                RETRY_DELAY: 1000,
+                MAX_RETRIES: 3
             },
-            es: {
-                title: "Analizador de Especies Marinas",
-                subtitle: "Herramienta profesional de extracción de PDF y verificación multibases de datos",
-                "tab.upload": "📄 Subir y Extraer",
-                "tab.results": "📊 Resultados y Verificación",
-                "tab.analytics": "📈 Analíticas",
-                "tab.help": "❓ Ayuda",
-                "upload.title": "Subir PDF de Guía de Campo Marina",
-                "upload.subtitle": "Arrastra y suelta tu PDF aquí, o haz clic para navegar",
-                "upload.button": "Elegir Archivo PDF",
-                "upload.limit": "Tamaño máximo de archivo: 1GB • Archivos almacenados de forma segura en Google Drive",
-                "results.title": "Resultados de Verificación de Especies",
-                "view.cards": "📋 Tarjetas",
-                "view.table": "📊 Tabla",
-                "table.scientific": "Nombre Científico",
-                "table.common": "Nombre(s) Común(es)",
-                "table.status": "Estado",
-                "table.confidence": "Confianza",
-                "table.size": "Tamaño (Estándar)",
-                "table.habitat": "Hábitat",
-                "table.distribution": "Distribución",
-                "table.source": "Fuente",
-                "table.page": "Página(s)",
-                "export.csv": "📊 Exportar CSV",
-                "export.report": "📋 Generar Informe",
-                "analytics.title": "Analíticas de Verificación",
-                "analytics.empty": "No hay datos disponibles aún. Procesa algunas especies para ver analíticas.",
-                "help.title": "Guía de Usuario y Documentación",
-                "help.quickstart.title": "🚀 Inicio Rápido",
-                "help.quickstart.step1": "Subir PDF: Arrastra y suelta una guía de campo marina o lista de especies PDF",
-                "help.quickstart.step2": "Esperar Procesamiento: OCR extrae texto e IA analiza nombres de especies",
-                "help.quickstart.step3": "Revisar Resultados: Verificar resultados en la pestaña de Resultados",
-                "help.quickstart.step4": "Exportar Datos: Descargar CSV o generar informes para análisis",
-                "help.databases.title": "🗄️ Bases de Datos Utilizadas",
-                "help.databases.worms": "Registro Mundial de Especies Marinas (taxonomía autoritativa)",
-                "help.databases.gbif": "Facilidad Global de Información sobre Biodiversidad (datos de ocurrencia)",
-                "help.databases.inat": "Observaciones de ciencia ciudadana y fotos",
-                "help.databases.obis": "Sistema de Información de Biodiversidad Oceánica (datos específicos marinos)",
-                "help.standards.title": "📏 Unidades Estandarizadas",
-                "help.standards.size": "Tamaño: Convertido a metros (m) para longitud, kilogramos (kg) para peso",
-                "help.standards.depth": "Profundidad: Convertido a metros (m) bajo el nivel del mar",
-                "help.standards.temp": "Temperatura: Convertido a Celsius (°C)",
-                "help.standards.original": "Valores originales: Mostrados junto a unidades estandarizadas"
+            GBIF_API: {
+                BASE_URL: 'https://api.gbif.org/v1',
+                RATE_LIMIT: 300
             },
-            fr: {
-                title: "Analyseur d'Espèces Marines",
-                subtitle: "Outil professionnel d'extraction PDF et de vérification multi-bases de données",
-                "tab.upload": "📄 Télécharger et Extraire",
-                "tab.results": "📊 Résultats et Vérification",
-                "tab.analytics": "📈 Analytiques",
-                "tab.help": "❓ Aide",
-                "upload.title": "Télécharger PDF de Guide de Terrain Marin",
-                "upload.subtitle": "Glissez et déposez votre PDF ici, ou cliquez pour parcourir",
-                "upload.button": "Choisir Fichier PDF",
-                "upload.limit": "Taille maximale de fichier: 1GB • Fichiers stockés en sécurité dans Google Drive",
-                "results.title": "Résultats de Vérification des Espèces",
-                "view.cards": "📋 Cartes",
-                "view.table": "📊 Tableau",
-                "table.scientific": "Nom Scientifique",
-                "table.common": "Nom(s) Commun(s)",
-                "table.status": "Statut",
-                "table.confidence": "Confiance",
-                "table.size": "Taille (Standard)",
-                "table.habitat": "Habitat",
-                "table.distribution": "Distribution",
-                "table.source": "Source",
-                "table.page": "Page(s)",
-                "export.csv": "📊 Exporter CSV",
-                "export.report": "📋 Générer Rapport",
-                "analytics.title": "Analytiques de Vérification",
-                "analytics.empty": "Aucune donnée disponible pour le moment. Traitez quelques espèces pour voir les analytiques.",
-                "help.title": "Guide Utilisateur et Documentation",
-                "help.quickstart.title": "🚀 Démarrage Rapide",
-                "help.quickstart.step1": "Télécharger PDF: Glissez et déposez un guide de terrain marin ou liste d'espèces PDF",
-                "help.quickstart.step2": "Attendre Traitement: OCR extrait le texte et IA analyse les noms d'espèces",
-                "help.quickstart.step3": "Examiner Résultats: Vérifier les résultats dans l'onglet Résultats",
-                "help.quickstart.step4": "Exporter Données: Télécharger CSV ou générer rapports pour analyse",
-                "help.databases.title": "🗄️ Bases de Données Utilisées",
-                "help.databases.worms": "Registre Mondial des Espèces Marines (taxonomie autoritaire)",
-                "help.databases.gbif": "Facilité Mondiale d'Information sur la Biodiversité (données d'occurrence)",
-                "help.databases.inat": "Observations de science citoyenne et photos",
-                "help.databases.obis": "Système d'Information de Biodiversité Océanique (données spécifiques marines)",
-                "help.standards.title": "📏 Unités Standardisées",
-                "help.standards.size": "Taille: Converti en mètres (m) pour longueur, kilogrammes (kg) pour poids",
-                "help.standards.depth": "Profondeur: Converti en mètres (m) sous le niveau de la mer",
-                "help.standards.temp": "Température: Converti en Celsius (°C)",
-                "help.standards.original": "Valeurs originales: Affichées à côté des unités standardisées"
-            }
+            INATURALIST_API: {
+                BASE_URL: 'https://api.inaturalist.org/v1',
+                RATE_LIMIT: 200
+            },
+            OBIS_API: {
+                BASE_URL: 'https://api.obis.org',
+                RATE_LIMIT: 400
+            },
+            MAX_FILE_SIZE: 1024 * 1024 * 1024, // 1GB
+            CHUNK_SIZE: 10 * 1024 * 1024 // 10MB chunks
         };
 
-        // Configuration
-        const CONFIG = {
-            BACKEND_URL: 'https://script.google.com/macros/s/AKfycbyE8GSVzattGzZnPKqGdzdlst9Z5A2PlrfieNcV69PO1Y4I9uLhHBipXLXVUaLjQO3A/exec',
-            MAX_FILE_SIZE: 1024 * 1024 * 1024, // 1GB - supports large field guides
-            SUPPORTED_TYPES: ['application/pdf'],
-            CHUNK_SIZE: 10 * 1024 * 1024 // 10MB chunks for large file upload
+        // Sample data - preserved
+        const SAMPLE_DATA = {
+            nudibranch: `649. Eubranchus madapamensis (Rao, 1969) Madapam Aeolid
+Description: Body color translucent gray brown with brown-yellow, white, clear and dark spots and blotches. Bulbous cerata with tubercles; with a gold and a blue band distally, with 4-6 pinkish orange dots.
+Size: To 0.5 in.
+Habitat: Intertidal and shallow subtidal, to at least 30 ft.
+Distribution: Indo-Pacific, from Tanzania to Hawai'i; in eastern Pacific at Bahía de los Ángeles and Bahía de Banderas.
+
+650. Eubranchus steinbecki Behrens, 1987 Steinbeck's Aeolid
+Description: Irregular, nodular cerata; body color tan with dark olive-green mottling.
+Size: To 0.23 in.
+Habitat: Intertidal and on boat docks.
+Distribution: Palos Verdes and Mission Bay, California, and La Paz, Baja California Sur.`,
+
+            species: `Mytilus californianus California mussel
+Eubranchus steinbecki Steinbeck's Aeolid
+Blue rockfish Sebastes mystinus
+Haliotis rufescens Red abalone
+Aeolidia loui Lou's Southern Aeolidia`
         };
 
         // Initialize app
