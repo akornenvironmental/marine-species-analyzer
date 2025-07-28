@@ -106,11 +106,11 @@
         .ai-intro li {
             font-family: 'Josefin Sans', sans-serif;
             color: #333;
-            margin: 5px 0;
+            margin: 3px 0;
             padding-left: 20px;
             position: relative;
             font-size: 13px;
-            line-height: 1.4;
+            line-height: 1.2;
         }
 
         .ai-intro li::before {
@@ -695,17 +695,18 @@
                 </div>
                 <div class="header-controls">
                     <div class="controls-row">
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="font-size: 12px; margin-right: 8px;">Theme:</span>
-                            <button class="theme-btn active" onclick="setTheme('light')" data-theme="light">Light</button>
-                            <button class="theme-btn" onclick="setTheme('dark')" data-theme="dark">Dark</button>
-                        </div>
-                    </div>
-                    <div class="controls-row">
                         <div style="display: flex; gap: 5px;">
                             <button class="lang-btn active" onclick="setLanguage('en')" data-lang="en">English</button>
                             <button class="lang-btn" onclick="setLanguage('es')" data-lang="es">Español</button>
                             <button class="lang-btn" onclick="setLanguage('fr')" data-lang="fr">Français</button>
+                        </div>
+                    </div>
+                    <div class="controls-row">
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span style="font-size: 12px; margin-right: 8px;">Theme:</span>
+                            <button class="theme-btn" onclick="setTheme('system')" data-theme="system">System</button>
+                            <button class="theme-btn active" onclick="setTheme('light')" data-theme="light">Light</button>
+                            <button class="theme-btn" onclick="setTheme('dark')" data-theme="dark">Dark</button>
                         </div>
                     </div>
                 </div>
@@ -808,18 +809,18 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2 class="section-title">Species Results</h2>
                     <div style="display: flex; gap: 10px; align-items: center;">
-                        <div style="display: flex; gap: 5px; margin-right: 15px;">
-                            <button class="button" onclick="toggleView('cards')" id="cardsViewBtn" style="background: #6c757d;">🔲 Cards</button>
-                            <button class="button" onclick="toggleView('table')" id="tableViewBtn" style="background: var(--accent-color);">📋 Table</button>
+                        <div style="display: flex; gap: 3px; margin-right: 15px;">
+                            <button class="button" onclick="toggleView('cards')" id="cardsViewBtn" style="background: #6c757d; padding: 8px 16px; font-size: 12px;">🔲 Cards</button>
+                            <button class="button" onclick="toggleView('table')" id="tableViewBtn" style="background: var(--accent-color); padding: 8px 16px; font-size: 12px;">📋 Table</button>
                         </div>
-                        <div style="display: flex; gap: 5px; margin-right: 15px;">
-                            <button class="button" onclick="selectAll()" style="background: var(--success-color);">✅ Select All</button>
-                            <button class="button" onclick="clearSelection()" style="background: #6c757d;">❌ Clear</button>
+                        <div style="display: flex; gap: 3px; margin-right: 15px;">
+                            <button class="button" onclick="selectAll()" style="background: var(--success-color); padding: 8px 16px; font-size: 12px;">✅ Select All</button>
+                            <button class="button" onclick="clearSelection()" style="background: #6c757d; padding: 8px 16px; font-size: 12px;">❌ Clear</button>
                         </div>
-                        <div style="display: flex; gap: 5px;">
-                            <button class="button" onclick="exportSelected('csv')" id="exportSelectedCSV">📥 Export Selected CSV</button>
-                            <button class="button" onclick="exportSelected('json')" id="exportSelectedJSON">📥 Export Selected JSON</button>
-                            <button class="button" onclick="resetAll()" style="background: var(--error-color);">🔄 Reset All</button>
+                        <div style="display: flex; gap: 3px;">
+                            <button class="button" onclick="exportSelected('csv')" id="exportSelectedCSV" style="padding: 8px 16px; font-size: 12px;">📥 Export CSV</button>
+                            <button class="button" onclick="exportSelected('json')" id="exportSelectedJSON" style="padding: 8px 16px; font-size: 12px;">📥 Export JSON</button>
+                            <button class="button" onclick="resetAll()" style="background: var(--error-color); padding: 8px 16px; font-size: 12px;">🔄 Reset</button>
                         </div>
                     </div>
                 </div>
@@ -893,7 +894,6 @@
             <div class="tab-content" id="analytics-content">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2 class="section-title">Analytics</h2>
-                    <button class="button" onclick="resetAll()" style="background: var(--error-color);">🔄 Reset All</button>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
@@ -927,7 +927,6 @@
             <div class="tab-content" id="help-content">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h2 class="section-title">Extraction Guide</h2>
-                    <button class="button" onclick="resetAll()" style="background: var(--error-color);">🔄 Reset All</button>
                 </div>
                 
                 <div style="background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%); border: 1px solid var(--success-color); border-radius: 12px; padding: 25px; margin-bottom: 30px;">
@@ -981,19 +980,15 @@
                 </div>
 
                 <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-                    <h3 style="color: var(--text-color); margin-bottom: 15px;">📊 Expected Performance</h3>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                    <h3 style="color: var(--text-color); margin-bottom: 15px;">📊 Processing Capabilities</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
                         <div style="text-align: center; padding: 15px;">
-                            <div style="font-size: 2rem; color: var(--accent-color); margin-bottom: 10px;">300+</div>
-                            <div style="color: var(--text-color); font-size: 0.9rem;">Species from "Marine Invertebrates" guide</div>
+                            <div style="font-size: 1.5rem; color: var(--accent-color); margin-bottom: 10px;">Large Files</div>
+                            <div style="color: var(--text-color); font-size: 0.9rem;">Handles PDFs up to 1GB with hundreds of species</div>
                         </div>
                         <div style="text-align: center; padding: 15px;">
-                            <div style="font-size: 2rem; color: var(--success-color); margin-bottom: 10px;">98%</div>
-                            <div style="color: var(--text-color); font-size: 0.9rem;">Extraction accuracy for numbered entries</div>
-                        </div>
-                        <div style="text-align: center; padding: 15px;">
-                            <div style="font-size: 2rem; color: var(--warning-color); margin-bottom: 10px;">5-15min</div>
-                            <div style="color: var(--text-color); font-size: 0.9rem;">Processing time for 500+ page PDFs</div>
+                            <div style="font-size: 1.5rem; color: var(--success-color); margin-bottom: 10px;">Multi-format</div>
+                            <div style="color: var(--text-color); font-size: 0.9rem;">Numbered entries, family headers, bilingual content</div>
                         </div>
                     </div>
                 </div>
@@ -1079,7 +1074,7 @@
         });
 
         function initializeTheme() {
-            const savedTheme = localStorage.getItem('marineid_theme') || 'light';
+            const savedTheme = localStorage.getItem('marineid_theme') || 'system';
             setTheme(savedTheme);
         }
 
@@ -1094,7 +1089,13 @@
             if (themeBtn) themeBtn.classList.add('active');
             
             // Apply theme
-            document.documentElement.setAttribute('data-theme', theme);
+            if (theme === 'system') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+            
             localStorage.setItem('marineid_theme', theme);
         }
 
