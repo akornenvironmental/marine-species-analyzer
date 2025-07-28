@@ -633,7 +633,7 @@
                         <div style="font-size: 3rem; margin-bottom: 15px;">📄</div>
                         <div style="font-size: 1.2rem; font-weight: 600; color: var(--text-color); margin-bottom: 8px;">Upload Marine Field Guide PDF</div>
                         <div style="color: var(--text-color); opacity: 0.7; margin-bottom: 20px;">Drag and drop your PDF here, or click to browse</div>
-                        <button style="background: var(--accent-color); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">
+                        <button style="background: var(--accent-color); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;">
                             Choose PDF File
                         </button>
                         <input type="file" id="fileInput" style="display: none;" accept=".pdf" onchange="handleFileUpload(event)">
@@ -657,13 +657,13 @@
                                       placeholder="Enter species name(s) here, one per line or separated by commas"></textarea>
                             
                             <div style="display: flex; gap: 10px; margin-top: 15px;">
-                                <button onclick="processManualSpecies()" style="background: var(--accent-color); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                                <button onclick="processManualSpecies()" style="background: var(--accent-color); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 14px;">
                                     🔍 Verify Species
                                 </button>
-                                <button onclick="clearManualInput()" style="background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                                <button onclick="clearManualInput()" style="background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 14px;">
                                     🗑️ Clear
                                 </button>
-                                <button onclick="loadSampleSpecies()" style="background: var(--success-color); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                                <button onclick="loadSampleSpecies()" style="background: var(--success-color); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 14px;">
                                     📋 Examples
                                 </button>
                             </div>
@@ -937,6 +937,98 @@
         </div>
     </div>
 
+    <!-- Language Selection Modal -->
+    <div id="languageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10003; animation: fadeIn 0.3s ease;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border-radius: 15px; padding: 40px; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <div>
+                <h2 style="color: var(--accent-color); margin-bottom: 10px; font-size: 1.8rem; font-family: 'Orpheus Pro', serif;">🌍 Welcome / Bienvenido / Bienvenue</h2>
+                <p style="color: var(--text-color); margin-bottom: 30px; opacity: 0.8; font-family: 'Josefin Sans', sans-serif;">Please select your preferred language / Seleccione su idioma / Sélectionnez votre langue</p>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 30px;">
+                <div class="language-option selected" onclick="selectLanguage('en')" data-lang="en" style="background: var(--light-bg); border: 2px solid var(--border-color); border-radius: 12px; padding: 20px 10px; cursor: pointer; transition: all 0.3s ease; text-align: center;">
+                    <span style="font-size: 2rem; margin-bottom: 8px; display: block;">🇺🇸</span>
+                    <div style="font-weight: 600; font-size: 14px; font-family: 'Josefin Sans', sans-serif;">English</div>
+                </div>
+                <div class="language-option" onclick="selectLanguage('es')" data-lang="es" style="background: var(--light-bg); border: 2px solid var(--border-color); border-radius: 12px; padding: 20px 10px; cursor: pointer; transition: all 0.3s ease; text-align: center;">
+                    <span style="font-size: 2rem; margin-bottom: 8px; display: block;">🇪🇸</span>
+                    <div style="font-weight: 600; font-size: 14px; font-family: 'Josefin Sans', sans-serif;">Español</div>
+                </div>
+                <div class="language-option" onclick="selectLanguage('fr')" data-lang="fr" style="background: var(--light-bg); border: 2px solid var(--border-color); border-radius: 12px; padding: 20px 10px; cursor: pointer; transition: all 0.3s ease; text-align: center;">
+                    <span style="font-size: 2rem; margin-bottom: 8px; display: block;">🇫🇷</span>
+                    <div style="font-weight: 600; font-size: 14px; font-family: 'Josefin Sans', sans-serif;">Français</div>
+                </div>
+            </div>
+            <button onclick="confirmLanguageSelection()" style="background: var(--success-color); color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; min-width: 120px; font-family: 'Josefin Sans', sans-serif;">Continue / Continuar / Continuer</button>
+        </div>
+    </div>
+
+    <!-- Legal Disclaimer Modal -->
+    <div id="legalModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10004; animation: fadeIn 0.3s ease;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border-radius: 15px; padding: 30px; max-width: 700px; width: 90%; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <h3 style="color: var(--accent-color); margin-bottom: 20px; text-align: center; font-family: 'Orpheus Pro', serif;">⚖️ MarineID Pro - Terms of Use & User Registration</h3>
+            
+            <!-- User Registration Form -->
+            <div style="margin-bottom: 30px;">
+                <h4 style="color: var(--accent-color); margin-bottom: 15px; font-family: 'Josefin Sans', sans-serif;">📋 User Information</h4>
+                <p style="margin-bottom: 15px; font-size: 14px; opacity: 0.8; font-family: 'Josefin Sans', sans-serif;">Please provide your information to access MarineID Pro. This helps us improve the tool and provide support.</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; font-family: 'Josefin Sans', sans-serif;">First Name *</label>
+                        <input type="text" id="firstName" required style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-family: inherit;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; font-family: 'Josefin Sans', sans-serif;">Last Name *</label>
+                        <input type="text" id="lastName" required style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-family: inherit;">
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; font-family: 'Josefin Sans', sans-serif;">Email Address *</label>
+                        <input type="email" id="userEmail" required style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-family: inherit;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; margin-bottom: 5px; font-family: 'Josefin Sans', sans-serif;">Organization *</label>
+                        <input type="text" id="organization" required style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-family: inherit;">
+                    </div>
+                </div>
+                
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px; font-family: 'Josefin Sans', sans-serif;">Role/Position *</label>
+                    <select id="userRole" required style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; font-family: inherit;">
+                        <option value="">Select your role</option>
+                        <option value="researcher">Researcher/Scientist</option>
+                        <option value="student">Student</option>
+                        <option value="educator">Educator/Professor</option>
+                        <option value="consultant">Environmental Consultant</option>
+                        <option value="government">Government Agency</option>
+                        <option value="ngo">NGO/Non-profit</option>
+                        <option value="industry">Industry Professional</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Legal Terms -->
+            <div style="font-size: 0.9rem; line-height: 1.6; font-family: 'Josefin Sans', sans-serif;">
+                <p><strong>By proceeding, you acknowledge and agree to:</strong></p>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li><strong>File Handling:</strong> PDFs are uploaded to Google Drive, processed, and automatically deleted after 30 days</li>
+                    <li><strong>Research Tool:</strong> Results are for research/educational use only - verify with authoritative sources</li>
+                    <li><strong>No Warranty:</strong> Tool provided "as is" - users responsible for validating outputs</li>
+                    <li><strong>Copyright:</strong> Users must own or have rights to upload PDFs</li>
+                    <li><strong>Large Files:</strong> 1GB max upload - processing may take several minutes</li>
+                </ul>
+                <p style="margin-top: 20px;"><strong>Clicking "I Agree & Continue" confirms you accept these terms and our data handling practices.</strong></p>
+            </div>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                <button onclick="acceptLegalTermsWithRegistration()" style="padding: 12px 30px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; min-width: 120px; background: var(--success-color); color: white; font-family: 'Josefin Sans', sans-serif;">I Agree & Continue</button>
+                <button onclick="declineLegalTerms()" style="padding: 12px 30px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; min-width: 120px; background: #6c757d; color: white; font-family: 'Josefin Sans', sans-serif;">Decline</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <div style="background: var(--light-bg); border-top: 1px solid var(--border-color); padding: 20px; margin-top: 40px; text-align: center; font-size: 0.9rem; color: var(--text-color); opacity: 0.8;">
         <div style="max-width: 1400px; margin: 0 auto;">
@@ -995,12 +1087,94 @@
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
             initializeTheme();
-            console.log('Enhanced MarineID Pro initialized with PDF.js support');
+            checkLanguageAndLegalAcceptance();
+            console.log('MarineID Pro initialized with PDF.js support');
         });
 
         function initializeTheme() {
             const savedTheme = localStorage.getItem('msa_theme') || 'system';
             setTheme(savedTheme);
+        }
+
+        function checkLanguageAndLegalAcceptance() {
+            const languageSelected = localStorage.getItem('msa_language_selected');
+            const legalAccepted = localStorage.getItem('msa_legal_accepted');
+            
+            if (!languageSelected) {
+                showLanguageSelection();
+            } else if (!legalAccepted) {
+                showLegalModal();
+            } else {
+                initializeApp();
+            }
+        }
+
+        function showLanguageSelection() {
+            document.getElementById('languageModal').style.display = 'block';
+        }
+
+        function selectLanguage(lang) {
+            // Update selected language option
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.classList.remove('selected');
+                option.style.borderColor = 'var(--border-color)';
+                option.style.background = 'var(--light-bg)';
+            });
+            const selected = document.querySelector(`[data-lang="${lang}"]`);
+            selected.classList.add('selected');
+            selected.style.borderColor = 'var(--accent-color)';
+            selected.style.background = 'var(--accent-color)';
+            selected.style.color = 'white';
+            
+            // Store selection temporarily
+            window.selectedLanguage = lang;
+        }
+
+        function confirmLanguageSelection() {
+            const selectedLang = window.selectedLanguage || 'en';
+            localStorage.setItem('msa_language_selected', 'true');
+            localStorage.setItem('msa_current_language', selectedLang);
+            
+            // Set the language
+            setLanguage(selectedLang);
+            
+            // Hide language modal and show legal modal
+            document.getElementById('languageModal').style.display = 'none';
+            showLegalModal();
+        }
+
+        function showLegalModal() {
+            document.getElementById('legalModal').style.display = 'block';
+        }
+
+        function acceptLegalTermsWithRegistration() {
+            // Simple validation
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            const organization = document.getElementById('organization').value.trim();
+            const role = document.getElementById('userRole').value;
+            
+            if (!firstName || !lastName || !email || !organization || !role) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Store acceptance and user info
+            localStorage.setItem('msa_legal_accepted', 'true');
+            localStorage.setItem('msa_legal_date', new Date().toISOString());
+            
+            document.getElementById('legalModal').style.display = 'none';
+            initializeApp();
+        }
+
+        function declineLegalTerms() {
+            alert('You must accept the terms to use this tool.');
+            window.location.href = 'https://akornenvironmental.com';
+        }
+
+        function initializeApp() {
+            console.log('MarineID Pro application ready');
         }
 
         function setTheme(theme) {
@@ -1230,8 +1404,8 @@
             console.log(`Found ${scientificMatches.length} scientific name matches`);
             
             scientificMatches.forEach(match => {
-                const [fullMatch, genus, species, author] = match;
-                const scientificName = `${genus} ${species}`;
+                const [fullMatch, genus, speciesName, author] = match;
+                const scientificName = `${genus} ${speciesName}`;
                 
                 if (!seenNames.has(scientificName)) {
                     seenNames.add(scientificName);
@@ -1239,7 +1413,7 @@
                     species.push({
                         scientificName: scientificName,
                         genus: genus,
-                        species: species,
+                        species: speciesName,
                         author: author.trim(),
                         commonNames: [],
                         fullMatch: fullMatch,
