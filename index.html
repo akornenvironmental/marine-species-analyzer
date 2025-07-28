@@ -63,53 +63,27 @@
             }
         }
 
-        /* Theme Toggle */
-        .theme-selector {
+        /* Results pagination */
+        .results-pagination {
             display: flex;
-            gap: 5px;
             align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        .theme-btn {
-            background: none;
+        .pagination-label {
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .pagination-select {
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
+            color: var(--text-color);
             padding: 5px 10px;
             border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            color: var(--text-color);
-            transition: all 0.2s;
-        }
-
-        .theme-btn.active {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-
-        .theme-btn:hover:not(.active) {
-            background: var(--light-bg);
-        }
-
-        .lang-btn {
-            background: none;
-            border: 1px solid var(--border-color);
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            color: var(--text-color);
-            transition: all 0.2s;
-        }
-
-        .lang-btn.active {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-
-        .lang-btn:hover:not(.active) {
-            background: var(--light-bg);
+            font-size: 14px;
         }
 
         /* Main Layout */
@@ -220,6 +194,8 @@
             background: var(--card-bg);
             display: flex;
             flex-direction: column;
+            min-height: 600px;
+            height: auto;
         }
 
         .content-header {
@@ -229,6 +205,61 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Theme Selector */
+        .theme-selector {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .theme-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-color);
+            transition: all 0.2s;
+        }
+
+        .theme-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .theme-btn:hover:not(.active) {
+            background: var(--light-bg);
+        }
+
+        .lang-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-color);
+            transition: all 0.2s;
+        }
+
+        .lang-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .lang-btn:hover:not(.active) {
+            background: var(--light-bg);
         }
 
         .content-title h1 {
@@ -891,28 +922,6 @@
         This tool is optimized for desktop use. A mobile-friendly version will be available soon. For the best experience, please use a desktop or laptop computer.
     </div>
 
-    <!-- Top Navigation Bar with Language & Theme Selectors -->
-    <div style="background: var(--card-bg); border-bottom: 1px solid var(--border-color); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <strong>🐚 Marine Species Analyzer</strong>
-        </div>
-        <div style="display: flex; gap: 20px; align-items: center;">
-            <!-- Theme Selector -->
-            <div class="theme-selector">
-                <span style="font-size: 12px; margin-right: 8px;">Theme:</span>
-                <button class="theme-btn active" onclick="setTheme('system')" data-theme="system">System</button>
-                <button class="theme-btn" onclick="setTheme('light')" data-theme="light">Light</button>
-                <button class="theme-btn" onclick="setTheme('dark')" data-theme="dark">Dark</button>
-            </div>
-            <!-- Language Selector -->
-            <div style="display: flex; gap: 5px;">
-                <button class="lang-btn active" onclick="setLanguage('en')" data-lang="en">English</button>
-                <button class="lang-btn" onclick="setLanguage('es')" data-lang="es">Español</button>
-                <button class="lang-btn" onclick="setLanguage('fr')" data-lang="fr">Français</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Layout -->
     <div class="main-layout">
         <!-- AI Assistant Panel -->
@@ -945,9 +954,25 @@
                     <h1>🐚 Marine Species Analyzer</h1>
                     <p>Professional PDF extraction & multi-database verification tool</p>
                 </div>
-                <div class="status-indicator">
-                    <div class="status-dot"></div>
-                    <span>System Online</span>
+                <div class="header-controls">
+                    <!-- Theme Selector -->
+                    <div class="theme-selector">
+                        <span style="font-size: 12px; margin-right: 8px;">Theme:</span>
+                        <button class="theme-btn active" onclick="setTheme('system')" data-theme="system">System</button>
+                        <button class="theme-btn" onclick="setTheme('light')" data-theme="light">Light</button>
+                        <button class="theme-btn" onclick="setTheme('dark')" data-theme="dark">Dark</button>
+                    </div>
+                    <!-- Language Selector -->
+                    <div style="display: flex; gap: 5px;">
+                        <button class="lang-btn active" onclick="setLanguage('en')" data-lang="en">English</button>
+                        <button class="lang-btn" onclick="setLanguage('es')" data-lang="es">Español</button>
+                        <button class="lang-btn" onclick="setLanguage('fr')" data-lang="fr">Français</button>
+                    </div>
+                    <!-- Status Indicator -->
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span>System Online</span>
+                    </div>
                 </div>
             </div>
 
@@ -1093,6 +1118,18 @@ Blue rockfish"></textarea>
                     <span class="stat-badge stat-synonyms" id="synonymCount">0 Synonyms</span>
                     <span class="stat-badge stat-not-found" id="notFoundCount">0 Not Found</span>
                 </div>
+
+                <!-- Results Pagination -->
+                <div class="results-pagination">
+                    <span class="pagination-label">Show:</span>
+                    <select class="pagination-select" id="resultsPerPage" onchange="updateResultsDisplay()">
+                        <option value="20">20 species</option>
+                        <option value="50">50 species</option>
+                        <option value="100">100 species</option>
+                        <option value="all">All species</option>
+                    </select>
+                    <span class="pagination-label" id="resultsInfo">Showing 0 of 0 species</span>
+                </div>
                 
                 <!-- Cards View -->
                 <div class="species-grid" id="speciesGrid">
@@ -1202,34 +1239,121 @@ Blue rockfish"></textarea>
             <div class="tab-content" id="help-content">
                 <h2>User Guide & Documentation</h2>
                 
-                <div style="background: var(--light-bg); padding: 25px; border-radius: 12px; margin-bottom: 30px;">
-                    <h3>🚀 Quick Start</h3>
-                    <ol>
-                        <li>Upload PDF: Drag and drop a marine field guide or species list PDF</li>
-                        <li>Wait for Processing: OCR extracts text and AI parses species names</li>
-                        <li>Review Results: Check verification results in the Results tab</li>
-                        <li>Export Data: Download CSV or generate reports for analysis</li>
-                    </ol>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                    <!-- Quick Start -->
+                    <div style="background: var(--light-bg); padding: 20px; border-radius: 12px;">
+                        <h3>🚀 Quick Start</h3>
+                        <ol style="margin: 15px 0; padding-left: 20px; line-height: 1.6;">
+                            <li><strong>Upload PDF:</strong> Drag and drop a marine field guide or species list PDF</li>
+                            <li><strong>Wait for Processing:</strong> OCR extracts text and AI parses species names</li>
+                            <li><strong>Review Results:</strong> Check verification results in the Results tab</li>
+                            <li><strong>Export Data:</strong> Download CSV or generate reports for analysis</li>
+                        </ol>
+                    </div>
+
+                    <!-- Common Issues -->
+                    <div style="background: var(--light-bg); padding: 20px; border-radius: 12px;">
+                        <h3>⚠️ Common Issues</h3>
+                        <ul style="margin: 15px 0; padding-left: 20px; line-height: 1.6;">
+                            <li><strong>Species Not Found:</strong> Check spelling, try common names, or verify it's a marine species</li>
+                            <li><strong>Low Confidence:</strong> May indicate taxonomic uncertainty or data quality issues</li>
+                            <li><strong>PDF Processing Slow:</strong> Large files (>100MB) may take several minutes</li>
+                            <li><strong>Missing Species:</strong> OCR may miss faint text or unusual formatting</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div style="background: var(--light-bg); padding: 25px; border-radius: 12px; margin-bottom: 30px;">
-                    <h3>🗄️ Databases Used</h3>
-                    <ul>
-                        <li><strong>WoRMS:</strong> World Register of Marine Species (authoritative taxonomy)</li>
-                        <li><strong>GBIF:</strong> Global Biodiversity Information Facility (occurrence data)</li>
-                        <li><strong>iNaturalist:</strong> Citizen science observations and photos</li>
-                        <li><strong>OBIS:</strong> Ocean Biodiversity Information System (marine-specific data)</li>
-                    </ul>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                    <!-- Databases -->
+                    <div style="background: var(--light-bg); padding: 20px; border-radius: 12px;">
+                        <h3>🗄️ Databases Used</h3>
+                        <ul style="margin: 15px 0; padding-left: 20px; line-height: 1.6;">
+                            <li><strong>WoRMS:</strong> World Register of Marine Species (authoritative taxonomy)</li>
+                            <li><strong>GBIF:</strong> Global Biodiversity Information Facility (occurrence data)</li>
+                            <li><strong>iNaturalist:</strong> Citizen science observations and photos</li>
+                            <li><strong>OBIS:</strong> Ocean Biodiversity Information System (marine-specific data)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Best Practices -->
+                    <div style="background: var(--light-bg); padding: 20px; border-radius: 12px;">
+                        <h3>✅ Best Practices</h3>
+                        <ul style="margin: 15px 0; padding-left: 20px; line-height: 1.6;">
+                            <li><strong>File Quality:</strong> Use high-resolution PDFs with clear text</li>
+                            <li><strong>Manual Review:</strong> Always verify results against authoritative sources</li>
+                            <li><strong>Data Export:</strong> Export results before closing browser</li>
+                            <li><strong>Large Files:</strong> Split very large PDFs for faster processing</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div style="background: var(--light-bg); padding: 25px; border-radius: 12px;">
-                    <h3>📏 Standardized Units</h3>
-                    <ul>
-                        <li><strong>Size:</strong> Converted to meters (m) for length, kilograms (kg) for weight</li>
-                        <li><strong>Depth:</strong> Converted to meters (m) below sea level</li>
-                        <li><strong>Temperature:</strong> Converted to Celsius (°C)</li>
-                        <li><strong>Original values:</strong> Displayed alongside standardized units</li>
-                    </ul>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                    <!-- Standardized Units -->
+                    <div style="background: var(--light-bg); padding: 20px; border-radius: 12px;">
+                        <h3>📏 Standardized Units</h3>
+                        <ul style="margin: 15px 0; padding-left: 20px; line-height: 1.6;">
+                            <li><strong>Size:</strong> Converted to meters (m) for length, kilograms (kg) for weight</li>
+                            <li><strong>Depth:</strong> Converted to meters (m) below sea level</li>
+                            <li><strong>Temperature:</strong> Converted to Celsius (°C)</li>
+                            <li><strong>Original values:</strong> Always displayed alongside standardized units</li>
+                        </ul>
+                    </div>
+
+                    <!-- Data Interpretation -->
+                    <div style="background: var(--light-bg); padding: 20px; border-radius: 12px;">
+                        <h3>📊 Data Interpretation</h3>
+                        <ul style="margin: 15px 0; padding-left: 20px; line-height: 1.6;">
+                            <li><strong>Verified (Green):</strong> Found in primary databases with high confidence</li>
+                            <li><strong>Synonym (Yellow):</strong> Valid name but may have taxonomic synonyms</li>
+                            <li><strong>Not Found (Red):</strong> Not located in marine databases - check spelling</li>
+                            <li><strong>Confidence %:</strong> Based on database matches and data quality</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Support -->
+                <div style="background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%); border: 1px solid #2196f3; border-radius: 12px; padding: 25px; margin-bottom: 20px;">
+                    <h3 style="color: #1976d2; margin-bottom: 15px;">📧 Need Help?</h3>
+                    <p style="margin-bottom: 15px; line-height: 1.6;">
+                        Having issues or questions about the Marine Species Analyzer? Our team is here to help!
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h4 style="margin-bottom: 10px;">🔬 Technical Support</h4>
+                            <button onclick="sendSupportEmail('technical')" style="background: #2196f3; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%;">
+                                Email Aaron Kornbluth
+                            </button>
+                            <p style="font-size: 0.9rem; margin-top: 8px; opacity: 0.8;">Marine biology expertise, tool functionality</p>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 10px;">💻 Development Support</h4>
+                            <button onclick="sendSupportEmail('development')" style="background: #4caf50; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%;">
+                                Email Jake Spencer
+                            </button>
+                            <p style="font-size: 0.9rem; margin-top: 8px; opacity: 0.8;">Bug reports, feature requests</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keyboard Shortcuts -->
+                <div style="background: var(--light-bg); padding: 20px; border-radius: 12px;">
+                    <h3>⌨️ Keyboard Shortcuts</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                        <div>
+                            <ul style="list-style: none; padding: 0; line-height: 1.8;">
+                                <li><kbd style="background: var(--card-bg); padding: 2px 6px; border: 1px solid var(--border-color); border-radius: 3px;">Ctrl/Cmd + U</kbd> - Upload Tab</li>
+                                <li><kbd style="background: var(--card-bg); padding: 2px 6px; border: 1px solid var(--border-color); border-radius: 3px;">Ctrl/Cmd + R</kbd> - Results Tab</li>
+                                <li><kbd style="background: var(--card-bg); padding: 2px 6px; border: 1px solid var(--border-color); border-radius: 3px;">Ctrl/Cmd + A</kbd> - Analytics Tab</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <ul style="list-style: none; padding: 0; line-height: 1.8;">
+                                <li><kbd style="background: var(--card-bg); padding: 2px 6px; border: 1px solid var(--border-color); border-radius: 3px;">Ctrl/Cmd + E</kbd> - Export CSV</li>
+                                <li><kbd style="background: var(--card-bg); padding: 2px 6px; border: 1px solid var(--border-color); border-radius: 3px;">Ctrl/Cmd + G</kbd> - Generate Report</li>
+                                <li><kbd style="background: var(--card-bg); padding: 2px 6px; border: 1px solid var(--border-color); border-radius: 3px;">Ctrl/Cmd + H</kbd> - Help Tab</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1299,6 +1423,8 @@ Blue rockfish"></textarea>
         let currentLanguage = 'en';
         let currentView = 'cards';
         let uploadedPDFInfo = null;
+        let currentPage = 1;
+        let resultsPerPage = 20;
 
         // Configuration
         const CONFIG = {
@@ -1481,6 +1607,23 @@ Purple sea star`
                 document.getElementById('speciesGrid').style.display = 'none';
                 document.getElementById('tableView').style.display = 'block';
             }
+        }
+
+        // Results pagination and display
+        function updateResultsDisplay() {
+            const selector = document.getElementById('resultsPerPage');
+            resultsPerPage = selector.value === 'all' ? speciesData.length : parseInt(selector.value);
+            currentPage = 1;
+            populateResults();
+        }
+
+        function getDisplayedSpecies() {
+            if (resultsPerPage === 'all' || resultsPerPage >= speciesData.length) {
+                return speciesData;
+            }
+            const startIndex = (currentPage - 1) * resultsPerPage;
+            const endIndex = startIndex + resultsPerPage;
+            return speciesData.slice(startIndex, endIndex);
         }
 
         // File upload handlers
@@ -1824,27 +1967,54 @@ Purple sea star`
 
         function populateResults() {
             updateResultsStats();
+            updateResultsInfo();
             populateSpeciesCards();
             populateSpeciesTable();
         }
 
-        function updateResultsStats() {
-            const verified = speciesData.filter(s => s.status === 'verified').length;
-            const synonyms = speciesData.filter(s => s.status === 'synonym').length;
-            const notFound = speciesData.filter(s => s.status === 'not-found').length;
-
-            document.getElementById('verifiedCount').textContent = `${verified} Verified`;
-            document.getElementById('synonymCount').textContent = `${synonyms} Synonyms`;
-            document.getElementById('notFoundCount').textContent = `${notFound} Not Found`;
+        function updateResultsInfo() {
+            const info = document.getElementById('resultsInfo');
+            if (info) {
+                const displayedCount = getDisplayedSpecies().length;
+                const totalCount = speciesData.length;
+                info.textContent = `Showing ${displayedCount} of ${totalCount} species`;
+            }
         }
 
         function populateSpeciesCards() {
             const grid = document.getElementById('speciesGrid');
             grid.innerHTML = '';
 
-            speciesData.forEach(species => {
+            const displayedSpecies = getDisplayedSpecies();
+            displayedSpecies.forEach(species => {
                 const card = createSpeciesCard(species);
                 grid.appendChild(card);
+            });
+        }
+
+        function populateSpeciesTable() {
+            const tbody = document.getElementById('speciesTableBody');
+            tbody.innerHTML = '';
+
+            const displayedSpecies = getDisplayedSpecies();
+            displayedSpecies.forEach(species => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="scientific-name">${species.scientificName}</td>
+                    <td>${species.commonNames.join(', ')}</td>
+                    <td><span class="status-badge status-${species.status}">${species.status.toUpperCase()}</span></td>
+                    <td>${species.confidence}%</td>
+                    <td>
+                        <div>
+                            <span>${species.standardizedSize.value.toFixed(2)} ${species.standardizedSize.unit}</span>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">${species.standardizedSize.original}</div>
+                        </div>
+                    </td>
+                    <td>${species.habitat}</td>
+                    <td style="font-size: 0.85rem;">${species.citation}</td>
+                    <td>${species.sourcePage}</td>
+                `;
+                tbody.appendChild(row);
             });
         }
 
@@ -1912,6 +2082,16 @@ Purple sea star`
             `;
 
             return div;
+        }
+
+        function updateResultsStats() {
+            const verified = speciesData.filter(s => s.status === 'verified').length;
+            const synonyms = speciesData.filter(s => s.status === 'synonym').length;
+            const notFound = speciesData.filter(s => s.status === 'not-found').length;
+
+            document.getElementById('verifiedCount').textContent = `${verified} Verified`;
+            document.getElementById('synonymCount').textContent = `${synonyms} Synonyms`;
+            document.getElementById('notFoundCount').textContent = `${notFound} Not Found`;
         }
 
         function populateSpeciesTable() {
@@ -2141,6 +2321,37 @@ Purple sea star`
             alert(`AI Helper: ${response}`);
             
             input.value = '';
+        }
+
+        // Support email functions
+        function sendSupportEmail(type) {
+            const subject = type === 'technical' ? 
+                'Marine Species Analyzer - Technical Support Request' : 
+                'Marine Species Analyzer - Development Support Request';
+            
+            const recipient = type === 'technical' ? 
+                'aaron.kornbluth@gmail.com' : 
+                'jakespencer6596@gmail.com';
+            
+            const body = `Hello ${type === 'technical' ? 'Aaron' : 'Jake'},
+
+I need help with the Marine Species Analyzer tool. 
+
+Issue Description:
+[Please describe your issue or question here]
+
+Browser: ${navigator.userAgent}
+Tool Version: 1.0
+Current Language: ${currentLanguage}
+Species Data Count: ${speciesData.length}
+
+Thank you for your assistance!
+
+Best regards,
+[Your name]`;
+
+            const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(mailtoLink);
         }
 
         // Message display functions
