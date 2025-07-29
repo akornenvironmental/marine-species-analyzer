@@ -1282,144 +1282,145 @@
             }
         }
 
-        // Species extraction - FIXED to avoid random text capture
+        // Species extraction - FIXED to properly capture numbered entries
         async function speciesExtraction(fullText, progressContainer) {
-            console.log('🎯 Starting CORRECTED species extraction...');
+            console.log('🎯 Starting FIXED species extraction...');
             
             const species = [];
             const processedNames = new Set();
             let extractionProgress = 40;
             
-            // CORRECTED regex patterns with much stricter validation
+            // FIXED regex patterns - removed ^ anchors that were preventing matches
             const patterns = [
-                // Pattern 1: Numbered entries with author in parentheses - MOST RELIABLE
-                // Matches: "649. Eubranchus madapamensis (Rao, 1969)"
+                // Pattern 1: Numbered entries with author in parentheses - FIXED
+                // Matches: "555. Okenia cochimi Gosliner & Bertsch, 2004"
                 {
-                    name: 'numbered_with_parentheses',
-                    regex: /^(\d{1,4})\.\s+([A-Z][a-z]{2,15})\s+([a-z]{3,20}(?:\s+[a-z]{3,15})?)\s+\(([^)]{4,40})\)/gm,
+                    name: 'numbered_with_author_year',
+                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25})\s+([A-Z][a-zA-Z\s&.,]{4,50}\d{4})/g,
                     priority: 1
                 },
                 
-                // Pattern 2: Numbered entries with author after space - RELIABLE
-                // Matches: "650. Eubranchus steinbecki Behrens, 1987"
+                // Pattern 2: Numbered entries with author in parentheses
+                // Matches: "649. Eubranchus madapamensis (Rao, 1969)"
                 {
-                    name: 'numbered_with_author',
-                    regex: /^(\d{1,4})\.\s+([A-Z][a-z]{2,15})\s+([a-z]{3,20})\s+([A-Z][a-z]+(?:\s+et\s+al\.?)?,?\s+\d{4})/gm,
+                    name: 'numbered_with_parentheses',
+                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25}(?:\s+[a-z]{2,15})?)\s+\(([^)]{4,50})\)/g,
                     priority: 2
                 },
                 
-                // Pattern 3: Family headers - SAFE
-                // Matches: "Eubranchidae", "Aeolidiidae"
-                {
-                    name: 'family_headers',
-                    regex: /^([A-Z][a-z]{4,25}idae)\s*$/gm,
-                    priority: 0,
-                    isHeader: true
-                },
-                
-                // Pattern 4: Simple numbered entries - MOST RESTRICTIVE
-                // Matches: "651. Aeolidia loui" but NOT random text
+                // Pattern 3: Simple numbered entries
+                // Matches: "651. Aeolidia loui"
                 {
                     name: 'numbered_simple',
-                    regex: /^(\d{1,4})\.\s+([A-Z][a-z]{2,15})\s+([a-z]{3,20})(?=\s|$)/gm,
+                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25})(?=\s|$)/g,
                     priority: 3
+                },
+                
+                // Pattern 4: Family headers - kept separate
+                {
+                    name: 'family_headers',
+                    regex: /\b([A-Z][a-z]{4,25}idae)\b/g,
+                    priority: 0,
+                    isHeader: true
                 }
             ];
             
             let currentFamily = 'Unknown Family';
             
-            // CRITICAL: Split text into lines and process line by line for better accuracy
-            const lines = fullText.split('\n');
+            // Process patterns in priority order
+            patterns.sort((a, b) => a.priority - b.priority);
             
             for (let patternIndex = 0; patternIndex < patterns.length; patternIndex++) {
                 const pattern = patterns[patternIndex];
                 let foundCount = 0;
                 
-                // Process each line individually to avoid capturing across line boundaries
-                for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
-                    const line = lines[lineIndex].trim();
-                    
-                    // Skip obviously bad lines
-                    if (line.length > 200 || line.includes('http') || line.includes('©') || 
-                        line.includes('Bibliography') || line.includes('References') ||
-                        line.toLowerCase().includes('figure') || line.toLowerCase().includes('plate')) {
+                // Reset regex lastIndex to ensure we get all matches
+                pattern.regex.lastIndex = 0;
+                
+                let match;
+                while ((match = pattern.regex.exec(fullText)) !== null) {
+                    if (pattern.isHeader) {
+                        // Update current family
+                        const familyName = match[1];
+                        if (familyName.endsWith('idae') && familyName.length > 6) {
+                            currentFamily = familyName;
+                            console.log(`📋 Found family header - ${currentFamily}`);
+                        }
                         continue;
                     }
                     
-                    const matches = Array.from(line.matchAll(pattern.regex));
+                    // Extract species data based on pattern
+                    let speciesEntry = null;
                     
-                    for (const match of matches) {
-                        if (pattern.isHeader) {
-                            // This is a family header
-                            currentFamily = match[1];
-                            console.log(`📋 Found family header - ${currentFamily}`);
-                            continue;
+                    if (pattern.name === 'numbered_with_author_year') {
+                        // "555. Okenia cochimi Gosliner & Bertsch, 2004"
+                        const [, number, genus, species, authorYear] = match;
+                        if (isStrictlyValidSpecies(genus, species)) {
+                            speciesEntry = {
+                                number: parseInt(number),
+                                genus: genus.trim(),
+                                species: species.trim(),
+                                scientificName: `${genus.trim()} ${species.trim()}`,
+                                authorYear: authorYear.trim(),
+                                family: currentFamily,
+                                extractionMethod: pattern.name,
+                                extractionPattern: 'numbered_with_author_year'
+                            };
                         }
-                        
-                        // Extract species data based on pattern with STRICT validation
-                        let speciesEntry = null;
-                        
-                        if (pattern.name === 'numbered_with_parentheses') {
-                            const [, number, genus, species, authorYear] = match;
-                            if (isStrictlyValidSpecies(genus, species)) {
-                                speciesEntry = {
-                                    number: parseInt(number),
-                                    genus: genus,
-                                    species: species,
-                                    scientificName: `${genus} ${species}`,
-                                    authorYear: authorYear,
-                                    family: currentFamily,
-                                    extractionMethod: pattern.name,
-                                    extractionPattern: 'numbered_with_parentheses'
-                                };
-                            }
-                        } else if (pattern.name === 'numbered_with_author') {
-                            const [, number, genus, species, authorYear] = match;
-                            if (isStrictlyValidSpecies(genus, species)) {
-                                speciesEntry = {
-                                    number: parseInt(number),
-                                    genus: genus,
-                                    species: species,
-                                    scientificName: `${genus} ${species}`,
-                                    authorYear: authorYear,
-                                    family: currentFamily,
-                                    extractionMethod: pattern.name,
-                                    extractionPattern: 'numbered_with_author'
-                                };
-                            }
-                        } else if (pattern.name === 'numbered_simple') {
-                            const [, number, genus, species] = match;
-                            if (isStrictlyValidSpecies(genus, species)) {
-                                speciesEntry = {
-                                    number: parseInt(number),
-                                    genus: genus,
-                                    species: species,
-                                    scientificName: `${genus} ${species}`,
-                                    authorYear: 'Unknown',
-                                    family: currentFamily,
-                                    extractionMethod: pattern.name,
-                                    extractionPattern: 'numbered_simple'
-                                };
-                            }
+                    } else if (pattern.name === 'numbered_with_parentheses') {
+                        // "649. Eubranchus madapamensis (Rao, 1969)"
+                        const [, number, genus, species, authorYear] = match;
+                        if (isStrictlyValidSpecies(genus, species)) {
+                            speciesEntry = {
+                                number: parseInt(number),
+                                genus: genus.trim(),
+                                species: species.trim(),
+                                scientificName: `${genus.trim()} ${species.trim()}`,
+                                authorYear: authorYear.trim(),
+                                family: currentFamily,
+                                extractionMethod: pattern.name,
+                                extractionPattern: 'numbered_with_parentheses'
+                            };
                         }
-                        
-                        // STRICT validation and deduplication
-                        if (speciesEntry && 
-                            isStrictlyValidSpecies(speciesEntry.genus, speciesEntry.species) && 
-                            !processedNames.has(speciesEntry.scientificName)) {
-                            
-                            // Add context for later data enrichment
-                            const contextLines = lines.slice(Math.max(0, lineIndex - 2), lineIndex + 5);
-                            speciesEntry.context = contextLines.join('\n');
-                            speciesEntry.pageContext = findPageContext(fullText, fullText.indexOf(line));
-                            speciesEntry.sourceLine = line;
-                            
-                            species.push(speciesEntry);
-                            processedNames.add(speciesEntry.scientificName);
-                            foundCount++;
-                            
-                            console.log(`✅ Added ${speciesEntry.scientificName} (Entry #${speciesEntry.number}, Family: ${speciesEntry.family})`);
+                    } else if (pattern.name === 'numbered_simple') {
+                        // "651. Aeolidia loui"
+                        const [, number, genus, species] = match;
+                        if (isStrictlyValidSpecies(genus, species)) {
+                            speciesEntry = {
+                                number: parseInt(number),
+                                genus: genus.trim(),
+                                species: species.trim(),
+                                scientificName: `${genus.trim()} ${species.trim()}`,
+                                authorYear: 'Unknown',
+                                family: currentFamily,
+                                extractionMethod: pattern.name,
+                                extractionPattern: 'numbered_simple'
+                            };
                         }
+                    }
+                    
+                    // Validate and add species with deduplication
+                    if (speciesEntry && 
+                        isStrictlyValidSpecies(speciesEntry.genus, speciesEntry.species) && 
+                        !processedNames.has(speciesEntry.scientificName)) {
+                        
+                        // Add context for later data enrichment - smaller context window
+                        const contextStart = Math.max(0, match.index - 300);
+                        const contextEnd = Math.min(fullText.length, match.index + 2000);
+                        speciesEntry.context = fullText.substring(contextStart, contextEnd);
+                        speciesEntry.pageContext = findPageContext(fullText, match.index);
+                        speciesEntry.sourceLine = match[0];
+                        
+                        species.push(speciesEntry);
+                        processedNames.add(speciesEntry.scientificName);
+                        foundCount++;
+                        
+                        console.log(`✅ Added ${speciesEntry.scientificName} (Entry #${speciesEntry.number}, Family: ${speciesEntry.family}, Method: ${speciesEntry.extractionMethod})`);
+                    }
+                    
+                    // Prevent infinite loops
+                    if (pattern.regex.lastIndex === match.index) {
+                        pattern.regex.lastIndex++;
                     }
                 }
                 
@@ -1436,57 +1437,69 @@
             // Sort by entry number for proper ordering
             species.sort((a, b) => (a.number || 0) - (b.number || 0));
             
-            console.log(`🎉 CORRECTED extraction complete: ${species.length} validated species found`);
+            console.log(`🎉 FIXED extraction complete: ${species.length} validated species found`);
             updateProgress(progressContainer, 70, `Extraction complete: ${species.length} validated species found`);
             
             return species;
         }
 
-        // MUCH STRICTER species validation
+        // ENHANCED species validation with better logic
         function isStrictlyValidSpecies(genus, species) {
             if (!genus || !species || typeof genus !== 'string' || typeof species !== 'string') return false;
             
             const g = genus.trim();
             const s = species.trim();
             
-            // Length checks - must be reasonable
-            if (g.length < 3 || g.length > 20 || s.length < 3 || s.length > 25) return false;
+            // Length checks - must be reasonable biological names
+            if (g.length < 3 || g.length > 25 || s.length < 3 || s.length > 30) return false;
             
             // Format checks - genus must start with capital, species lowercase
             if (!/^[A-Z][a-z]+$/.test(g)) return false;
             if (!/^[a-z]+$/.test(s)) return false;
             
-            // Exclude common non-species terms (expanded list)
+            // Enhanced exclusion list - words that definitely aren't species names
             const excludeTerms = [
-                // English terms
-                'Description', 'Habitat', 'Distribution', 'Remarks', 'Size', 'Body', 'Color', 'Figure',
-                'Photo', 'Image', 'Page', 'Chapter', 'Section', 'Table', 'Plate', 'Common', 'Name',
-                'English', 'Family', 'Order', 'Class', 'Species', 'Genus', 'Author', 'Year', 'Reference',
-                'Bibliography', 'Appendix', 'Index', 'Contents', 'Introduction', 'Conclusion',
-                'The', 'This', 'That', 'These', 'Those', 'From', 'With', 'Without', 'About', 'Above',
-                'Below', 'Between', 'Among', 'During', 'Before', 'After', 'Through', 'Across',
-                'Development', 'Reproduction', 'Frequency', 'Circulation', 'Formation', 'Structure',
+                // Common English words
+                'The', 'This', 'That', 'These', 'Those', 'From', 'With', 'Without', 'About',
+                'Description', 'Habitat', 'Distribution', 'Remarks', 'Size', 'Body', 'Color',
+                'Figure', 'Photo', 'Image', 'Page', 'Chapter', 'Section', 'Table', 'Plate',
+                'Common', 'Name', 'English', 'Family', 'Order', 'Class', 'Species', 'Genus',
+                'Development', 'Reproduction', 'Frequency', 'Circulation', 'Formation',
+                'Structure', 'Process', 'System', 'Method', 'Analysis', 'Study', 'Research',
                 
-                // Spanish terms
+                // Spanish words
                 'Descripción', 'Hábitat', 'Distribución', 'Observaciones', 'Tamaño', 'Cuerpo',
-                'Color', 'Figura', 'Foto', 'Imagen', 'Página', 'Capítulo', 'Sección', 'Tabla',
-                'Familia', 'Orden', 'Clase', 'Especie', 'Género', 'Autor', 'Año', 'Referencia',
+                'Color', 'Figura', 'Foto', 'Imagen', 'Página', 'Capítulo', 'Sección',
+                'Familia', 'Orden', 'Clase', 'Especie', 'Género',
                 
-                // Technical terms
-                'Manual', 'Entry', 'Method', 'Process', 'System', 'Data', 'Information', 'Research',
-                'Study', 'Analysis', 'Report', 'Document', 'Field', 'Guide', 'Marine', 'Ocean',
-                'Water', 'Coast', 'Shore', 'Beach', 'Rock', 'Sand', 'Mud', 'Deep', 'Shallow'
+                // Technical/Document terms
+                'Manual', 'Entry', 'Data', 'Information', 'Document', 'Field', 'Guide',
+                'Marine', 'Ocean', 'Water', 'Coast', 'Shore', 'Beach', 'Rock', 'Sand'
             ];
             
             if (excludeTerms.includes(g) || excludeTerms.includes(s)) return false;
             
-            // Check for obviously non-biological terms
-            const nonBiological = ['http', 'www', 'com', 'org', 'edu', 'gov', 'pdf', 'jpg', 'png'];
-            const fullName = `${g} ${s}`.toLowerCase();
-            if (nonBiological.some(term => fullName.includes(term))) return false;
-            
-            // Genus should not equal species
+            // Must not be identical
             if (g.toLowerCase() === s.toLowerCase()) return false;
+            
+            // Additional checks for biological plausibility
+            // Genus names often end in certain patterns
+            const commonGenusEndings = ['us', 'is', 'a', 'um', 'on', 'ia', 'es', 'x'];
+            const genusEnd = g.slice(-2).toLowerCase();
+            
+            // Species names often end in certain patterns  
+            const commonSpeciesEndings = ['us', 'is', 'a', 'um', 'on', 'ia', 'es', 'i', 'ae', 'ii'];
+            const speciesEnd = s.slice(-2).toLowerCase();
+            
+            // If both genus and species have very uncommon endings, be more suspicious
+            if (!commonGenusEndings.includes(genusEnd) && !commonSpeciesEndings.includes(speciesEnd)) {
+                // Additional validation for uncommon patterns
+                if (g.includes('the') || s.includes('the') || 
+                    g.includes('and') || s.includes('and') ||
+                    g.includes('for') || s.includes('for')) {
+                    return false;
+                }
+            }
             
             return true;
         }
