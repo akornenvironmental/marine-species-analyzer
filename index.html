@@ -458,6 +458,32 @@
             text-align: center;
         }
 
+        /* Sortable table headers */
+        .sortable-header {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            transition: background-color 0.2s ease;
+        }
+
+        .sortable-header:hover {
+            background: rgba(8, 48, 107, 0.1);
+        }
+
+        .sortable-header.sorted-asc::after {
+            content: " ▲";
+            color: var(--accent-color);
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .sortable-header.sorted-desc::after {
+            content: " ▼";
+            color: var(--accent-color);
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
         .species-header {
             margin-bottom: 15px;
         }
@@ -814,6 +840,10 @@
                     <h2 class="section-title">Species Results</h2>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <div style="display: flex; gap: 3px; margin-right: 15px;">
+                            <button class="button" onclick="toggleView('cards')" id="cardsViewBtn" style="background: #6c757d; padding: 8px 16px; font-size: 12px;">🔲 Cards</button>
+                            <button class="button" onclick="toggleView('table')" id="tableViewBtn" style="background: var(--accent-color); padding: 8px 16px; font-size: 12px;">📋 Table</button>
+                        </div>
+                        <div style="display: flex; gap: 3px; margin-right: 15px;">
                             <button class="button" onclick="selectAll()" style="background: var(--success-color); padding: 8px 16px; font-size: 12px;">✅ Select All</button>
                             <button class="button" onclick="clearSelection()" style="background: #6c757d; padding: 8px 16px; font-size: 12px;">❌ Clear</button>
                         </div>
@@ -850,7 +880,16 @@
                     </div>
                 </div>
 
-                <!-- Table View - Now the only view -->
+                <!-- Cards View -->
+                <div class="species-grid" id="speciesGrid" style="display: none;">
+                    <div class="no-data-message">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">🔬</div>
+                        <h3>Ready for Species Extraction</h3>
+                        <p>Upload a comprehensive field guide to see hundreds of species extracted with full taxonomic data</p>
+                    </div>
+                </div>
+
+                <!-- Table View -->
                 <div id="tableView" style="display: block;">
                     <div style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px;">
                         <table style="width: 100%; border-collapse: collapse; background: var(--card-bg);">
@@ -866,10 +905,10 @@
                                     <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Size</th>
                                     <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Habitat</th>
                                     <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Distribution</th>
-                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); width: 80px;">WoRMS</th>
-                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); width: 80px;">GBIF</th>
-                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); width: 80px;">iNaturalist</th>
-                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); width: 80px;">OBIS</th>
+                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">WoRMS</th>
+                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">GBIF</th>
+                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">iNaturalist</th>
+                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">OBIS</th>
                                     <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600;">Status</th>
                                 </tr>
                             </thead>
@@ -1043,6 +1082,8 @@
         let speciesData = [];
         let selectedSpecies = new Set();
         let currentView = 'table';
+        let currentSortField = 'number';
+        let currentSortDirection = 'asc';
         let processingStats = {
             totalSpecies: 0,
             verified: 0,
@@ -1269,172 +1310,197 @@
             }
         }
 
-        // Species extraction - IMPROVED family recognition and author parsing
+        // Species extraction - ENHANCED with better author/year parsing and family tracking
         async function speciesExtraction(fullText, progressContainer) {
-            console.log('🎯 Starting IMPROVED species extraction...');
+            console.log('🎯 Starting ENHANCED species extraction...');
             
             const species = [];
             const processedNames = new Set();
             let extractionProgress = 40;
             
-            // IMPROVED patterns with better family recognition
+            // ENHANCED regex patterns with better author/year handling
             const patterns = [
-                // Pattern 0: Family headers - MUCH more comprehensive
-                {
-                    name: 'family_headers',
-                    regex: /\b([A-Z][a-z]{4,25}(?:idae|idae|idae|inae|oidea|acea|iformes|ida|ita|ata|ella|ura|osa|ata))\b/g,
-                    priority: 0,
-                    isHeader: true
-                },
-                
-                // Pattern 1: Numbered entries with author & year - IMPROVED parsing
+                // Pattern 1: Complex author citations with ampersands, et al, etc.
                 // Matches: "555. Okenia cochimi Gosliner & Bertsch, 2004"
                 {
-                    name: 'numbered_with_author_year',
-                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25})\s+([A-Z][a-zA-Z\s&.,]+?)\s+(\d{4})/g,
+                    name: 'numbered_complex_author',
+                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25})\s+([A-Z][a-zA-Z\s&,\.]{4,60}(?:et\s+al\.?)?\s*,?\s*\d{4})/g,
                     priority: 1
                 },
                 
-                // Pattern 2: Numbered entries with parenthetical citations - IMPROVED
-                // Matches: "649. Eubranchus madapamensis (Rao, 1969)" or "(de Laubenfels, 1930)"
+                // Pattern 2: Parenthetical citations 
+                // Matches: "649. Eubranchus madapamensis (Rao, 1969)"
                 {
-                    name: 'numbered_with_parentheses',
-                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25}(?:\s+[a-z]{2,15})?)\s+\(([^)]+?),?\s*(\d{4})\)/g,
+                    name: 'numbered_parenthetical',
+                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25}(?:\s+[a-z]{2,15})?)\s+\(([^)]{4,50})\)/g,
                     priority: 2
                 },
                 
-                // Pattern 3: Simple numbered entries without author
+                // Pattern 3: Simple author year without complex formatting
+                // Matches: "123. Genus species Author, 1999"
                 {
-                    name: 'numbered_simple',
-                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25})(?=\s|$)/g,
+                    name: 'numbered_simple_author',
+                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25})\s+([A-Z][a-z]+,?\s+\d{4})/g,
                     priority: 3
+                },
+                
+                // Pattern 4: Just numbered species without author
+                // Matches: "651. Aeolidia loui"
+                {
+                    name: 'numbered_no_author',
+                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25})(?=\s|$|[^a-zA-Z])/g,
+                    priority: 4
+                },
+                
+                // Pattern 5: Family headers
+                {
+                    name: 'family_headers',
+                    regex: /(?:^|\n)\s*([A-Z][a-z]{4,25}idae)\s*(?:\n|$)/g,
+                    priority: 0,
+                    isHeader: true
                 }
             ];
             
             let currentFamily = 'Unknown Family';
+            const familyMap = new Map(); // Track which species belong to which families
             
-            // STEP 1: First pass - identify family headers
-            console.log('🔍 Step 1: Identifying family headers...');
-            const familyPattern = patterns[0];
-            familyPattern.regex.lastIndex = 0;
-            
+            // First pass: Find all family headers and their positions
+            console.log('🔍 First pass: Finding family headers...');
             const familyPositions = [];
-            let familyMatch;
-            while ((familyMatch = familyPattern.regex.exec(fullText)) !== null) {
-                const familyName = familyMatch[1];
-                // More specific family name validation
-                if ((familyName.endsWith('idae') || familyName.endsWith('inae') || 
-                     familyName.endsWith('oidea') || familyName.endsWith('acea')) && 
-                    familyName.length > 6 && familyName.length < 30) {
+            patterns[4].regex.lastIndex = 0; // Reset family header regex
+            let match;
+            while ((match = patterns[4].regex.exec(fullText)) !== null) {
+                const familyName = match[1];
+                if (familyName.endsWith('idae') && familyName.length > 6) {
                     familyPositions.push({
-                        name: familyName,
-                        position: familyMatch.index
+                        family: familyName,
+                        position: match.index,
+                        endPosition: match.index + match[0].length
                     });
-                    console.log(`📋 Found family: ${familyName} at position ${familyMatch.index}`);
-                }
-                
-                if (familyPattern.regex.lastIndex === familyMatch.index) {
-                    familyPattern.regex.lastIndex++;
+                    console.log(`📋 Found family: ${familyName} at position ${match.index}`);
                 }
             }
             
-            // Helper function to find current family based on position
-            function getCurrentFamily(position) {
-                let current = 'Unknown Family';
-                for (const family of familyPositions) {
-                    if (family.position <= position) {
-                        current = family.name;
-                    } else {
-                        break;
+            // Sort family positions
+            familyPositions.sort((a, b) => a.position - b.position);
+            
+            // Helper function to get current family based on position
+            function getFamilyAtPosition(position) {
+                for (let i = familyPositions.length - 1; i >= 0; i--) {
+                    if (position >= familyPositions[i].endPosition) {
+                        return familyPositions[i].family;
                     }
                 }
-                return current;
+                return 'Unknown Family';
             }
             
-            // STEP 2: Extract species with improved author/year parsing
-            console.log('🔍 Step 2: Extracting species with improved parsing...');
-            
-            // Process non-family patterns
-            for (let patternIndex = 1; patternIndex < patterns.length; patternIndex++) {
+            // Process species extraction patterns
+            for (let patternIndex = 0; patternIndex < patterns.length - 1; patternIndex++) { // Skip family pattern
                 const pattern = patterns[patternIndex];
                 let foundCount = 0;
                 
+                // Reset regex
                 pattern.regex.lastIndex = 0;
                 
-                let match;
                 while ((match = pattern.regex.exec(fullText)) !== null) {
+                    const matchPosition = match.index;
+                    
+                    // Determine family based on position
+                    currentFamily = getFamilyAtPosition(matchPosition);
+                    
+                    // Extract species data with enhanced author/year parsing
                     let speciesEntry = null;
                     
-                    // Find current family based on match position
-                    currentFamily = getCurrentFamily(match.index);
-                    
-                    if (pattern.name === 'numbered_with_author_year') {
-                        // "555. Okenia cochimi Gosliner & Bertsch, 2004"
-                        const [, number, genus, species, author, year] = match;
+                    if (pattern.name === 'numbered_complex_author') {
+                        const [fullMatch, number, genus, species, authorYear] = match;
+                        const {author, year} = parseAuthorYear(authorYear);
+                        
                         if (isStrictlyValidSpecies(genus, species)) {
                             speciesEntry = {
                                 number: parseInt(number),
                                 genus: genus.trim(),
                                 species: species.trim(),
                                 scientificName: `${genus.trim()} ${species.trim()}`,
-                                author: author.trim(),
-                                year: year.trim(),
-                                authorYear: `${author.trim()}, ${year.trim()}`,
+                                authorYear: authorYear.trim(),
+                                author: author,
+                                year: year,
                                 family: currentFamily,
-                                extractionMethod: pattern.name
+                                extractionMethod: pattern.name,
+                                extractionPattern: 'complex_author'
                             };
                         }
-                    } else if (pattern.name === 'numbered_with_parentheses') {
-                        // "649. Eubranchus madapamensis (Rao, 1969)" or "(de Laubenfels, 1930)"
-                        const [, number, genus, species, author, year] = match;
+                    } else if (pattern.name === 'numbered_parenthetical') {
+                        const [fullMatch, number, genus, species, authorYear] = match;
+                        const {author, year} = parseAuthorYear(authorYear);
+                        
                         if (isStrictlyValidSpecies(genus, species)) {
                             speciesEntry = {
                                 number: parseInt(number),
                                 genus: genus.trim(),
                                 species: species.trim(),
                                 scientificName: `${genus.trim()} ${species.trim()}`,
-                                author: author.trim(),
-                                year: year.trim(),
-                                authorYear: `${author.trim()}, ${year.trim()}`,
+                                authorYear: authorYear.trim(),
+                                author: author,
+                                year: year,
                                 family: currentFamily,
-                                extractionMethod: pattern.name
+                                extractionMethod: pattern.name,
+                                extractionPattern: 'parenthetical'
                             };
                         }
-                    } else if (pattern.name === 'numbered_simple') {
-                        // "651. Aeolidia loui"
-                        const [, number, genus, species] = match;
+                    } else if (pattern.name === 'numbered_simple_author') {
+                        const [fullMatch, number, genus, species, authorYear] = match;
+                        const {author, year} = parseAuthorYear(authorYear);
+                        
                         if (isStrictlyValidSpecies(genus, species)) {
                             speciesEntry = {
                                 number: parseInt(number),
                                 genus: genus.trim(),
                                 species: species.trim(),
                                 scientificName: `${genus.trim()} ${species.trim()}`,
+                                authorYear: authorYear.trim(),
+                                author: author,
+                                year: year,
+                                family: currentFamily,
+                                extractionMethod: pattern.name,
+                                extractionPattern: 'simple_author'
+                            };
+                        }
+                    } else if (pattern.name === 'numbered_no_author') {
+                        const [fullMatch, number, genus, species] = match;
+                        
+                        if (isStrictlyValidSpecies(genus, species)) {
+                            speciesEntry = {
+                                number: parseInt(number),
+                                genus: genus.trim(),
+                                species: species.trim(),
+                                scientificName: `${genus.trim()} ${species.trim()}`,
+                                authorYear: 'Unknown',
                                 author: 'Unknown',
                                 year: 'Unknown',
-                                authorYear: 'Unknown',
                                 family: currentFamily,
-                                extractionMethod: pattern.name
+                                extractionMethod: pattern.name,
+                                extractionPattern: 'no_author'
                             };
                         }
                     }
                     
-                    // Validate and add species
+                    // Validate and add species with enhanced deduplication
                     if (speciesEntry && 
                         isStrictlyValidSpecies(speciesEntry.genus, speciesEntry.species) && 
                         !processedNames.has(speciesEntry.scientificName)) {
                         
-                        // Add context
-                        const contextStart = Math.max(0, match.index - 300);
-                        const contextEnd = Math.min(fullText.length, match.index + 2000);
+                        // Enhanced context extraction with better boundaries
+                        const contextStart = Math.max(0, matchPosition - 500);
+                        const contextEnd = Math.min(fullText.length, matchPosition + 3000);
                         speciesEntry.context = fullText.substring(contextStart, contextEnd);
-                        speciesEntry.pageContext = findPageContext(fullText, match.index);
-                        speciesEntry.sourceLine = match[0];
+                        speciesEntry.pageContext = findPageContext(fullText, matchPosition);
+                        speciesEntry.matchPosition = matchPosition;
                         
                         species.push(speciesEntry);
                         processedNames.add(speciesEntry.scientificName);
                         foundCount++;
                         
-                        console.log(`✅ Added ${speciesEntry.scientificName} (${speciesEntry.author}, ${speciesEntry.year}) [Family: ${speciesEntry.family}]`);
+                        console.log(`✅ ${speciesEntry.scientificName} (#${speciesEntry.number}) - ${speciesEntry.family} - ${speciesEntry.author} (${speciesEntry.year})`);
                     }
                     
                     // Prevent infinite loops
@@ -1446,21 +1512,61 @@
                 console.log(`🎯 Pattern "${pattern.name}" found ${foundCount} valid species`);
                 
                 // Update progress
-                extractionProgress = 40 + ((patternIndex) / (patterns.length - 1)) * 30;
+                extractionProgress = 40 + ((patternIndex + 1) / (patterns.length - 1)) * 30;
                 updateProgress(progressContainer, extractionProgress, 
-                    `Pattern ${patternIndex}/${patterns.length - 1}: Found ${species.length} valid species`);
+                    `Pattern ${patternIndex + 1}/${patterns.length - 1}: Found ${species.length} species`);
                 
                 await new Promise(resolve => setTimeout(resolve, 200));
             }
             
-            // Sort by entry number
+            // Sort by entry number for proper ordering
             species.sort((a, b) => (a.number || 0) - (b.number || 0));
             
-            console.log(`🎉 IMPROVED extraction complete: ${species.length} validated species found`);
-            console.log(`📊 Families found: ${new Set(species.map(s => s.family)).size}`);
-            updateProgress(progressContainer, 70, `Extraction complete: ${species.length} validated species found`);
+            // Final validation pass
+            const validatedSpecies = species.filter(sp => {
+                return sp.scientificName && 
+                       sp.scientificName.split(' ').length === 2 &&
+                       sp.number > 0 && sp.number < 10000;
+            });
             
-            return species;
+            console.log(`🎉 ENHANCED extraction complete: ${validatedSpecies.length} validated species found`);
+            console.log(`📊 Families found: ${familyPositions.length}`);
+            console.log(`📊 Species with authors: ${validatedSpecies.filter(s => s.author !== 'Unknown').length}`);
+            
+            updateProgress(progressContainer, 70, `Enhanced extraction complete: ${validatedSpecies.length} species found`);
+            
+            return validatedSpecies;
+        }
+
+        // Enhanced author/year parsing function
+        function parseAuthorYear(authorYearString) {
+            if (!authorYearString || typeof authorYearString !== 'string') {
+                return { author: 'Unknown', year: 'Unknown' };
+            }
+            
+            const cleaned = authorYearString.trim();
+            
+            // Extract year (4 digits)
+            const yearMatch = cleaned.match(/(\d{4})/);
+            const year = yearMatch ? yearMatch[1] : 'Unknown';
+            
+            // Extract author (everything before the year, cleaned up)
+            let author = cleaned;
+            if (yearMatch) {
+                author = cleaned.substring(0, cleaned.lastIndexOf(yearMatch[0])).trim();
+                // Remove trailing comma or whitespace
+                author = author.replace(/[,\s]+$/, '');
+            }
+            
+            // Clean up common author formatting
+            author = author.replace(/^\(/, '').replace(/\)$/, ''); // Remove parentheses
+            author = author.replace(/,$/, ''); // Remove trailing comma
+            
+            if (!author || author.length < 2) {
+                author = 'Unknown';
+            }
+            
+            return { author, year };
         }
 
         // ENHANCED species validation with better logic
@@ -1560,7 +1666,7 @@
             return enriched;
         }
 
-        // Extract detailed species data from context - IMPROVED author/year handling
+        // Extract detailed species data from context
         function extractFixedSpeciesData(species, fullText) {
             const scientificName = species.scientificName;
             const context = species.context || '';
@@ -1568,112 +1674,102 @@
             console.log(`🔍 Extracting data for ${scientificName}`);
             
             const extractedData = {
-                // Base fields - now properly handling separated author/year
+                // Base fields
                 scientificName: scientificName,
                 commonName: 'Unknown',
                 description: 'No description available',
-                author: species.author || 'Unknown',
-                year: species.year || 'Unknown',
+                author: 'Unknown',
+                year: 'Unknown',
                 size: 'Size not specified',
                 habitat: 'Habitat not specified',
                 distribution: 'Distribution not specified'
             };
             
-            // Legacy support: Extract author and year from authorYear field if needed
-            if (species.authorYear && species.authorYear !== 'Unknown' && 
-                (extractedData.author === 'Unknown' || extractedData.year === 'Unknown')) {
+            // Extract author and year from authorYear field
+            if (species.authorYear && species.authorYear !== 'Unknown') {
+                const authorMatch = species.authorYear.match(/^([^,\d]+)/);
+                const yearMatch = species.authorYear.match(/(\d{4})/);
                 
-                // Try to parse "Author, Year" format
-                const authorYearMatch = species.authorYear.match(/^(.+?),?\s*(\d{4})$/);
-                if (authorYearMatch) {
-                    if (extractedData.author === 'Unknown') {
-                        extractedData.author = authorYearMatch[1].trim();
-                    }
-                    if (extractedData.year === 'Unknown') {
-                        extractedData.year = authorYearMatch[2];
-                    }
-                }
+                if (authorMatch) extractedData.author = authorMatch[1].trim();
+                if (yearMatch) extractedData.year = yearMatch[1];
             }
             
-            // Pattern matching for field extraction - ENHANCED patterns
+            // Pattern matching for field extraction
             const patterns = {
-                // Common name patterns - improved to capture more variations
+                // Common name patterns - look for lines after scientific name
                 commonName: [
-                    new RegExp(`${scientificName}[^\\n]*\\n\\s*([A-Z][^\\n]{3,60})`, 'i'),
+                    new RegExp(`${scientificName}[^\\n]*\\n([A-Z][^\\n]{5,50})`, 'i'),
                     /^([A-Z][a-z]+(?:'s)?\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s*$/m,
-                    /Common name:\s*([^.\n]+)/i,
-                    // Spanish common names
-                    /Nombre común:\s*([^.\n]+)/i
+                    /Common name:\s*([^.\n]+)/i
                 ],
                 
-                // Description patterns - enhanced for bilingual content
+                // Description patterns
                 description: [
                     /Description:\s*([^.]*(?:\.[^A-Z\n][^.]*){0,8}\.)/i,
-                    /Body\s+color?\s*([^.]*(?:\.[^A-Z\n][^.]*){0,5}\.)/i,
-                    /The\s+body\s+color\s+is\s+([^.]*(?:\.[^A-Z\n][^.]*){0,3}\.)/i,
-                    // Spanish descriptions
-                    /Descripción:\s*([^.]*(?:\.[^A-Z ñáéíóú\n][^.]*){0,8}\.)/i,
-                    /El\s+color\s+del\s+cuerpo\s+([^.]*(?:\.[^A-Z ñáéíóú\n][^.]*){0,3}\.)/i
+                    /Body\s+color?\s*([^.]*(?:\.[^A-Z\n][^.]*){0,3}\.)/i,
+                    /Irregular[,\s]+([^.]*(?:\.[^A-Z\n][^.]*){0,2}\.)/i
                 ],
                 
-                // Size patterns - enhanced with more variations
+                // Size patterns with standardization
                 size: [
                     /Size:\s*(To\s+[^.\n]+)/i,
                     /Size:\s*([^.\n]+)/i,
-                    /(To\s+\d+(?:\.\d+)?\s*(?:in|inch|inches|mm|cm|m))/i,
-                    /(Up\s+to\s+\d+(?:\.\d+)?\s*(?:in|inch|inches|mm|cm|m))/i,
-                    /less\s+than\s+(\d+(?:\/\d+)?\s*(?:of\s+an\s+)?inch)/i,
-                    // Spanish size patterns
-                    /Tamaño:\s*([^.\n]+)/i,
-                    /(Hasta\s+\d+(?:\.\d+)?\s*(?:mm|cm|m))/i
+                    /(To\s+\d+(?:\.\d+)?\s*(?:in|inch|mm|cm|m))/i,
+                    /(Up\s+to\s+\d+(?:\.\d+)?\s*(?:in|inch|mm|cm|m))/i
                 ],
                 
-                // Habitat patterns - more comprehensive
+                // Habitat patterns
                 habitat: [
                     /Habitat:\s*([^.\n]+(?:\.[^A-Z\n][^.\n]*)*)/i,
                     /(Intertidal[^.\n]*(?:\.[^A-Z\n][^.\n]*)*)/i,
                     /(Subtidal[^.\n]*(?:\.[^A-Z\n][^.\n]*)*)/i,
-                    /(In\s+(?:relatively\s+)?shallow\s+water[^.\n]*)/i,
-                    /Found\s+(?:in|on)\s+([^.\n]+)/i,
-                    // Spanish habitat patterns
-                    /Hábitat:\s*([^.\n]+(?:\.[^A-Z ñáéíóú\n][^.\n]*)*)/i,
-                    /(En\s+aguas\s+[^.\n]*)/i
+                    /Found\s+(?:in|on)\s+([^.\n]+)/i
                 ],
                 
-                // Distribution patterns - enhanced
+                // Distribution patterns
                 distribution: [
                     /Distribution:\s*([^.\n]+(?:\.[^A-Z\n][^.\n]*)*)/i,
                     /(Pacific[^.\n]*(?:\.[^A-Z\n][^.\n]*)*)/i,
-                    /(Known\s+only\s+from[^.\n]*)/i,
                     /Range:\s*([^.\n]+)/i,
-                    /from\s+([A-Z][^.\n]*to[^.\n]*)/i,
-                    // Spanish distribution patterns
-                    /Distribución:\s*([^.\n]+(?:\.[^A-Z ñáéíóú\n][^.\n]*)*)/i,
-                    /(Es\s+únicamente\s+conocida[^.\n]*)/i,
-                    /(Desde\s+[^.\n]*hasta[^.\n]*)/i
-                ]
+                    /from\s+([A-Z][^.\n]*to[^.\n]*)/i
+                ],
+                
+                // Spanish versions
+                descripcion: /Descripción:\s*([^.]*(?:\.[^A-Z ñáéíóú\n][^.]*){0,8}\.)/i,
+                tamano: /Tamaño:\s*([^.\n]+)/i,
+                habitat_es: /Hábitat:\s*([^.\n]+(?:\.[^A-Z ñáéíóú\n][^.\n]*)*)/i,
+                distribucion: /Distribución:\s*([^.\n]+(?:\.[^A-Z ñáéíóú\n][^.\n]*)*)/i
             };
             
-            // Apply patterns to extract data with better matching
+            // Apply patterns to extract data
             Object.entries(patterns).forEach(([field, patternList]) => {
+                if (!Array.isArray(patternList)) patternList = [patternList];
+                
                 for (const pattern of patternList) {
                     const match = context.match(pattern);
                     if (match && match[1]) {
                         const value = match[1].trim();
-                        if (value.length > 2 && value.length < 500) { // Reasonable length
-                            // Don't override good data with poor data
-                            if (extractedData[field] === `${field.charAt(0).toUpperCase() + field.slice(1)} not specified` ||
-                                extractedData[field] === 'No description available' ||
-                                extractedData[field] === 'Unknown') {
-                                extractedData[field] = value;
-                                break; // Use first good match
+                        if (value.length > 3) { // Ensure meaningful content
+                            if (field === 'descripcion' && !extractedData.description.includes('No description')) {
+                                // Don't override English description with Spanish
+                                continue;
                             }
+                            if (field.endsWith('_es')) {
+                                // Handle Spanish versions
+                                const baseField = field.replace('_es', '');
+                                if (extractedData[baseField] === `${baseField.charAt(0).toUpperCase() + baseField.slice(1)} not specified`) {
+                                    extractedData[baseField] = value;
+                                }
+                            } else {
+                                extractedData[field] = value;
+                            }
+                            break;
                         }
                     }
                 }
             });
             
-            // Size standardization with better parsing
+            // Size standardization
             if (extractedData.size && extractedData.size !== 'Size not specified') {
                 const standardized = standardizeSize(extractedData.size);
                 if (standardized) {
@@ -1681,7 +1777,7 @@
                 }
             }
             
-            // Add metadata - preserving new structure
+            // Add metadata
             extractedData.family = species.family || 'Unknown Family';
             extractedData.genus = species.genus || 'Unknown';
             extractedData.species = species.species || 'Unknown';
@@ -1977,7 +2073,11 @@ Strongylocentrotus purpuratus`;
 
         function populateResults() {
             updateResultsStats();
-            populateTableView();
+            if (currentView === 'table') {
+                populateTableView();
+            } else {
+                populateSpeciesCards();
+            }
         }
 
         function updateResultsStats() {
@@ -2150,17 +2250,92 @@ Strongylocentrotus purpuratus`;
                 return;
             }
 
+            // Sort data based on current sort settings
+            const sortedData = [...speciesData].sort((a, b) => {
+                let aVal = getSortValue(a, currentSortField);
+                let bVal = getSortValue(b, currentSortField);
+                
+                // Handle numeric sorting
+                if (currentSortField === 'number' || currentSortField === 'year' || currentSortField === 'confidence') {
+                    aVal = parseInt(aVal) || 0;
+                    bVal = parseInt(bVal) || 0;
+                }
+                
+                // Handle string sorting
+                if (typeof aVal === 'string' && typeof bVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+                
+                let result = 0;
+                if (aVal < bVal) result = -1;
+                if (aVal > bVal) result = 1;
+                
+                return currentSortDirection === 'desc' ? -result : result;
+            });
+
+            tableView.innerHTML = `
+                <div style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <table style="width: 100%; border-collapse: collapse; background: var(--card-bg);">
+                        <thead>
+                            <tr style="background: var(--light-bg); border-bottom: 2px solid var(--border-color);">
+                                <th style="padding: 12px 8px; text-align: center; width: 40px;">
+                                    <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()" style="cursor: pointer;">
+                                </th>
+                                <th class="sortable-header ${currentSortField === 'number' ? 'sorted-' + currentSortDirection : ''}" 
+                                    onclick="sortTable('number')" 
+                                    style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">#</th>
+                                <th class="sortable-header ${currentSortField === 'scientificName' ? 'sorted-' + currentSortDirection : ''}" 
+                                    onclick="sortTable('scientificName')" 
+                                    style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Scientific Name</th>
+                                <th class="sortable-header ${currentSortField === 'commonName' ? 'sorted-' + currentSortDirection : ''}" 
+                                    onclick="sortTable('commonName')" 
+                                    style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Common Name</th>
+                                <th class="sortable-header ${currentSortField === 'family' ? 'sorted-' + currentSortDirection : ''}" 
+                                    onclick="sortTable('family')" 
+                                    style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Family</th>
+                                <th class="sortable-header ${currentSortField === 'author' ? 'sorted-' + currentSortDirection : ''}" 
+                                    onclick="sortTable('author')" 
+                                    style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Author</th>
+                                <th class="sortable-header ${currentSortField === 'year' ? 'sorted-' + currentSortDirection : ''}" 
+                                    onclick="sortTable('year')" 
+                                    style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Year</th>
+                                <th class="sortable-header ${currentSortField === 'size' ? 'sorted-' + currentSortDirection : ''}" 
+                                    onclick="sortTable('size')" 
+                                    style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Size</th>
+                                <th class="sortable-header ${currentSortField === 'habitat' ? 'sorted-' + currentSortDirection : ''}" 
+                                    onclick="sortTable('habitat')" 
+                                    style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Habitat</th>
+                                <th class="sortable-header ${currentSortField === 'distribution' ? 'sorted-' + currentSortDirection : ''}" 
+                                    onclick="sortTable('distribution')" 
+                                    style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Distribution</th>
+                                <th class="sortable-header ${currentSortField === 'verificationStatus' ? 'sorted-' + currentSortDirection : ''}" 
+                                    onclick="sortTable('verificationStatus')" 
+                                    style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Status</th>
+                                <th class="sortable-header ${currentSortField === 'confidence' ? 'sorted-' + currentSortDirection : ''}" 
+                                    onclick="sortTable('confidence')" 
+                                    style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600;">Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody id="speciesTableBody">
+                            <!-- Table rows will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
             const tableBody = document.getElementById('speciesTableBody');
-            tableBody.innerHTML = '';
-            
-            speciesData.forEach((species, index) => {
+            sortedData.forEach((species, index) => {
+                // Find original index for selection purposes
+                const originalIndex = speciesData.findIndex(s => s.scientificName === species.scientificName && s.number === species.number);
+                
                 const row = document.createElement('tr');
-                row.className = `table-row ${selectedSpecies.has(index) ? 'selected' : ''}`;
-                row.dataset.speciesIndex = index;
+                row.className = `table-row ${selectedSpecies.has(originalIndex) ? 'selected' : ''}`;
+                row.dataset.speciesIndex = originalIndex;
                 
                 row.addEventListener('click', (e) => {
                     if (e.target.type !== 'checkbox') {
-                        toggleSpeciesSelection(index);
+                        toggleSpeciesSelection(originalIndex);
                     }
                 });
 
@@ -2169,87 +2344,94 @@ Strongylocentrotus purpuratus`;
                     status === 'verified' ? 'VERIFIED' : status === 'synonym' ? 'SYNONYM' : 'NOT FOUND'
                 }</span>`;
 
-                // Helper function to create database link with indicator
-                function createDbLink(dbData, dbName, species) {
-                    if (!dbData) return '<span style="color: #999;">-</span>';
-                    
-                    const status = dbData.status || 'not_found';
-                    const confidence = Math.round(dbData.confidence || 0);
-                    const color = status === 'verified' ? '#28a745' : 
-                                 status === 'found' ? '#28a745' : 
-                                 status === 'synonym' ? '#ffc107' : '#dc3545';
-                    
-                    // Generate database URLs
-                    let dbUrl = '#';
-                    const scientificName = encodeURIComponent(species.scientificName);
-                    
-                    switch(dbName) {
-                        case 'WoRMS':
-                            // WoRMS search URL
-                            dbUrl = `https://www.marinespecies.org/aphia.php?p=taxdetails&id=${dbData.aphiaId || ''}`;
-                            if (!dbData.aphiaId) {
-                                dbUrl = `https://www.marinespecies.org/aphia.php?p=search&q=${scientificName}`;
-                            }
-                            break;
-                        case 'GBIF':
-                            // GBIF search URL
-                            dbUrl = `https://www.gbif.org/species/search?q=${scientificName}`;
-                            if (dbData.key) {
-                                dbUrl = `https://www.gbif.org/species/${dbData.key}`;
-                            }
-                            break;
-                        case 'iNaturalist':
-                            // iNaturalist search URL
-                            dbUrl = `https://www.inaturalist.org/taxa/search?q=${scientificName}`;
-                            if (dbData.taxonId) {
-                                dbUrl = `https://www.inaturalist.org/taxa/${dbData.taxonId}`;
-                            }
-                            break;
-                        case 'OBIS':
-                            // OBIS search URL
-                            dbUrl = `https://obis.org/taxon/${dbData.taxonKey || ''}`;
-                            if (!dbData.taxonKey) {
-                                dbUrl = `https://obis.org/search?scientificname=${scientificName}`;
-                            }
-                            break;
-                    }
-                    
-                    return `<div style="font-size: 0.8rem;">
-                        <a href="${dbUrl}" target="_blank" style="color: ${color}; font-weight: 600; text-decoration: none;">
-                            ${status.toUpperCase()}
-                        </a>
-                        ${confidence > 0 ? `<div style="color: #666; font-size: 0.7rem;">${confidence}%</div>` : ''}
-                        ${dbData.records ? `<div style="color: #666; font-size: 0.7rem;">${dbData.records} records</div>` : ''}
-                        ${dbData.observations ? `<div style="color: #666; font-size: 0.7rem;">${dbData.observations} obs</div>` : ''}
-                        ${dbData.occurrences ? `<div style="color: #666; font-size: 0.7rem;">${dbData.occurrences} occur</div>` : ''}
-                    </div>`;
-                }
-
                 row.innerHTML = `
                     <td class="table-cell" style="text-align: center;">
-                        <input type="checkbox" onchange="toggleSpeciesSelection(${index})" 
-                               ${selectedSpecies.has(index) ? 'checked' : ''}>
+                        <input type="checkbox" onchange="toggleSpeciesSelection(${originalIndex})" 
+                               ${selectedSpecies.has(originalIndex) ? 'checked' : ''}>
                     </td>
+                    <td class="table-cell" style="font-weight: 600;">${species.number || 'N/A'}</td>
                     <td class="table-cell scientific-name-cell">${species.scientificName}</td>
                     <td class="table-cell">${species.commonName || 'Not available'}</td>
+                    <td class="table-cell">${species.family || 'Unknown'}</td>
                     <td class="table-cell">${species.author || 'Unknown'}</td>
                     <td class="table-cell">${species.year || 'Unknown'}</td>
                     <td class="table-cell">${species.size || 'Not specified'}</td>
                     <td class="table-cell">${(species.habitat || 'Not specified').substring(0, 100)}${species.habitat && species.habitat.length > 100 ? '...' : ''}</td>
                     <td class="table-cell">${(species.distribution || 'Not specified').substring(0, 100)}${species.distribution && species.distribution.length > 100 ? '...' : ''}</td>
-                    <td class="table-cell">${createDbLink(species.databases?.worms, 'WoRMS', species)}</td>
-                    <td class="table-cell">${createDbLink(species.databases?.gbif, 'GBIF', species)}</td>
-                    <td class="table-cell">${createDbLink(species.databases?.inaturalist, 'iNaturalist', species)}</td>
-                    <td class="table-cell">${createDbLink(species.databases?.obis, 'OBIS', species)}</td>
                     <td class="table-cell status-cell">${statusBadge}</td>
+                    <td class="table-cell" style="text-align: center; font-weight: 600;">${species.confidence || 0}%</td>
                 `;
 
                 tableBody.appendChild(row);
             });
         }
 
-        // Remove unused card view functions
-        // Cards view has been removed - table view only
+        // Sorting functions
+        function sortTable(field) {
+            if (currentSortField === field) {
+                // Toggle direction if clicking the same field
+                currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                // New field, default to ascending
+                currentSortField = field;
+                currentSortDirection = 'asc';
+            }
+            
+            // Re-populate table with new sort
+            if (currentView === 'table') {
+                populateTableView();
+            }
+            
+            console.log(`Sorted by ${field} (${currentSortDirection})`);
+        }
+
+        function getSortValue(species, field) {
+            switch (field) {
+                case 'number':
+                    return species.number || 0;
+                case 'scientificName':
+                    return species.scientificName || '';
+                case 'commonName':
+                    return species.commonName || 'zzz'; // Put "not available" at end
+                case 'family':
+                    return species.family || 'zzz';
+                case 'author':
+                    return species.author || 'zzz';
+                case 'year':
+                    return species.year || '0';
+                case 'size':
+                    return species.size || 'zzz';
+                case 'habitat':
+                    return species.habitat || 'zzz';
+                case 'distribution':
+                    return species.distribution || 'zzz';
+                case 'verificationStatus':
+                    return species.verificationStatus || 'zzz';
+                case 'confidence':
+                    return species.confidence || 0;
+                default:
+                    return '';
+            }
+        }
+
+        function toggleView(viewType) {
+            currentView = viewType;
+            
+            // Update button states
+            document.getElementById('cardsViewBtn').style.background = viewType === 'cards' ? 'var(--accent-color)' : '#6c757d';
+            document.getElementById('tableViewBtn').style.background = viewType === 'table' ? 'var(--accent-color)' : '#6c757d';
+            
+            // Show/hide views
+            if (viewType === 'cards') {
+                document.getElementById('speciesGrid').style.display = 'grid';
+                document.getElementById('tableView').style.display = 'none';
+                populateSpeciesCards();
+            } else {
+                document.getElementById('speciesGrid').style.display = 'none';
+                document.getElementById('tableView').style.display = 'block';
+                populateTableView();
+            }
+        }
 
         function toggleSpeciesSelection(index) {
             if (selectedSpecies.has(index)) {
