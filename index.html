@@ -1579,53 +1579,79 @@
             const context = species.context || '';
             const extractedFields = {};
             
-            // Enhanced field extraction patterns
+            // Enhanced field extraction patterns with more aggressive matching
             const fieldPatterns = {
                 'habitat': [
                     /Habitat:\s*([^.\n]+(?:\.[^A-Z\n][^.\n]*)*)/i,
                     /Hábitat:\s*([^.\n]+(?:\.[^A-Z\n][^.\n]*)*)/i,
-                    /(Intertidal[^.\n]*(?:\.[^A-Z\n][^.\n]*)*)/i,
-                    /(Subtidal[^.\n]*(?:\.[^A-Z\n][^.\n]*)*)/i
+                    /(Intertidal[^.\n]*(?:and|y)?[^.\n]*(?:subtidal|submarine)[^.\n]*)/i,
+                    /(Subtidal[^.\n]*(?:and|y)?[^.\n]*)/i,
+                    /(on\s+boat\s+docks[^.\n]*)/i,
+                    /(rocky\s+intertidal[^.\n]*)/i
                 ],
                 'size': [
                     /Size:\s*([^.\n]+)/i,
                     /Tamaño:\s*([^.\n]+)/i,
-                    /(To\s+\d+(?:\.\d+)?\s*(?:in|inch|mm|cm|m))/i,
-                    /(\d+(?:\.\d+)?\s*(?:mm|cm|m)\s+(?:long|diameter|width))/i,
-                    /(Hasta\s+\d+(?:\.\d+)?\s*(?:mm|cm|m))/i
+                    /(To\s+(?:about\s+)?\d+(?:\.\d+)?\s*(?:in|inch|mm|cm|m)(?:\s+long)?)/i,
+                    /(\d+(?:\.\d+)?\s*(?:mm|cm|m)\s+(?:long|diameter|width|in\s+length))/i,
+                    /(Hasta\s+\d+(?:\.\d+)?\s*(?:mm|cm|m))/i,
+                    /(about\s+\d+(?:\.\d+)?\s*(?:in|inch|mm|cm|m))/i
                 ],
                 'distribution': [
                     /Distribution:\s*([^.\n]+(?:\.[^A-Z\n][^.\n]*)*)/i,
                     /Distribución:\s*([^.\n]+(?:\.[^A-Z\n][^.\n]*)*)/i,
-                    /(Pacific[^.\n]*(?:\.[^A-Z\n][^.\n]*)*)/i,
-                    /(Pacífico[^.\n]*(?:\.[^A-Z\n][^.\n]*)*)/i,
+                    /((?:Indo-)?Pacific[^.\n]*(?:from|to)[^.\n]*)/i,
+                    /(Pacífico[^.\n]*(?:desde|hasta)[^.\n]*)/i,
                     /(from\s+[A-Z][^.\n]*to[^.\n]*)/i,
-                    /(desde\s+[A-Z][^.\n]*hasta[^.\n]*)/i
+                    /(desde\s+[A-Z][^.\n]*hasta[^.\n]*)/i,
+                    /([A-Z][a-z]+\s+(?:Bay|Verdes|California|Oregon|Mexico)[^.\n]*(?:to|and)[^.\n]*)/i,
+                    /(Cape\s+[A-Z][a-z]+[^.\n]*to[^.\n]*)/i
                 ],
                 'description': [
-                    /Description:\s*([^.]*(?:\.[^A-Z\n][^.]*){0,3}\.)/i,
-                    /Descripción:\s*([^.]*(?:\.[^A-Z\n][^.]*){0,3}\.)/i
+                    /Description:\s*([^.]*(?:\.[^A-Z\n][^.]*){0,5}\.)/i,
+                    /Descripción:\s*([^.]*(?:\.[^A-Z\n][^.]*){0,5}\.)/i,
+                    /(Body\s+(?:color|covered)[^.]*(?:\.[^A-Z\n][^.]*){0,3}\.)/i,
+                    /(Irregular[^.]*cerata[^.]*(?:\.[^A-Z\n][^.]*){0,2}\.)/i
                 ],
                 'remarks': [
                     /Remarks:\s*([^.\n]+(?:\.[^A-Z\n][^.\n]*)*)/i,
-                    /Observaciones:\s*([^.\n]+(?:\.[^A-Z\n][^.\n]*)*)/i
+                    /Observaciones:\s*([^.\n]+(?:\.[^A-Z\n][^.\n]*)*)/i,
+                    /(This\s+(?:rare|distinct)\s+[^.]*(?:\.[^A-Z\n][^.]*){0,2}\.)/i
+                ],
+                'commonname': [
+                    /^([A-Z][a-z]+(?:'s)?\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s*$/m,
+                    /(\w+\s+Aeolid)/i,
+                    /(\w+\s+Aeolidia)/i
                 ]
             };
             
-            // Extract custom fields
+            // Extract custom fields with more comprehensive patterns
             for (const customField of customFields) {
                 const fieldKey = customField.toLowerCase();
                 const patterns = fieldPatterns[fieldKey] || [
-                    // Generic pattern for any custom field
+                    // Generic pattern for any custom field - more flexible
                     new RegExp(`${customField}:\\s*([^.\\n]+(?:\\.[^A-Z\\n][^.\\n]*)*)`, 'i'),
-                    new RegExp(`${customField}\\s*([^.\\n]+)`, 'i')
+                    new RegExp(`${customField}\\s*([^.\\n]+)`, 'i'),
+                    // Try without colon
+                    new RegExp(`\\b${customField}\\s+([^.\\n]{10,100})`, 'i')
                 ];
                 
                 for (const pattern of patterns) {
                     const match = context.match(pattern);
                     if (match && match[1]) {
-                        const value = match[1].trim();
-                        if (value.length > 3) {
+                        let value = match[1].trim();
+                        
+                        // Clean up common extraction artifacts
+                        value = value.replace(/^[:.\s]+/, ''); // Remove leading punctuation
+                        value = value.replace(/\s+/g, ' '); // Normalize whitespace
+                        
+                        // For size specifically, try to preserve the complete measurement
+                        if (fieldKey === 'size' && value.length > 3) {
+                            // Remove trailing periods if they don't seem to belong
+                            value = value.replace(/\.\s*$/, '');
+                            extractedFields[customField] = value;
+                            break;
+                        } else if (value.length > 5 && value.length < 200) { // Reasonable length limits
                             extractedFields[customField] = value;
                             break;
                         }
@@ -2569,7 +2595,7 @@ Description: Body covered with numerous bristly cerata; white, with cream white 
             }
         }
 
-        // AI Assistant
+        // AI Assistant with context-aware responses
         function sendAIMessage() {
             const input = document.getElementById('aiInput').value.trim();
             if (!input) {
@@ -2594,16 +2620,85 @@ Description: Body covered with numerous bristly cerata; white, with cream white 
             let aiResponse;
             const lowerInput = input.toLowerCase();
             
-            if (lowerInput.includes('custom') || lowerInput.includes('field')) {
-                aiResponse = `Custom fields allow you to extract specific information like habitat, size, distribution, or any field you define. The system searches for these fields in the document context around each species. Configure custom fields in the extraction settings above the upload area.`;
+            // Context-aware responses based on current data
+            if (lowerInput.includes('quality') && (lowerInput.includes('medium') || lowerInput.includes('low'))) {
+                const mediumQualityReasons = [];
+                if (speciesData.length > 0) {
+                    const mediumSpecies = speciesData.filter(s => s.dataQuality === 'Medium');
+                    if (mediumSpecies.length > 0) {
+                        const commonIssues = mediumSpecies[0]?.qualityFlags || [];
+                        if (commonIssues.includes('Missing Author')) mediumQualityReasons.push('missing author information');
+                        if (commonIssues.includes('Missing Year')) mediumQualityReasons.push('missing publication year');
+                        if (commonIssues.some(flag => flag.includes('Missing'))) mediumQualityReasons.push('incomplete custom field extraction');
+                        if (commonIssues.includes('Limited Context')) mediumQualityReasons.push('insufficient surrounding text');
+                    }
+                }
+                
+                if (mediumQualityReasons.length > 0) {
+                    aiResponse = `Medium quality scores typically result from: ${mediumQualityReasons.join(', ')}. The scoring system awards points for core fields (genus, species, author, year), custom field completeness, and extraction context quality. Check the Analytics tab for detailed quality breakdowns.`;
+                } else {
+                    aiResponse = `Medium quality species (60-79 points) usually have some missing information like author, year, or custom fields (habitat, size, distribution). The system requires complete core taxonomic data plus rich context for high quality scores.`;
+                }
+            } else if (lowerInput.includes('size') && (lowerInput.includes('unit') || lowerInput.includes('measurement') || lowerInput.includes('refer'))) {
+                const sizeExamples = [];
+                if (speciesData.length > 0) {
+                    speciesData.slice(0, 3).forEach(species => {
+                        if (species.Size && !species.Size.includes('not specified')) {
+                            sizeExamples.push(species.Size);
+                        }
+                    });
+                }
+                
+                if (sizeExamples.length > 0) {
+                    const uniqueUnits = [...new Set(sizeExamples.map(size => {
+                        if (size.includes('in')) return 'inches';
+                        if (size.includes('mm')) return 'millimeters';
+                        if (size.includes('cm')) return 'centimeters';
+                        return 'various units';
+                    }))];
+                    
+                    aiResponse = `Size measurements in your extracted data use ${uniqueUnits.join(' and ')}. Examples from your results: ${sizeExamples.slice(0, 2).join('; ')}. Marine field guides commonly use inches for larger species and millimeters for smaller organisms. The "To X" format indicates maximum recorded size.`;
+                } else {
+                    aiResponse = `Size typically refers to maximum body length of marine organisms, commonly measured in inches (in), millimeters (mm), or centimeters (cm). Field guides often use "To X in" format meaning "up to X inches long". For example: "To 0.5 in" means the species reaches up to half an inch in length.`;
+                }
+            } else if (lowerInput.includes('custom') || lowerInput.includes('field')) {
+                const currentFields = customFields.length > 0 ? customFields.join(', ') : 'Habitat, Size, Distribution';
+                aiResponse = `Custom fields (currently: ${currentFields}) allow you to extract specific information beyond core taxonomic data. The system searches for these fields in the document context around each species using bilingual patterns. Configure custom fields in the extraction settings above the upload area.`;
             } else if (lowerInput.includes('database') || lowerInput.includes('link')) {
-                aiResponse = `Database verification provides live links to WoRMS, GBIF, iNaturalist, and OBIS records. Each species gets verified against these databases with direct links to authoritative taxonomic records, showing match status and confidence levels.`;
-            } else if (lowerInput.includes('quality') || lowerInput.includes('validation')) {
-                aiResponse = `Data quality scoring evaluates extraction completeness and accuracy. High quality (80-100 points) indicates complete core and custom fields with good context. Check the Analytics tab for detailed quality metrics and performance analysis.`;
-            } else if (lowerInput.includes('bilingual') || lowerInput.includes('spanish')) {
-                aiResponse = `The system recognizes both English and Spanish field patterns. It looks for "Description/Descripción", "Habitat/Hábitat", "Distribution/Distribución", etc. This is especially useful for Latin American field guides and taxonomic papers.`;
+                const dbStats = speciesData.length > 0 ? {
+                    worms: speciesData.filter(s => s.databaseLinks?.worms).length,
+                    gbif: speciesData.filter(s => s.databaseLinks?.gbif).length,
+                    total: speciesData.length
+                } : null;
+                
+                if (dbStats && dbStats.total > 0) {
+                    aiResponse = `Database verification provides live links to authoritative marine databases. From your current results: ${dbStats.worms}/${dbStats.total} species have WoRMS links, ${dbStats.gbif}/${dbStats.total} have GBIF records. Links show match status (MATCH for verified, SYN for synonyms, N/F for not found) and connect directly to species pages.`;
+                } else {
+                    aiResponse = `Database verification provides live links to WoRMS, GBIF, iNaturalist, and OBIS records. Each species gets verified against these databases with direct links to authoritative taxonomic records, showing match status and confidence levels.`;
+                }
+            } else if (lowerInput.includes('bilingual') || lowerInput.includes('spanish') || lowerInput.includes('english')) {
+                aiResponse = `The system recognizes both English and Spanish field patterns. It looks for "Description/Descripción", "Habitat/Hábitat", "Distribution/Distribución", "Size/Tamaño", etc. This is especially useful for Latin American field guides like "Invertebrados Marinos del Noroeste de México" where content appears in both languages.`;
+            } else if (lowerInput.includes('pattern') || lowerInput.includes('extraction') || lowerInput.includes('recognition')) {
+                const extractionPatterns = speciesData.length > 0 ? 
+                    [...new Set(speciesData.map(s => s.extractionPattern).filter(p => p))] : [];
+                
+                if (extractionPatterns.length > 0) {
+                    aiResponse = `Your document used these extraction patterns: ${extractionPatterns.join(', ')}. The system automatically detects document structure and applies appropriate patterns for numbered entries, family organization, or scientific name formats. Different patterns optimize for field guides vs. research papers.`;
+                } else {
+                    aiResponse = `The system uses multiple extraction patterns: numbered_bilingual for field guide entries (649. Species name), family_organized for taxonomic groupings, and scientific_enhanced for research papers. Patterns are automatically selected based on document structure analysis.`;
+                }
+            } else if (lowerInput.includes('confidence') || lowerInput.includes('score')) {
+                const avgConfidence = speciesData.length > 0 ? 
+                    Math.round(speciesData.reduce((sum, s) => sum + (s.confidence || 0), 0) / speciesData.length) : null;
+                
+                if (avgConfidence !== null) {
+                    aiResponse = `Your extraction has an average confidence of ${avgConfidence}%. Confidence scores reflect database verification success: 80-100% indicates strong matches, 50-79% suggests possible synonyms or uncertain matches, below 50% indicates species not found in databases. Higher data quality generally correlates with better confidence scores.`;
+                } else {
+                    aiResponse = `Confidence scores range from 0-100% and indicate how certain the system is about species verification. High confidence (≥80%) shows strong database matches, medium (50-79%) indicates possible synonyms, and low (<50%) suggests uncertain or unmatched species.`;
+                }
             } else {
-                aiResponse = `MarineID Pro features enhanced pattern recognition, custom field extraction, data quality scoring, database verification with live links, and comprehensive analytics. Your question "${input}" relates to the advanced capabilities for processing diverse marine taxonomic documents.`;
+                // Generic fallback - but more helpful
+                aiResponse = `I can help with questions about data quality, size measurements, custom fields, database verification, extraction patterns, confidence scores, or bilingual processing. For specific questions about your results, try asking about the quality scores, size units, or database links you're seeing.`;
             }
             
             responseElement.innerHTML = `<strong>Q:</strong> ${input}<br><strong>AI:</strong> ${aiResponse}`;
