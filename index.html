@@ -814,10 +814,6 @@
                     <h2 class="section-title">Species Results</h2>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <div style="display: flex; gap: 3px; margin-right: 15px;">
-                            <button class="button" onclick="toggleView('cards')" id="cardsViewBtn" style="background: #6c757d; padding: 8px 16px; font-size: 12px;">🔲 Cards</button>
-                            <button class="button" onclick="toggleView('table')" id="tableViewBtn" style="background: var(--accent-color); padding: 8px 16px; font-size: 12px;">📋 Table</button>
-                        </div>
-                        <div style="display: flex; gap: 3px; margin-right: 15px;">
                             <button class="button" onclick="selectAll()" style="background: var(--success-color); padding: 8px 16px; font-size: 12px;">✅ Select All</button>
                             <button class="button" onclick="clearSelection()" style="background: #6c757d; padding: 8px 16px; font-size: 12px;">❌ Clear</button>
                         </div>
@@ -854,16 +850,7 @@
                     </div>
                 </div>
 
-                <!-- Cards View -->
-                <div class="species-grid" id="speciesGrid" style="display: none;">
-                    <div class="no-data-message">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">🔬</div>
-                        <h3>Ready for Species Extraction</h3>
-                        <p>Upload a comprehensive field guide to see hundreds of species extracted with full taxonomic data</p>
-                    </div>
-                </div>
-
-                <!-- Table View -->
+                <!-- Table View - Now the only view -->
                 <div id="tableView" style="display: block;">
                     <div style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px;">
                         <table style="width: 100%; border-collapse: collapse; background: var(--card-bg);">
@@ -879,10 +866,10 @@
                                     <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Size</th>
                                     <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Habitat</th>
                                     <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Distribution</th>
-                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">WoRMS</th>
-                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">GBIF</th>
-                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">iNaturalist</th>
-                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">OBIS</th>
+                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); width: 80px;">WoRMS</th>
+                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); width: 80px;">GBIF</th>
+                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); width: 80px;">iNaturalist</th>
+                                    <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); width: 80px;">OBIS</th>
                                     <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600;">Status</th>
                                 </tr>
                             </thead>
@@ -1990,11 +1977,7 @@ Strongylocentrotus purpuratus`;
 
         function populateResults() {
             updateResultsStats();
-            if (currentView === 'table') {
-                populateTableView();
-            } else {
-                populateSpeciesCards();
-            }
+            populateTableView();
         }
 
         function updateResultsStats() {
@@ -2167,36 +2150,9 @@ Strongylocentrotus purpuratus`;
                 return;
             }
 
-            tableView.innerHTML = `
-                <div style="overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px;">
-                    <table style="width: 100%; border-collapse: collapse; background: var(--card-bg);">
-                        <thead>
-                            <tr style="background: var(--light-bg); border-bottom: 2px solid var(--border-color);">
-                                <th style="padding: 12px 8px; text-align: center; width: 40px;">
-                                    <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()" style="cursor: pointer;">
-                                </th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Scientific Name</th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Common Name</th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Author</th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Year</th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Size</th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Habitat</th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">Distribution</th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">WoRMS</th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">GBIF</th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">iNaturalist</th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color);">OBIS</th>
-                                <th style="padding: 12px; text-align: left; color: var(--text-color); font-weight: 600;">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="speciesTableBody">
-                            <!-- Table rows will be populated here -->
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
             const tableBody = document.getElementById('speciesTableBody');
+            tableBody.innerHTML = '';
+            
             speciesData.forEach((species, index) => {
                 const row = document.createElement('tr');
                 row.className = `table-row ${selectedSpecies.has(index) ? 'selected' : ''}`;
@@ -2213,8 +2169,8 @@ Strongylocentrotus purpuratus`;
                     status === 'verified' ? 'VERIFIED' : status === 'synonym' ? 'SYNONYM' : 'NOT FOUND'
                 }</span>`;
 
-                // Helper function to create database indicator
-                function createDbIndicator(dbData, dbName) {
+                // Helper function to create database link with indicator
+                function createDbLink(dbData, dbName, species) {
                     if (!dbData) return '<span style="color: #999;">-</span>';
                     
                     const status = dbData.status || 'not_found';
@@ -2223,9 +2179,49 @@ Strongylocentrotus purpuratus`;
                                  status === 'found' ? '#28a745' : 
                                  status === 'synonym' ? '#ffc107' : '#dc3545';
                     
+                    // Generate database URLs
+                    let dbUrl = '#';
+                    const scientificName = encodeURIComponent(species.scientificName);
+                    
+                    switch(dbName) {
+                        case 'WoRMS':
+                            // WoRMS search URL
+                            dbUrl = `https://www.marinespecies.org/aphia.php?p=taxdetails&id=${dbData.aphiaId || ''}`;
+                            if (!dbData.aphiaId) {
+                                dbUrl = `https://www.marinespecies.org/aphia.php?p=search&q=${scientificName}`;
+                            }
+                            break;
+                        case 'GBIF':
+                            // GBIF search URL
+                            dbUrl = `https://www.gbif.org/species/search?q=${scientificName}`;
+                            if (dbData.key) {
+                                dbUrl = `https://www.gbif.org/species/${dbData.key}`;
+                            }
+                            break;
+                        case 'iNaturalist':
+                            // iNaturalist search URL
+                            dbUrl = `https://www.inaturalist.org/taxa/search?q=${scientificName}`;
+                            if (dbData.taxonId) {
+                                dbUrl = `https://www.inaturalist.org/taxa/${dbData.taxonId}`;
+                            }
+                            break;
+                        case 'OBIS':
+                            // OBIS search URL
+                            dbUrl = `https://obis.org/taxon/${dbData.taxonKey || ''}`;
+                            if (!dbData.taxonKey) {
+                                dbUrl = `https://obis.org/search?scientificname=${scientificName}`;
+                            }
+                            break;
+                    }
+                    
                     return `<div style="font-size: 0.8rem;">
-                        <div style="color: ${color}; font-weight: 600;">${status.toUpperCase()}</div>
+                        <a href="${dbUrl}" target="_blank" style="color: ${color}; font-weight: 600; text-decoration: none;">
+                            ${status.toUpperCase()}
+                        </a>
                         ${confidence > 0 ? `<div style="color: #666; font-size: 0.7rem;">${confidence}%</div>` : ''}
+                        ${dbData.records ? `<div style="color: #666; font-size: 0.7rem;">${dbData.records} records</div>` : ''}
+                        ${dbData.observations ? `<div style="color: #666; font-size: 0.7rem;">${dbData.observations} obs</div>` : ''}
+                        ${dbData.occurrences ? `<div style="color: #666; font-size: 0.7rem;">${dbData.occurrences} occur</div>` : ''}
                     </div>`;
                 }
 
@@ -2241,10 +2237,10 @@ Strongylocentrotus purpuratus`;
                     <td class="table-cell">${species.size || 'Not specified'}</td>
                     <td class="table-cell">${(species.habitat || 'Not specified').substring(0, 100)}${species.habitat && species.habitat.length > 100 ? '...' : ''}</td>
                     <td class="table-cell">${(species.distribution || 'Not specified').substring(0, 100)}${species.distribution && species.distribution.length > 100 ? '...' : ''}</td>
-                    <td class="table-cell">${createDbIndicator(species.databases?.worms, 'WoRMS')}</td>
-                    <td class="table-cell">${createDbIndicator(species.databases?.gbif, 'GBIF')}</td>
-                    <td class="table-cell">${createDbIndicator(species.databases?.inaturalist, 'iNaturalist')}</td>
-                    <td class="table-cell">${createDbIndicator(species.databases?.obis, 'OBIS')}</td>
+                    <td class="table-cell">${createDbLink(species.databases?.worms, 'WoRMS', species)}</td>
+                    <td class="table-cell">${createDbLink(species.databases?.gbif, 'GBIF', species)}</td>
+                    <td class="table-cell">${createDbLink(species.databases?.inaturalist, 'iNaturalist', species)}</td>
+                    <td class="table-cell">${createDbLink(species.databases?.obis, 'OBIS', species)}</td>
                     <td class="table-cell status-cell">${statusBadge}</td>
                 `;
 
@@ -2252,24 +2248,8 @@ Strongylocentrotus purpuratus`;
             });
         }
 
-        function toggleView(viewType) {
-            currentView = viewType;
-            
-            // Update button states
-            document.getElementById('cardsViewBtn').style.background = viewType === 'cards' ? 'var(--accent-color)' : '#6c757d';
-            document.getElementById('tableViewBtn').style.background = viewType === 'table' ? 'var(--accent-color)' : '#6c757d';
-            
-            // Show/hide views
-            if (viewType === 'cards') {
-                document.getElementById('speciesGrid').style.display = 'grid';
-                document.getElementById('tableView').style.display = 'none';
-                populateSpeciesCards();
-            } else {
-                document.getElementById('speciesGrid').style.display = 'none';
-                document.getElementById('tableView').style.display = 'block';
-                populateTableView();
-            }
-        }
+        // Remove unused card view functions
+        // Cards view has been removed - table view only
 
         function toggleSpeciesSelection(index) {
             if (selectedSpecies.has(index)) {
