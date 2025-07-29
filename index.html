@@ -158,14 +158,29 @@
             padding: 20px 30px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+            position: relative;
+            min-height: 120px;
         }
 
         .header-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
             align-items: flex-end;
+            gap: 8px;
+            min-width: 200px;
+        }
+
+        .desktop-note {
+            font-size: 11px;
+            color: var(--text-color);
+            opacity: 0.6;
+            text-align: right;
+            line-height: 1.2;
+            white-space: nowrap;
         }
 
         .controls-row {
@@ -698,9 +713,24 @@
         }
 
         /* Responsive design */
+        @media (max-width: 1400px) {
+            .header-main p:last-child {
+                max-width: 60%;
+            }
+        }
+
         @media (max-width: 1200px) {
             .processing-steps {
                 grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .header-main p:last-child {
+                max-width: 55%;
+                font-size: 13px;
+            }
+            
+            .header-controls {
+                min-width: 180px;
             }
         }
 
@@ -715,13 +745,10 @@
                 max-width: 100%;
                 order: 2;
                 flex-shrink: 1;
+                max-height: 400px;
             }
             
             .processing-steps {
-                grid-template-columns: 1fr;
-            }
-            
-            .species-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -731,6 +758,22 @@
 
             .retry-options {
                 grid-template-columns: 1fr;
+            }
+            
+            .content-header {
+                flex-direction: column;
+                align-items: stretch;
+                min-height: auto;
+            }
+            
+            .header-controls {
+                position: static;
+                align-self: flex-end;
+                margin-top: 15px;
+            }
+            
+            .header-main p:last-child {
+                max-width: 100%;
             }
         }
 
@@ -789,18 +832,18 @@
                     <p style="font-family: 'Josefin Sans', sans-serif; color: var(--text-color); opacity: 0.7; font-size: 16px; font-weight: 400; margin-bottom: 10px;">
                         Advanced AI-powered marine species identification and verification system
                     </p>
-                    <p style="font-family: 'Josefin Sans', sans-serif; color: var(--text-color); opacity: 0.8; font-size: 14px; line-height: 1.3; max-width: 700px;">
+                    <p style="font-family: 'Josefin Sans', sans-serif; color: var(--text-color); opacity: 0.8; font-size: 14px; line-height: 1.3; max-width: 65%; padding-right: 20px;">
                         Leverages cutting-edge OCR technology, natural language processing, and real-time access to four authoritative marine databases: <strong>WoRMS</strong>, <strong>GBIF</strong>, <strong>iNaturalist</strong>, and <strong>OBIS</strong>. Extracts, identifies, and verifies marine species from field guides and research documents with unprecedented accuracy and speed.
                     </p>
                 </div>
-                <div class="header-controls" style="position: absolute; top: 15px; right: 15px;">
-                    <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 8px;">
+                <div class="header-controls">
+                    <div style="display: flex; align-items: center; gap: 5px;">
                         <span style="font-size: 12px; margin-right: 8px;">Theme:</span>
                         <button class="theme-btn" onclick="setTheme('system')" data-theme="system">System</button>
                         <button class="theme-btn active" onclick="setTheme('light')" data-theme="light">Light</button>
                         <button class="theme-btn" onclick="setTheme('dark')" data-theme="dark">Dark</button>
                     </div>
-                    <div style="font-size: 11px; color: var(--text-color); opacity: 0.6; text-align: right; line-height: 1.2;">
+                    <div class="desktop-note">
                         Optimized for desktop view<br>
                         <em>(Mobile version forthcoming)</em>
                     </div>
@@ -1366,13 +1409,17 @@
                 
                 showMessage(`🎉 Universal extraction complete! Successfully extracted ${speciesData.length} species from ${pdf.numPages} pages using ${detectedFormats.map(f => f.type).join(', ')} patterns.`, 'success');
                 
-                populateResults();
-                updateAnalytics();
-                
+                // Ensure we're on the results tab before populating
                 setTimeout(() => {
+                    populateResults();
+                    updateAnalytics();
+                    
+                    // Switch to results tab
                     const resultsTab = document.querySelector('[onclick="switchTab(\'results\')"]');
-                    resultsTab.click();
-                }, 1000);
+                    if (resultsTab) {
+                        resultsTab.click();
+                    }
+                }, 500);
                 
             } catch (error) {
                 console.error('Universal PDF processing error:', error);
