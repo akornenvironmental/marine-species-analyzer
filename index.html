@@ -864,17 +864,19 @@
                             <h3 style="font-family: 'Orpheus Pro', serif; margin: 0 0 10px 0; color: #333; font-size: 20px;">Advanced Marine Species Extraction</h3>
                             <div style="display: grid; grid-template-rows: repeat(3, 1fr); gap: 8px; font-family: 'Josefin Sans', sans-serif; font-size: 13px; color: #333;">
                                 <div style="display: flex; gap: 20px;">
-                                    <span style="cursor: help;" title="Processes PDFs up to 1GB, handles hi-res/low-res scans, performs advanced OCR, supports multiple document layouts and formats">• Multi-format document processing</span>
+                                    <span style="cursor: help;" title="Processes PDFs up to 1GB, handles hi-res/low-res scans, performs advanced OCR, supports multiple document layouts and formats. Enhanced via training on multiple field manuals and marine biology literature">• Multi-format document processing</span>
                                     <span style="cursor: help;" title="Recognizes numbered species entries (e.g., '649. Eubranchus madapamensis'), handles sequential taxonomic listings, extracts entry numbers and cross-references">• Field guides (numbered entries)</span>
                                     <span style="cursor: help;" title="Extracts species from research papers, monographs, systematic reviews, handles author citations, publication references, and formal taxonomic descriptions">• Scientific papers (taxonomic lists)</span>
                                 </div>
                                 <div style="display: flex; gap: 20px;">
-                                    <span style="cursor: help;" title="Processes policy documents, conservation reports, biodiversity assessments, environmental impact studies, and government publications">• White papers & reports</span>
+                                    <span style="cursor: help;" title="User-configurable fields (habitat, size, distribution, depth, feeding, etc.) extracted automatically from document context using intelligent pattern recognition">• Custom field extraction</span>
                                     <span style="cursor: help;" title="Tracks exact page numbers for each species, enables precise source citation, facilitates document navigation and reference verification">• Page number tracking</span>
                                     <span style="cursor: help;" title="Analyzes surrounding text for habitat, size, distribution data, understands document structure, extracts related information and descriptions">• Context-aware extraction</span>
                                 </div>
                                 <div style="display: flex; gap: 20px;">
+                                    <span style="cursor: help;" title="Manual species entry using scientific names (Genus species) or common names (Blue whale, Sea otter). Multiple export formats: CSV, JSON, Excel-compatible downloads">• Manual entry & export options</span>
                                     <span style="cursor: help;" title="Supports English, Spanish, and other languages, recognizes bilingual field guides, handles international taxonomic publications and regional naming conventions">• Multilingual support</span>
+                                    <span style="cursor: help;" title="Automatically converts measurements to metric system (inches to cm, feet to meters, Fahrenheit to Celsius) for standardized data analysis">• Metric standardization</span>
                                 </div>
                             </div>
                         </div>
@@ -915,7 +917,7 @@
                          style="padding: 20px;">
                         <div style="font-size: 2.5rem; margin-bottom: 12px;">📄</div>
                         <div style="font-size: 1.1rem; font-weight: 600; color: var(--text-color); margin-bottom: 6px; font-family: 'Orpheus Pro', serif;">Upload Document</div>
-                        <div style="color: var(--text-color); opacity: 0.7; margin-bottom: 15px; font-family: 'Josefin Sans', sans-serif; font-size: 12px;">Native PDFs or scanned documents<br><span style="font-size: 10px; opacity: 0.6;">Max file size: 1GB • No pre-OCR required</span></div>
+                        <div style="color: var(--text-color); opacity: 0.7; margin-bottom: 15px; font-family: 'Josefin Sans', sans-serif; font-size: 12px;">Native PDFs or scanned documents<br><span style="font-size: 12px; opacity: 0.8; font-weight: 600;">Max file size: 1GB • No pre-processing required</span></div>
                         <button class="button" style="padding: 10px 18px; font-size: 13px;">Choose PDF File</button>
                         <input type="file" id="fileInput" style="display: none;" accept=".pdf" onchange="handleFileUpload(event)">
                         <div style="margin-top: 12px; font-size: 0.8rem; color: var(--text-color); opacity: 0.6; font-family: 'Josefin Sans', sans-serif;">
@@ -928,14 +930,14 @@
                         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
                             <div style="font-size: 2rem;">🔍</div>
                             <div>
-                                <h3 style="margin: 0; color: var(--text-color); font-family: 'Orpheus Pro', serif; font-size: 15px;">Manual Testing</h3>
-                                <p style="margin: 3px 0 0 0; color: var(--text-color); opacity: 0.7; font-size: 11px; font-family: 'Josefin Sans', sans-serif;">Test extraction patterns</p>
+                                <h3 style="margin: 0; color: var(--text-color); font-family: 'Orpheus Pro', serif; font-size: 15px;">Manual Entry</h3>
+                                <p style="margin: 3px 0 0 0; color: var(--text-color); opacity: 0.7; font-size: 11px; font-family: 'Josefin Sans', sans-serif;">Scientific names or common names</p>
                             </div>
                         </div>
                         
                         <div>
                             <textarea id="manualSpeciesInput" style="width: 100%; height: 80px; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Josefin Sans', sans-serif; font-size: 12px; background: var(--card-bg); color: var(--text-color); resize: vertical;"
-                                      placeholder="Enter species data..."></textarea>
+                                      placeholder="Enter scientific names (Genus species) or common names (Blue whale, Sea otter)..."></textarea>
                             
                             <div style="display: flex; gap: 8px; margin-top: 12px;">
                                 <button class="button" onclick="processManualSpecies()" style="padding: 8px 12px; font-size: 11px; flex: 1;">🔍 Test</button>
@@ -1187,32 +1189,26 @@
                     </div>
                 </div>
 
-                <div style="background: var(--light-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px;">
+                <div style="background: var(--light-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-top: 20px; width: 100%;">
                     <h3 style="color: var(--text-color); margin-bottom: 15px; font-family: 'Orpheus Pro', serif;">📧 Support & Contact</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div>
-                            <h4 style="color: var(--text-color); margin-bottom: 10px; font-family: 'Orpheus Pro', serif;">🔬 Marine Biology & Technical</h4>
-                            <p style="font-size: 0.9rem; margin-bottom: 10px; color: var(--text-color); opacity: 0.8; font-family: 'Josefin Sans', sans-serif;">
-                                For taxonomic questions, field guide formats, or extraction accuracy:
-                            </p>
-                            <button class="button" onclick="window.location.href='mailto:aaron.kornbluth@gmail.com?subject=MarineID Pro - Technical Support'" style="width: 100%;">
-                                📧 Email Aaron Kornbluth
+                    <div style="text-align: center;">
+                        <h4 style="color: var(--text-color); margin-bottom: 15px; font-family: 'Orpheus Pro', serif;">🔬 All Questions & Support</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 15px; color: var(--text-color); opacity: 0.8; font-family: 'Josefin Sans', sans-serif;">
+                            For technical questions, marine biology expertise, feature requests, bug reports, or development support:
+                        </p>
+                        <div style="display: flex; gap: 20px; justify-content: center;">
+                            <button class="button" onclick="window.location.href='mailto:aaron.kornbluth@gmail.com,jakespencer6596@gmail.com?subject=MarineID Pro - Support Request'" style="flex: 1; max-width: 300px;">
+                                📧 Email Aaron & Jake
                             </button>
                         </div>
-                        <div>
-                            <h4 style="color: var(--text-color); margin-bottom: 10px; font-family: 'Orpheus Pro', serif;">💻 Development & Features</h4>
-                            <p style="font-size: 0.9rem; margin-bottom: 10px; color: var(--text-color); opacity: 0.8; font-family: 'Josefin Sans', sans-serif;">
-                                For feature requests, bug reports, or technical development:
-                            </p>
-                            <button class="button success" onclick="window.location.href='mailto:jakespencer6596@gmail.com?subject=MarineID Pro - Development Support'" style="width: 100%;">
-                                📧 Email Jake Spencer
-                            </button>
-                        </div>
+                        <p style="font-size: 0.85rem; margin-top: 10px; color: var(--text-color); opacity: 0.6; font-family: 'Josefin Sans', sans-serif;">
+                            Both developers will receive your message for comprehensive support
+                        </p>
                     </div>
                 </div>
 
-                <!-- Legal Disclaimer -->
-                <div style="background: #fff9e6; border: 2px solid #d4a574; border-radius: 12px; padding: 25px; margin-top: 20px;">
+                <!-- Legal Disclaimer - Full Width -->
+                <div style="background: #fff9e6; border: 2px solid #d4a574; border-radius: 12px; padding: 25px; margin-top: 20px; width: 100%;">
                     <h3 style="color: #8b4513; margin-bottom: 15px; font-family: 'Orpheus Pro', serif;">⚖️ Legal Disclaimer & Data Sources</h3>
                     <div style="font-size: 0.9rem; line-height: 1.6; color: #654321; font-family: 'Josefin Sans', sans-serif;">
                         <p style="margin-bottom: 15px;">
@@ -1221,10 +1217,12 @@
                         <p style="margin-bottom: 15px;">
                             <strong>Data Sources:</strong> This tool queries the following databases via their public APIs: World Register of Marine Species (WoRMS), Global Biodiversity Information Facility (GBIF), iNaturalist, and Ocean Biodiversity Information System (OBIS). Data accuracy and completeness depend on these external sources.
                         </p>
+                        <p style="margin-bottom: 15px;">
+                            <strong>Machine Learning & Adaptability:</strong> While MarineID Pro uses advanced pattern recognition trained on multiple field manuals and marine literature, it does not currently learn or adapt from user submissions. Each document is processed independently using established algorithms to ensure consistent, reliable results.
+                        </p>
                         <p style="font-size: 0.85rem; font-style: italic; color: #8b4513;">
                             © 2025 akorn environmental consulting, LLC. No warranty is provided for the accuracy of species identifications or database content. Use at your own discretion for research and educational purposes only. 
-                            <br>Technical support: <a href="mailto:aaron.kornbluth@gmail.com" style="color: #8b4513;">aaron.kornbluth@gmail.com</a> | 
-                            Development support: <a href="mailto:jakespencer6596@gmail.com" style="color: #8b4513;">jakespencer6596@gmail.com</a>
+                            <br>Support contact: <a href="mailto:aaron.kornbluth@gmail.com,jakespencer6596@gmail.com" style="color: #8b4513;">aaron.kornbluth@gmail.com, jakespencer6596@gmail.com</a>
                         </p>
                     </div>
                 </div>
@@ -1233,9 +1231,9 @@
     </div>
 
     <script>
-        // Global variables
+        // Global variables  
         let speciesData = [];
-        let customFields = ['Habitat', 'Size', 'Distribution']; // Default custom fields
+        let customFields = ['Habitat', 'Size', 'Distribution']; // Default custom fields - Common Name is now core
         let processingStats = {
             totalSpecies: 0,
             verified: 0,
@@ -1257,8 +1255,56 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeTheme();
             updateCustomFieldsDisplay();
-            console.log('MarineID Pro - Loaded with custom field support and database linking');
+            console.log('MarineID Pro - Loaded with custom field support, metric conversion, and database linking');
         });
+
+        // Add metric conversion function
+        function convertToMetric(value, field) {
+            if (!value || typeof value !== 'string') return value;
+            
+            let converted = value;
+            
+            // Size conversions
+            if (field.toLowerCase() === 'size') {
+                // Convert inches to centimeters
+                converted = converted.replace(/(\d+(?:\.\d+)?)\s*(?:in|inch|inches)/gi, (match, num) => {
+                    const cm = (parseFloat(num) * 2.54).toFixed(1);
+                    return `${cm} cm`;
+                });
+                
+                // Convert feet to meters
+                converted = converted.replace(/(\d+(?:\.\d+)?)\s*(?:ft|feet|foot)/gi, (match, num) => {
+                    const m = (parseFloat(num) * 0.3048).toFixed(2);
+                    return `${m} m`;
+                });
+                
+                // Convert yards to meters
+                converted = converted.replace(/(\d+(?:\.\d+)?)\s*(?:yd|yard|yards)/gi, (match, num) => {
+                    const m = (parseFloat(num) * 0.9144).toFixed(2);
+                    return `${m} m`;
+                });
+            }
+            
+            // Temperature conversions
+            if (field.toLowerCase().includes('temperature') || field.toLowerCase().includes('temp')) {
+                // Convert Fahrenheit to Celsius
+                converted = converted.replace(/(\d+(?:\.\d+)?)\s*°?F/gi, (match, num) => {
+                    const celsius = ((parseFloat(num) - 32) * 5/9).toFixed(1);
+                    return `${celsius}°C`;
+                });
+            }
+            
+            // Depth conversions
+            if (field.toLowerCase().includes('depth')) {
+                // Convert fathoms to meters
+                converted = converted.replace(/(\d+(?:\.\d+)?)\s*(?:fathom|fathoms)/gi, (match, num) => {
+                    const m = (parseFloat(num) * 1.8288).toFixed(1);
+                    return `${m} m`;
+                });
+            }
+            
+            return converted;
+        }
 
         function initializeTheme() {
             const savedTheme = localStorage.getItem('marineid_theme') || 'light';
@@ -1698,16 +1744,19 @@
                         value = value.replace(/^[:.\s]+/, ''); // Remove leading punctuation
                         value = value.replace(/\s+/g, ' '); // Normalize whitespace
                         
-                        // For size specifically, try to preserve the complete measurement
+                        // For size specifically, try to preserve the complete measurement and convert to metric
                         if (fieldKey === 'size' && value.length > 3) {
                             // Remove trailing periods if they don't seem to belong
                             value = value.replace(/\.\s*$/, '');
-                            // Format as extracted data with quotes
-                            extractedFields[customField] = `"${value}" [extracted]`;
+                            // Convert to metric and format as extracted data with quotes
+                            const metricValue = convertToMetric(value, 'size');
+                            extractedFields[customField] = `"${metricValue}" [extracted]`;
                             break;
                         } else if (value.length > 5 && value.length < 200) { // Reasonable length limits
+                            // Apply metric conversion if applicable
+                            const convertedValue = convertToMetric(value, customField);
                             // Format as extracted data with quotes
-                            extractedFields[customField] = `"${value}" [extracted]`;
+                            extractedFields[customField] = `"${convertedValue}" [extracted]`;
                             break;
                         }
                     }
@@ -1995,9 +2044,18 @@
                 nameCell.innerHTML = `<span class="scientific-name">${species.scientificName}</span>`;
                 row.appendChild(nameCell);
                 
-                // Common Name
+                // Common Name - now a core field
                 const commonCell = document.createElement('td');
-                commonCell.textContent = species.commonName || 'Not available';
+                // Extract common name from context if not already set
+                let commonName = species.commonName;
+                if (!commonName || commonName === 'Unknown') {
+                    // Try to extract from context
+                    const context = species.context || '';
+                    const commonNameMatch = context.match(/^([A-Z][a-z]+(?:'s)?\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s*$/m) ||
+                                          context.match(/(\w+\s+(?:Aeolid|Aeolidia|whale|shark|fish|crab|shrimp))/i);
+                    commonName = commonNameMatch ? commonNameMatch[1].trim() : 'Not available';
+                }
+                commonCell.textContent = commonName;
                 row.appendChild(commonCell);
                 
                 // Author
@@ -2218,20 +2276,26 @@
         }
 
         function loadEnhancedSamples() {
-            const sampleText = `649. Eubranchus madapamensis (Rao, 1969)
-Madapam Aeolid
-Description: Body color translucent gray brown with brown-yellow, white, clear and dark spots and blotches. Size: To 0.5 in. Habitat: Intertidal and shallow subtidal, to at least 30 ft. Distribution: Indo-Pacific, from Tanzania to Hawai'i
-
-650. Eubranchus steinbecki Behrens, 1987
-Steinbeck's Aeolid  
-Description: Irregular, nodular cerata; body color tan with dark olive-green mottling. Size: To 0.23 in. Habitat: Intertidal and on boat docks. Distribution: Palos Verdes and Mission Bay, California
-
-651. Aeolidia loui Kienberger et al., 2016
-Lou's Southern Aeolidia
-Description: Body covered with numerous bristly cerata; white, with cream white patches on dorsum. Size: To about 1.2 in. Habitat: Intertidal and shallow subtidal. Distribution: Cape Arago, Oregon, to Punta Baja`;
+            // Random selection of 5 marine species (3 scientific names, 2 common names)
+            const scientificNames = [
+                "649. Eubranchus madapamensis (Rao, 1969)\nMadapam Aeolid\nDescription: Body color translucent gray brown. Size: To 0.5 in. Habitat: Intertidal and shallow subtidal.",
+                "Octopus vulgaris Cuvier, 1797\nDescription: Common octopus with eight arms. Size: To 25 cm mantle length. Habitat: Rocky reefs and sandy bottoms.",
+                "Mytilus californianus Conrad, 1837\nDescription: Large mussel with thick shell. Size: To 25 cm length. Habitat: Exposed rocky intertidal zones."
+            ];
+            
+            const commonNames = [
+                "Blue whale\nLargest animal on Earth, reaching lengths up to 30 meters. Habitat: Open ocean, feeding primarily on krill.",
+                "Sea otter\nMarine mammal with dense fur. Size: 1-1.5 meters. Habitat: Kelp forests and shallow coastal waters."
+            ];
+            
+            // Randomly select samples
+            const randomScientific = scientificNames.sort(() => 0.5 - Math.random()).slice(0, 3);
+            const randomCommon = commonNames.sort(() => 0.5 - Math.random()).slice(0, 2);
+            
+            const sampleText = [...randomScientific, ...randomCommon].join('\n\n');
             
             document.getElementById('manualSpeciesInput').value = sampleText;
-            showMessage('Enhanced sample entries loaded with detailed descriptions for custom field extraction', 'info');
+            showMessage('Random marine species samples loaded (3 scientific names, 2 common names)', 'info');
         }
 
         // Enhanced analytics
