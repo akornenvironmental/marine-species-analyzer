@@ -1282,104 +1282,135 @@
             }
         }
 
-        // Species extraction - FIXED to properly capture numbered entries
+        // Species extraction - IMPROVED family recognition and author parsing
         async function speciesExtraction(fullText, progressContainer) {
-            console.log('🎯 Starting FIXED species extraction...');
+            console.log('🎯 Starting IMPROVED species extraction...');
             
             const species = [];
             const processedNames = new Set();
             let extractionProgress = 40;
             
-            // FIXED regex patterns - removed ^ anchors that were preventing matches
+            // IMPROVED patterns with better family recognition
             const patterns = [
-                // Pattern 1: Numbered entries with author in parentheses - FIXED
+                // Pattern 0: Family headers - MUCH more comprehensive
+                {
+                    name: 'family_headers',
+                    regex: /\b([A-Z][a-z]{4,25}(?:idae|idae|idae|inae|oidea|acea|iformes|ida|ita|ata|ella|ura|osa|ata))\b/g,
+                    priority: 0,
+                    isHeader: true
+                },
+                
+                // Pattern 1: Numbered entries with author & year - IMPROVED parsing
                 // Matches: "555. Okenia cochimi Gosliner & Bertsch, 2004"
                 {
                     name: 'numbered_with_author_year',
-                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25})\s+([A-Z][a-zA-Z\s&.,]{4,50}\d{4})/g,
+                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25})\s+([A-Z][a-zA-Z\s&.,]+?)\s+(\d{4})/g,
                     priority: 1
                 },
                 
-                // Pattern 2: Numbered entries with author in parentheses
-                // Matches: "649. Eubranchus madapamensis (Rao, 1969)"
+                // Pattern 2: Numbered entries with parenthetical citations - IMPROVED
+                // Matches: "649. Eubranchus madapamensis (Rao, 1969)" or "(de Laubenfels, 1930)"
                 {
                     name: 'numbered_with_parentheses',
-                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25}(?:\s+[a-z]{2,15})?)\s+\(([^)]{4,50})\)/g,
+                    regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25}(?:\s+[a-z]{2,15})?)\s+\(([^)]+?),?\s*(\d{4})\)/g,
                     priority: 2
                 },
                 
-                // Pattern 3: Simple numbered entries
-                // Matches: "651. Aeolidia loui"
+                // Pattern 3: Simple numbered entries without author
                 {
                     name: 'numbered_simple',
                     regex: /(\d{1,4})\.\s+([A-Z][a-z]{2,20})\s+([a-z]{2,25})(?=\s|$)/g,
                     priority: 3
-                },
-                
-                // Pattern 4: Family headers - kept separate
-                {
-                    name: 'family_headers',
-                    regex: /\b([A-Z][a-z]{4,25}idae)\b/g,
-                    priority: 0,
-                    isHeader: true
                 }
             ];
             
             let currentFamily = 'Unknown Family';
             
-            // Process patterns in priority order
-            patterns.sort((a, b) => a.priority - b.priority);
+            // STEP 1: First pass - identify family headers
+            console.log('🔍 Step 1: Identifying family headers...');
+            const familyPattern = patterns[0];
+            familyPattern.regex.lastIndex = 0;
             
-            for (let patternIndex = 0; patternIndex < patterns.length; patternIndex++) {
+            const familyPositions = [];
+            let familyMatch;
+            while ((familyMatch = familyPattern.regex.exec(fullText)) !== null) {
+                const familyName = familyMatch[1];
+                // More specific family name validation
+                if ((familyName.endsWith('idae') || familyName.endsWith('inae') || 
+                     familyName.endsWith('oidea') || familyName.endsWith('acea')) && 
+                    familyName.length > 6 && familyName.length < 30) {
+                    familyPositions.push({
+                        name: familyName,
+                        position: familyMatch.index
+                    });
+                    console.log(`📋 Found family: ${familyName} at position ${familyMatch.index}`);
+                }
+                
+                if (familyPattern.regex.lastIndex === familyMatch.index) {
+                    familyPattern.regex.lastIndex++;
+                }
+            }
+            
+            // Helper function to find current family based on position
+            function getCurrentFamily(position) {
+                let current = 'Unknown Family';
+                for (const family of familyPositions) {
+                    if (family.position <= position) {
+                        current = family.name;
+                    } else {
+                        break;
+                    }
+                }
+                return current;
+            }
+            
+            // STEP 2: Extract species with improved author/year parsing
+            console.log('🔍 Step 2: Extracting species with improved parsing...');
+            
+            // Process non-family patterns
+            for (let patternIndex = 1; patternIndex < patterns.length; patternIndex++) {
                 const pattern = patterns[patternIndex];
                 let foundCount = 0;
                 
-                // Reset regex lastIndex to ensure we get all matches
                 pattern.regex.lastIndex = 0;
                 
                 let match;
                 while ((match = pattern.regex.exec(fullText)) !== null) {
-                    if (pattern.isHeader) {
-                        // Update current family
-                        const familyName = match[1];
-                        if (familyName.endsWith('idae') && familyName.length > 6) {
-                            currentFamily = familyName;
-                            console.log(`📋 Found family header - ${currentFamily}`);
-                        }
-                        continue;
-                    }
-                    
-                    // Extract species data based on pattern
                     let speciesEntry = null;
+                    
+                    // Find current family based on match position
+                    currentFamily = getCurrentFamily(match.index);
                     
                     if (pattern.name === 'numbered_with_author_year') {
                         // "555. Okenia cochimi Gosliner & Bertsch, 2004"
-                        const [, number, genus, species, authorYear] = match;
+                        const [, number, genus, species, author, year] = match;
                         if (isStrictlyValidSpecies(genus, species)) {
                             speciesEntry = {
                                 number: parseInt(number),
                                 genus: genus.trim(),
                                 species: species.trim(),
                                 scientificName: `${genus.trim()} ${species.trim()}`,
-                                authorYear: authorYear.trim(),
+                                author: author.trim(),
+                                year: year.trim(),
+                                authorYear: `${author.trim()}, ${year.trim()}`,
                                 family: currentFamily,
-                                extractionMethod: pattern.name,
-                                extractionPattern: 'numbered_with_author_year'
+                                extractionMethod: pattern.name
                             };
                         }
                     } else if (pattern.name === 'numbered_with_parentheses') {
-                        // "649. Eubranchus madapamensis (Rao, 1969)"
-                        const [, number, genus, species, authorYear] = match;
+                        // "649. Eubranchus madapamensis (Rao, 1969)" or "(de Laubenfels, 1930)"
+                        const [, number, genus, species, author, year] = match;
                         if (isStrictlyValidSpecies(genus, species)) {
                             speciesEntry = {
                                 number: parseInt(number),
                                 genus: genus.trim(),
                                 species: species.trim(),
                                 scientificName: `${genus.trim()} ${species.trim()}`,
-                                authorYear: authorYear.trim(),
+                                author: author.trim(),
+                                year: year.trim(),
+                                authorYear: `${author.trim()}, ${year.trim()}`,
                                 family: currentFamily,
-                                extractionMethod: pattern.name,
-                                extractionPattern: 'numbered_with_parentheses'
+                                extractionMethod: pattern.name
                             };
                         }
                     } else if (pattern.name === 'numbered_simple') {
@@ -1391,20 +1422,21 @@
                                 genus: genus.trim(),
                                 species: species.trim(),
                                 scientificName: `${genus.trim()} ${species.trim()}`,
+                                author: 'Unknown',
+                                year: 'Unknown',
                                 authorYear: 'Unknown',
                                 family: currentFamily,
-                                extractionMethod: pattern.name,
-                                extractionPattern: 'numbered_simple'
+                                extractionMethod: pattern.name
                             };
                         }
                     }
                     
-                    // Validate and add species with deduplication
+                    // Validate and add species
                     if (speciesEntry && 
                         isStrictlyValidSpecies(speciesEntry.genus, speciesEntry.species) && 
                         !processedNames.has(speciesEntry.scientificName)) {
                         
-                        // Add context for later data enrichment - smaller context window
+                        // Add context
                         const contextStart = Math.max(0, match.index - 300);
                         const contextEnd = Math.min(fullText.length, match.index + 2000);
                         speciesEntry.context = fullText.substring(contextStart, contextEnd);
@@ -1415,7 +1447,7 @@
                         processedNames.add(speciesEntry.scientificName);
                         foundCount++;
                         
-                        console.log(`✅ Added ${speciesEntry.scientificName} (Entry #${speciesEntry.number}, Family: ${speciesEntry.family}, Method: ${speciesEntry.extractionMethod})`);
+                        console.log(`✅ Added ${speciesEntry.scientificName} (${speciesEntry.author}, ${speciesEntry.year}) [Family: ${speciesEntry.family}]`);
                     }
                     
                     // Prevent infinite loops
@@ -1427,17 +1459,18 @@
                 console.log(`🎯 Pattern "${pattern.name}" found ${foundCount} valid species`);
                 
                 // Update progress
-                extractionProgress = 40 + ((patternIndex + 1) / patterns.length) * 30;
+                extractionProgress = 40 + ((patternIndex) / (patterns.length - 1)) * 30;
                 updateProgress(progressContainer, extractionProgress, 
-                    `Pattern ${patternIndex + 1}/${patterns.length}: Found ${species.length} valid species`);
+                    `Pattern ${patternIndex}/${patterns.length - 1}: Found ${species.length} valid species`);
                 
                 await new Promise(resolve => setTimeout(resolve, 200));
             }
             
-            // Sort by entry number for proper ordering
+            // Sort by entry number
             species.sort((a, b) => (a.number || 0) - (b.number || 0));
             
-            console.log(`🎉 FIXED extraction complete: ${species.length} validated species found`);
+            console.log(`🎉 IMPROVED extraction complete: ${species.length} validated species found`);
+            console.log(`📊 Families found: ${new Set(species.map(s => s.family)).size}`);
             updateProgress(progressContainer, 70, `Extraction complete: ${species.length} validated species found`);
             
             return species;
@@ -1540,7 +1573,7 @@
             return enriched;
         }
 
-        // Extract detailed species data from context
+        // Extract detailed species data from context - IMPROVED author/year handling
         function extractFixedSpeciesData(species, fullText) {
             const scientificName = species.scientificName;
             const context = species.context || '';
@@ -1548,102 +1581,112 @@
             console.log(`🔍 Extracting data for ${scientificName}`);
             
             const extractedData = {
-                // Base fields
+                // Base fields - now properly handling separated author/year
                 scientificName: scientificName,
                 commonName: 'Unknown',
                 description: 'No description available',
-                author: 'Unknown',
-                year: 'Unknown',
+                author: species.author || 'Unknown',
+                year: species.year || 'Unknown',
                 size: 'Size not specified',
                 habitat: 'Habitat not specified',
                 distribution: 'Distribution not specified'
             };
             
-            // Extract author and year from authorYear field
-            if (species.authorYear && species.authorYear !== 'Unknown') {
-                const authorMatch = species.authorYear.match(/^([^,\d]+)/);
-                const yearMatch = species.authorYear.match(/(\d{4})/);
+            // Legacy support: Extract author and year from authorYear field if needed
+            if (species.authorYear && species.authorYear !== 'Unknown' && 
+                (extractedData.author === 'Unknown' || extractedData.year === 'Unknown')) {
                 
-                if (authorMatch) extractedData.author = authorMatch[1].trim();
-                if (yearMatch) extractedData.year = yearMatch[1];
+                // Try to parse "Author, Year" format
+                const authorYearMatch = species.authorYear.match(/^(.+?),?\s*(\d{4})$/);
+                if (authorYearMatch) {
+                    if (extractedData.author === 'Unknown') {
+                        extractedData.author = authorYearMatch[1].trim();
+                    }
+                    if (extractedData.year === 'Unknown') {
+                        extractedData.year = authorYearMatch[2];
+                    }
+                }
             }
             
-            // Pattern matching for field extraction
+            // Pattern matching for field extraction - ENHANCED patterns
             const patterns = {
-                // Common name patterns - look for lines after scientific name
+                // Common name patterns - improved to capture more variations
                 commonName: [
-                    new RegExp(`${scientificName}[^\\n]*\\n([A-Z][^\\n]{5,50})`, 'i'),
+                    new RegExp(`${scientificName}[^\\n]*\\n\\s*([A-Z][^\\n]{3,60})`, 'i'),
                     /^([A-Z][a-z]+(?:'s)?\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s*$/m,
-                    /Common name:\s*([^.\n]+)/i
+                    /Common name:\s*([^.\n]+)/i,
+                    // Spanish common names
+                    /Nombre común:\s*([^.\n]+)/i
                 ],
                 
-                // Description patterns
+                // Description patterns - enhanced for bilingual content
                 description: [
                     /Description:\s*([^.]*(?:\.[^A-Z\n][^.]*){0,8}\.)/i,
-                    /Body\s+color?\s*([^.]*(?:\.[^A-Z\n][^.]*){0,3}\.)/i,
-                    /Irregular[,\s]+([^.]*(?:\.[^A-Z\n][^.]*){0,2}\.)/i
+                    /Body\s+color?\s*([^.]*(?:\.[^A-Z\n][^.]*){0,5}\.)/i,
+                    /The\s+body\s+color\s+is\s+([^.]*(?:\.[^A-Z\n][^.]*){0,3}\.)/i,
+                    // Spanish descriptions
+                    /Descripción:\s*([^.]*(?:\.[^A-Z ñáéíóú\n][^.]*){0,8}\.)/i,
+                    /El\s+color\s+del\s+cuerpo\s+([^.]*(?:\.[^A-Z ñáéíóú\n][^.]*){0,3}\.)/i
                 ],
                 
-                // Size patterns with standardization
+                // Size patterns - enhanced with more variations
                 size: [
                     /Size:\s*(To\s+[^.\n]+)/i,
                     /Size:\s*([^.\n]+)/i,
-                    /(To\s+\d+(?:\.\d+)?\s*(?:in|inch|mm|cm|m))/i,
-                    /(Up\s+to\s+\d+(?:\.\d+)?\s*(?:in|inch|mm|cm|m))/i
+                    /(To\s+\d+(?:\.\d+)?\s*(?:in|inch|inches|mm|cm|m))/i,
+                    /(Up\s+to\s+\d+(?:\.\d+)?\s*(?:in|inch|inches|mm|cm|m))/i,
+                    /less\s+than\s+(\d+(?:\/\d+)?\s*(?:of\s+an\s+)?inch)/i,
+                    // Spanish size patterns
+                    /Tamaño:\s*([^.\n]+)/i,
+                    /(Hasta\s+\d+(?:\.\d+)?\s*(?:mm|cm|m))/i
                 ],
                 
-                // Habitat patterns
+                // Habitat patterns - more comprehensive
                 habitat: [
                     /Habitat:\s*([^.\n]+(?:\.[^A-Z\n][^.\n]*)*)/i,
                     /(Intertidal[^.\n]*(?:\.[^A-Z\n][^.\n]*)*)/i,
                     /(Subtidal[^.\n]*(?:\.[^A-Z\n][^.\n]*)*)/i,
-                    /Found\s+(?:in|on)\s+([^.\n]+)/i
+                    /(In\s+(?:relatively\s+)?shallow\s+water[^.\n]*)/i,
+                    /Found\s+(?:in|on)\s+([^.\n]+)/i,
+                    // Spanish habitat patterns
+                    /Hábitat:\s*([^.\n]+(?:\.[^A-Z ñáéíóú\n][^.\n]*)*)/i,
+                    /(En\s+aguas\s+[^.\n]*)/i
                 ],
                 
-                // Distribution patterns
+                // Distribution patterns - enhanced
                 distribution: [
                     /Distribution:\s*([^.\n]+(?:\.[^A-Z\n][^.\n]*)*)/i,
                     /(Pacific[^.\n]*(?:\.[^A-Z\n][^.\n]*)*)/i,
+                    /(Known\s+only\s+from[^.\n]*)/i,
                     /Range:\s*([^.\n]+)/i,
-                    /from\s+([A-Z][^.\n]*to[^.\n]*)/i
-                ],
-                
-                // Spanish versions
-                descripcion: /Descripción:\s*([^.]*(?:\.[^A-Z ñáéíóú\n][^.]*){0,8}\.)/i,
-                tamano: /Tamaño:\s*([^.\n]+)/i,
-                habitat_es: /Hábitat:\s*([^.\n]+(?:\.[^A-Z ñáéíóú\n][^.\n]*)*)/i,
-                distribucion: /Distribución:\s*([^.\n]+(?:\.[^A-Z ñáéíóú\n][^.\n]*)*)/i
+                    /from\s+([A-Z][^.\n]*to[^.\n]*)/i,
+                    // Spanish distribution patterns
+                    /Distribución:\s*([^.\n]+(?:\.[^A-Z ñáéíóú\n][^.\n]*)*)/i,
+                    /(Es\s+únicamente\s+conocida[^.\n]*)/i,
+                    /(Desde\s+[^.\n]*hasta[^.\n]*)/i
+                ]
             };
             
-            // Apply patterns to extract data
+            // Apply patterns to extract data with better matching
             Object.entries(patterns).forEach(([field, patternList]) => {
-                if (!Array.isArray(patternList)) patternList = [patternList];
-                
                 for (const pattern of patternList) {
                     const match = context.match(pattern);
                     if (match && match[1]) {
                         const value = match[1].trim();
-                        if (value.length > 3) { // Ensure meaningful content
-                            if (field === 'descripcion' && !extractedData.description.includes('No description')) {
-                                // Don't override English description with Spanish
-                                continue;
-                            }
-                            if (field.endsWith('_es')) {
-                                // Handle Spanish versions
-                                const baseField = field.replace('_es', '');
-                                if (extractedData[baseField] === `${baseField.charAt(0).toUpperCase() + baseField.slice(1)} not specified`) {
-                                    extractedData[baseField] = value;
-                                }
-                            } else {
+                        if (value.length > 2 && value.length < 500) { // Reasonable length
+                            // Don't override good data with poor data
+                            if (extractedData[field] === `${field.charAt(0).toUpperCase() + field.slice(1)} not specified` ||
+                                extractedData[field] === 'No description available' ||
+                                extractedData[field] === 'Unknown') {
                                 extractedData[field] = value;
+                                break; // Use first good match
                             }
-                            break;
                         }
                     }
                 }
             });
             
-            // Size standardization
+            // Size standardization with better parsing
             if (extractedData.size && extractedData.size !== 'Size not specified') {
                 const standardized = standardizeSize(extractedData.size);
                 if (standardized) {
@@ -1651,7 +1694,7 @@
                 }
             }
             
-            // Add metadata
+            // Add metadata - preserving new structure
             extractedData.family = species.family || 'Unknown Family';
             extractedData.genus = species.genus || 'Unknown';
             extractedData.species = species.species || 'Unknown';
