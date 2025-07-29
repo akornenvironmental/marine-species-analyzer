@@ -862,23 +862,20 @@
                         <div style="font-size: 3rem;">🔬</div>
                         <div>
                             <h3 style="font-family: 'Orpheus Pro', serif; margin: 0 0 10px 0; color: #333; font-size: 20px;">Advanced Marine Species Extraction</h3>
-                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; font-family: 'Josefin Sans', sans-serif; font-size: 13px; color: #333;">
-                                <ul style="list-style: none; padding: 0; margin: 0;">
-                                    <li style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Processes PDFs up to 1GB, handles hi-res/low-res scans, performs advanced OCR, supports multiple document layouts and formats">• Multi-format document processing</li>
-                                    <li style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Recognizes numbered species entries (e.g., '649. Eubranchus madapamensis'), handles sequential taxonomic listings, extracts entry numbers and cross-references">• Field guides (numbered entries)</li>
-                                </ul>
-                                <ul style="list-style: none; padding: 0; margin: 0;">
-                                    <li style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Extracts species from research papers, monographs, systematic reviews, handles author citations, publication references, and formal taxonomic descriptions">• Scientific papers (taxonomic lists)</li>
-                                    <li style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Processes policy documents, conservation reports, biodiversity assessments, environmental impact studies, and government publications">• White papers & reports</li>
-                                </ul>
-                                <ul style="list-style: none; padding: 0; margin: 0;">
-                                    <li style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Tracks exact page numbers for each species, enables precise source citation, facilitates document navigation and reference verification">• Page number tracking</li>
-                                    <li style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Analyzes surrounding text for habitat, size, distribution data, understands document structure, extracts related information and descriptions">• Context-aware extraction</li>
-                                </ul>
-                                <ul style="list-style: none; padding: 0; margin: 0;">
-                                    <li style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Real-time verification against World Register of Marine Species, Global Biodiversity Information Facility, provides live database links and taxonomic validation">• WoRMS/GBIF verification</li>
-                                    <li style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="Supports English, Spanish, and other languages, recognizes bilingual field guides, handles international taxonomic publications and regional naming conventions">• Multilingual support</li>
-                                </ul>
+                            <div style="display: grid; grid-template-rows: repeat(3, 1fr); gap: 8px; font-family: 'Josefin Sans', sans-serif; font-size: 13px; color: #333;">
+                                <div style="display: flex; gap: 20px;">
+                                    <span style="cursor: help;" title="Processes PDFs up to 1GB, handles hi-res/low-res scans, performs advanced OCR, supports multiple document layouts and formats">• Multi-format document processing</span>
+                                    <span style="cursor: help;" title="Recognizes numbered species entries (e.g., '649. Eubranchus madapamensis'), handles sequential taxonomic listings, extracts entry numbers and cross-references">• Field guides (numbered entries)</span>
+                                    <span style="cursor: help;" title="Extracts species from research papers, monographs, systematic reviews, handles author citations, publication references, and formal taxonomic descriptions">• Scientific papers (taxonomic lists)</span>
+                                </div>
+                                <div style="display: flex; gap: 20px;">
+                                    <span style="cursor: help;" title="Processes policy documents, conservation reports, biodiversity assessments, environmental impact studies, and government publications">• White papers & reports</span>
+                                    <span style="cursor: help;" title="Tracks exact page numbers for each species, enables precise source citation, facilitates document navigation and reference verification">• Page number tracking</span>
+                                    <span style="cursor: help;" title="Analyzes surrounding text for habitat, size, distribution data, understands document structure, extracts related information and descriptions">• Context-aware extraction</span>
+                                </div>
+                                <div style="display: flex; gap: 20px;">
+                                    <span style="cursor: help;" title="Supports English, Spanish, and other languages, recognizes bilingual field guides, handles international taxonomic publications and regional naming conventions">• Multilingual support</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -918,7 +915,7 @@
                          style="padding: 20px;">
                         <div style="font-size: 2.5rem; margin-bottom: 12px;">📄</div>
                         <div style="font-size: 1.1rem; font-weight: 600; color: var(--text-color); margin-bottom: 6px; font-family: 'Orpheus Pro', serif;">Upload Document</div>
-                        <div style="color: var(--text-color); opacity: 0.7; margin-bottom: 15px; font-family: 'Josefin Sans', sans-serif; font-size: 12px;">Field guides, papers, reports<br><span style="font-size: 10px; opacity: 0.6;">Max file size: 1GB</span></div>
+                        <div style="color: var(--text-color); opacity: 0.7; margin-bottom: 15px; font-family: 'Josefin Sans', sans-serif; font-size: 12px;">Native PDFs or scanned documents<br><span style="font-size: 10px; opacity: 0.6;">Max file size: 1GB • No pre-OCR required</span></div>
                         <button class="button" style="padding: 10px 18px; font-size: 13px;">Choose PDF File</button>
                         <input type="file" id="fileInput" style="display: none;" accept=".pdf" onchange="handleFileUpload(event)">
                         <div style="margin-top: 12px; font-size: 0.8rem; color: var(--text-color); opacity: 0.6; font-family: 'Josefin Sans', sans-serif;">
