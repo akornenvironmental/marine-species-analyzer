@@ -1561,21 +1561,44 @@
                         const contextEnd = Math.min(pageText.length, match.index + 500);
                         const surroundingText = pageText.substring(contextStart, contextEnd);
                         
-                        // Patterns for common names in field guides
+                        // Patterns for common names in field guides - Enhanced with better specificity
                         const commonNamePatterns = [
-                            // Direct common name after scientific name
-                            new RegExp(`${match[2]}\\s+${match[3]}[^\\n]*?\\n\\s*([A-Z][a-z]+(?:\\s+[A-Z][a-z]+)*(?:\\s+[A-Z][a-z]+)?)\\s*(?:\\n|$)`, 'i'),
-                            // English name before Spanish section
-                            /([A-Z][a-z]+(?:'s)?\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s*\n.*?Description:/i,
-                            // Look for characteristic marine animal names
-                            /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\s+(?:Aeolid|Aeolidia|Whale|Shark|Fish|Crab|Shrimp|Octopus|Mussel|Otter))/i
+                            // Pattern 1: Look for common name immediately after scientific name (next line)
+                            new RegExp(`${match[2]}\\s+${match[3]}[^\\n]*?\\n\\s*([A-Z][a-z]+(?:'s)?(?:\\s+[A-Z][a-z]+)*(?:\\s+[A-Z][a-z]+)?)\\s*(?:\\n|Description:|Descripción:)`, 'i'),
+                            
+                            // Pattern 2: Look for characteristic marine animal names with possessive forms
+                            /([A-Z][a-z]+(?:'s)?\s+(?:Southern|Northern|Pacific|Atlantic|Giant|Common|Blue|Red|California)\s+[A-Z][a-z]+)/i,
+                            /([A-Z][a-z]+(?:'s)?\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s*(?:\n|$)/,
+                            
+                            // Pattern 3: Look for names ending with common marine terms
+                            /([A-Z][a-z]+(?:'s)?\s+(?:Southern|Northern|Pacific|Atlantic|Giant|Common|Blue|Red|California)?\s*(?:Aeolid|Aeolidia|Whale|Shark|Fish|Crab|Shrimp|Octopus|Mussel|Otter|Nudibranch))/i,
+                            
+                            // Pattern 4: Extract from bilingual sections (before Spanish description)
+                            /([A-Z][a-z]+(?:'s)?\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s*\n.*?Descripción:/i,
+                            
+                            // Pattern 5: Simple pattern for names at start of context
+                            /^([A-Z][a-z]+(?:'s)?\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s*\n/
                         ];
                         
                         for (const namePattern of commonNamePatterns) {
                             const nameMatch = surroundingText.match(namePattern);
-                            if (nameMatch && nameMatch[1] && nameMatch[1].length > 5 && nameMatch[1].length < 50) {
-                                commonName = nameMatch[1].trim();
-                                break;
+                            if (nameMatch && nameMatch[1]) {
+                                let extractedName = nameMatch[1].trim();
+                                
+                                // Clean up the extracted name
+                                extractedName = extractedName.replace(/\s+/g, ' '); // Normalize whitespace
+                                
+                                // Validate the extracted name
+                                if (extractedName.length >= 5 && 
+                                    extractedName.length <= 50 && 
+                                    !extractedName.includes('.') &&
+                                    !extractedName.includes(',') &&
+                                    !/^(Description|Descripción|Size|Habitat|Distribution|Remarks)/i.test(extractedName)) {
+                                    
+                                    commonName = extractedName;
+                                    console.log(`✅ Common name extracted: "${commonName}" using pattern: ${namePattern.source.substring(0, 50)}...`);
+                                    break;
+                                }
                             }
                         }
                         
@@ -2119,7 +2142,8 @@
                         'Enhydra lutris': 'Sea Otter',
                         'Eubranchus madapamensis': 'Madapam Aeolid',
                         'Eubranchus steinbecki': 'Steinbeck\'s Aeolid',
-                        'Aeolidia loui': 'Lou\'s Southern Aeolidia'
+                        'Aeolidia loui': 'Lou\'s Southern Aeolidia',
+                        'Aeolidia papillosa': 'Common Grey Sea Slug'
                     };
                     
                     // Check known names first
@@ -2610,7 +2634,8 @@ Sea otter with the densest fur in the animal kingdom. Size: 1-1.5 meters body le
                             'Enhydra lutris': 'Sea Otter',
                             'Eubranchus madapamensis': 'Madapam Aeolid',
                             'Eubranchus steinbecki': 'Steinbeck\'s Aeolid',
-                            'Aeolidia loui': 'Lou\'s Southern Aeolidia'
+                            'Aeolidia loui': 'Lou\'s Southern Aeolidia',
+                            'Aeolidia papillosa': 'Common Grey Sea Slug'
                         };
                         commonName = knownCommonNames[species.scientificName] || 'Marine Species';
                     }
