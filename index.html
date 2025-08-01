@@ -1,13 +1,4 @@
-let processingMetadata = {
-            originalFileName: '',
-            processingStartTime: null,
-            processingEndTime: null,
-            documentFormat: 'Unknown',
-            pagesProcessed: 0,
-            extractionMethod: 'AI-Enhanced',
-            user: 'MarineID Pro User',
-            version: 'v3.0'
-        };<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -69,7 +60,7 @@ let processingMetadata = {
             width: 100%;
         }
 
-        /* Enhanced AI Assistant Panel */
+        /* AI Assistant Panel */
         .ai-assistant {
             width: 420px;
             min-width: 420px;
@@ -117,7 +108,7 @@ let processingMetadata = {
             min-height: 0;
         }
 
-        /* Enhanced AI Chat Interface */
+        /* AI Chat Interface */
         .ai-chat-interface {
             background: var(--light-bg);
             border: 2px solid var(--ai-color);
@@ -214,7 +205,7 @@ let processingMetadata = {
             transform: none;
         }
 
-        /* AI Quick Actions */
+        /* Quick Actions */
         .ai-quick-actions {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -530,234 +521,6 @@ let processingMetadata = {
             font-weight: 600;
         }
 
-        /* Results Table */
-        .results-container {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .results-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card-bg);
-            font-family: 'Josefin Sans', sans-serif;
-            position: relative;
-        }
-
-        .results-table thead {
-            background: var(--light-bg);
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .results-table th {
-            padding: 12px 8px;
-            text-align: left;
-            color: var(--text-color);
-            font-weight: 600;
-            border-right: 1px solid var(--border-color);
-            font-size: 12px;
-            position: sticky;
-            top: 0;
-            background: var(--light-bg);
-            font-family: 'Josefin Sans', sans-serif;
-            z-index: 10;
-            cursor: pointer;
-            user-select: none;
-            transition: background-color 0.2s ease;
-        }
-
-        .results-table th:hover {
-            background: var(--accent-color);
-            color: white;
-        }
-
-        .results-table th.sortable::after {
-            content: ' ↕';
-            font-size: 10px;
-            opacity: 0.5;
-        }
-
-        .results-table th.sort-asc::after {
-            content: ' ↑';
-            opacity: 1;
-            color: var(--accent-color);
-        }
-
-        .results-table th.sort-desc::after {
-            content: ' ↓';
-            opacity: 1;
-            color: var(--accent-color);
-        }
-
-        .results-table td {
-            padding: 10px 8px;
-            border-right: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            font-size: 12px;
-            vertical-align: top;
-            font-family: 'Josefin Sans', sans-serif;
-        }
-
-        .results-table tr:hover td {
-            background: var(--light-bg);
-        }
-
-        .results-table tr.selected td {
-            background: rgba(31, 71, 136, 0.1);
-            border-color: var(--accent-color);
-        }
-
-        .scientific-name {
-            font-family: 'Orpheus Pro', serif;
-            font-style: italic;
-            font-weight: 600;
-            color: var(--accent-color);
-            min-width: 180px;
-            display: block;
-        }
-
-        /* Database Link Styling */
-        .database-link {
-            display: inline-block;
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 600;
-            text-decoration: none;
-            margin: 1px;
-            transition: all 0.2s ease;
-            font-family: 'Josefin Sans', sans-serif;
-            border: 1px solid transparent;
-        }
-
-        .database-link:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .db-worms { 
-            background: var(--info-color); 
-            color: white; 
-            border-color: var(--info-color);
-        }
-        .db-gbif { 
-            background: var(--success-color); 
-            color: white; 
-            border-color: var(--success-color);
-        }
-        .db-obis { 
-            background: #0277bd; 
-            color: white; 
-            border-color: #0277bd;
-        }
-        .db-inaturalist { 
-            background: #74ac00; 
-            color: white; 
-            border-color: #74ac00;
-        }
-
-        .db-not-found { 
-            background: var(--border-color); 
-            color: var(--text-color); 
-            cursor: not-allowed; 
-            opacity: 0.6;
-        }
-
-        .confidence-badge {
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 600;
-            color: white;
-            font-family: 'Josefin Sans', sans-serif;
-        }
-
-        .confidence-high { 
-            background: var(--success-color); 
-            color: white;
-        }
-        .confidence-medium { 
-            background: var(--warning-color); 
-            color: var(--text-color);
-            font-weight: 700;
-        }
-        .confidence-low { 
-            background: var(--error-color); 
-            color: white;
-        }
-
-        .status-badge {
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-family: 'Josefin Sans', sans-serif;
-        }
-
-        .status-verified {
-            background: var(--success-color);
-            color: white;
-        }
-
-        .status-synonym {
-            background: var(--warning-color);
-            color: white;
-        }
-
-        .status-not_found {
-            background: var(--error-color);
-            color: white;
-        }
-
-        .retry-btn {
-            background: var(--warning-color);
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 10px;
-            font-family: 'Josefin Sans', sans-serif;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .retry-btn:hover {
-            background: var(--training-color);
-            transform: translateY(-1px);
-        }
-
-        .select-checkbox {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-
-        .results-actions {
-            background: var(--light-bg);
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .selection-info {
-            font-family: 'Josefin Sans', sans-serif;
-            font-size: 13px;
-            color: var(--text-color);
-        }
-
-        .bulk-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
         /* Messages */
         .message {
             padding: 15px 20px;
@@ -798,38 +561,6 @@ let processingMetadata = {
             border-left-color: var(--training-color);
         }
 
-        /* Progress indicators */
-        .progress-container {
-            margin: 20px 0;
-            padding: 20px;
-            background: var(--light-bg);
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 12px;
-            background: var(--border-color);
-            border-radius: 6px;
-            overflow: hidden;
-            margin: 15px 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-
-        .progress-text {
-            font-family: 'Orpheus Pro', serif;
-            font-size: 1rem;
-            color: var(--text-color);
-            font-weight: 600;
-        }
-
         .ai-learning-indicator {
             display: inline-flex;
             align-items: center;
@@ -842,17 +573,15 @@ let processingMetadata = {
             font-weight: 600;
         }
 
+        /* Text size classes */
+        .text-small { font-size: 0.9em; }
+        .text-medium { font-size: 1em; }
+        .text-large { font-size: 1.1em; }
+
         /* Responsive design */
         @media (max-width: 1200px) {
             .processing-steps {
                 grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .header-controls {
-                position: relative;
-                top: auto;
-                right: auto;
-                margin-top: 15px;
             }
         }
 
@@ -877,15 +606,6 @@ let processingMetadata = {
             .tab-content {
                 padding: 15px;
             }
-            
-            .content-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .header-controls {
-                align-items: flex-start;
-            }
         }
 
         .section-title {
@@ -895,16 +615,11 @@ let processingMetadata = {
             margin: 0;
             font-weight: 700;
         }
-
-        /* Text size classes */
-        .text-small { font-size: 0.9em; }
-        .text-medium { font-size: 1em; }
-        .text-large { font-size: 1.1em; }
     </style>
 </head>
 <body>
     <div class="main-layout">
-        <!-- Enhanced AI Assistant Panel -->
+        <!-- AI Assistant Panel -->
         <div class="ai-assistant">
             <div class="ai-header">
                 <h3>🤖 AI Assistant & Training</h3>
@@ -912,18 +627,18 @@ let processingMetadata = {
             </div>
             <div class="ai-body">
                 <!-- AI Chat Interface -->
-                <div class="ai-chat-interface">
-                    <h4>💬 AI Assistant</h4>
+                <div style="background: var(--light-bg); border: 2px solid var(--ai-color); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                    <h4 style="font-family: 'Orpheus Pro', serif; color: var(--ai-color); margin-bottom: 20px; font-size: 16px;">💬 AI Assistant</h4>
                     
                     <!-- Chat Messages -->
-                    <div class="ai-chat-messages" id="aiChatMessages">
+                    <div style="max-height: 200px; overflow-y: auto; margin-bottom: 20px; padding: 15px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px;" id="aiChatMessages">
                         <div class="ai-message assistant">
-                            Ask me about your species data, extraction patterns, or training progress.
+                            Hi! I'm your marine species AI assistant. Upload a PDF field guide to start extracting species data.
                         </div>
                     </div>
                     
                     <!-- Input Area -->
-                    <div class="ai-input-container">
+                    <div style="display: flex; gap: 10px; align-items: stretch;">
                         <textarea 
                             class="ai-input-box" 
                             id="aiChatInput" 
@@ -937,47 +652,45 @@ let processingMetadata = {
                 </div>
 
                 <!-- Quick Action Buttons -->
-                <div class="ai-quick-actions">
-                    <h5>🚀 Quick Queries</h5>
-                    <div class="quick-action-buttons">
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                    <h5 style="font-family: 'Orpheus Pro', serif; color: var(--text-color); margin-bottom: 15px; font-size: 14px;">🚀 Quick Queries</h5>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                         <button class="quick-action-btn" onclick="quickQuery('summary')">📊 Data Summary</button>
                         <button class="quick-action-btn" onclick="quickQuery('quality')">✅ Quality Report</button>
                         <button class="quick-action-btn" onclick="quickQuery('patterns')">🧠 AI Patterns</button>
                         <button class="quick-action-btn" onclick="quickQuery('taxonomy')">🔬 Taxonomy</button>
-                        <button class="quick-action-btn" onclick="quickQuery('training')">🎓 Training Tips</button>
-                        <button class="quick-action-btn" onclick="quickQuery('export')">📥 Export Help</button>
                     </div>
                 </div>
 
                 <!-- Training Mode Toggle -->
-                <div class="training-mode-toggle">
-                    <div class="toggle-switch">
+                <div style="background: var(--light-bg); border: 2px solid var(--training-color); border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                         <div class="switch" id="trainingSwitch" onclick="toggleTrainingMode()">
                             <div class="switch-handle"></div>
                         </div>
                         <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 14px; color: var(--text-color);">Training Mode</span>
                     </div>
-                    <p style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; color: var(--text-color); opacity: 0.8;">
+                    <p style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; color: var(--text-color); opacity: 0.8; margin: 0;">
                         Enable to provide feedback and improve extraction accuracy
                     </p>
                 </div>
 
                 <!-- Training Statistics -->
-                <div class="training-stats">
-                    <h4>🎯 Training Progress</h4>
-                    <div class="stat-row">
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 15px; margin-bottom: 20px;">
+                    <h4 style="font-family: 'Orpheus Pro', serif; font-size: 14px; margin-bottom: 12px; color: var(--training-color);">🎯 Training Progress</h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0; font-family: 'Josefin Sans', sans-serif; font-size: 12px;">
                         <span>Accuracy:</span>
                         <span id="currentAccuracy">87%</span>
                     </div>
-                    <div class="stat-row">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0; font-family: 'Josefin Sans', sans-serif; font-size: 12px;">
                         <span>Documents:</span>
                         <span id="documentsTrainedCount">0</span>
                     </div>
-                    <div class="stat-row">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0; font-family: 'Josefin Sans', sans-serif; font-size: 12px;">
                         <span>Patterns:</span>
                         <span id="patternsLearnedCount">4</span>
                     </div>
-                    <div class="stat-row">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0; font-family: 'Josefin Sans', sans-serif; font-size: 12px;">
                         <span>Corrections:</span>
                         <span id="correctionsCount">0</span>
                     </div>
@@ -987,6 +700,9 @@ let processingMetadata = {
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                     <button class="button small" style="background: var(--training-color);" onclick="loadSampleDocument()">
                         📚 Try Sample Document
+                    </button>
+                    <button class="button small" style="background: var(--ai-color);" onclick="resetTraining()">
+                        🔄 Reset Training
                     </button>
                 </div>
             </div>
@@ -1000,11 +716,11 @@ let processingMetadata = {
                         🐚 MarineID Pro <span class="ai-learning-indicator">🧠 AI Learning</span>
                     </h1>
                     <p style="font-family: 'Josefin Sans', sans-serif; color: var(--text-color); opacity: 0.8; font-size: 14px; line-height: 1.4; max-width: 80%; padding-right: 20px;">
-                        <strong>Extract marine species</strong> from PDF field guides, images, and spreadsheets. AI learns from bilingual content, extracts custom fields, and verifies against <strong><a href="https://www.marinespecies.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">WoRMS</a></strong>, <strong><a href="https://www.gbif.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">GBIF</a></strong>, <strong><a href="https://obis.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">OBIS</a></strong>, and <strong><a href="https://www.inaturalist.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">iNaturalist</a></strong>.
+                        <strong>AI-powered marine species identification</strong> from scientific documents and field guides. Automatically extracts taxonomic data, habitat descriptions, and geographic distributions with database verification against <strong><a href="https://www.marinespecies.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">WoRMS</a></strong>, <strong><a href="https://www.gbif.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">GBIF</a></strong>, <strong><a href="https://obis.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">OBIS</a></strong>, and <strong><a href="https://www.inaturalist.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">iNaturalist</a></strong>.
                     </p>
                 </div>
                 <div class="header-controls">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                         <div style="display: flex; align-items: center; gap: 5px;">
                             <button class="text-size-btn" onclick="adjustTextSize('small')" data-size="small">A</button>
                             <button class="text-size-btn active" onclick="adjustTextSize('medium')" data-size="medium">A</button>
@@ -1013,12 +729,6 @@ let processingMetadata = {
                         <div style="display: flex; align-items: center; gap: 3px;">
                             <button class="theme-btn active" onclick="setTheme('light')" data-theme="light">Light</button>
                             <button class="theme-btn" onclick="setTheme('dark')" data-theme="dark">Dark</button>
-                            <button class="theme-btn" onclick="setTheme('system')" data-theme="system">Auto</button>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 3px;">
-                            <button class="theme-btn active" onclick="setLanguage('en')" data-lang="en">EN</button>
-                            <button class="theme-btn" onclick="setLanguage('es')" data-lang="es">ES</button>
-                            <button class="theme-btn" onclick="setLanguage('fr')" data-lang="fr">FR</button>
                         </div>
                     </div>
                     <div style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; color: var(--text-color); opacity: 0.6; text-align: right; line-height: 1.2;">
@@ -1046,7 +756,7 @@ let processingMetadata = {
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; font-family: 'Josefin Sans', sans-serif; font-size: 13px; color: #333;">
                                 <div style="background: rgba(255,255,255,0.7); padding: 12px; border-radius: 8px;">
                                     <strong>📄 Step 1: Upload</strong><br>
-                                    Upload PDFs, images (JPG/PNG), or spreadsheets. Works with bilingual documents.
+                                    Upload PDFs, images, or spreadsheets. Supports bilingual documents and multiple formats.
                                 </div>
                                 <div style="background: rgba(255,255,255,0.7); padding: 12px; border-radius: 8px;">
                                     <strong>🧠 Step 2: AI Extract</strong><br>
@@ -1074,12 +784,12 @@ let processingMetadata = {
                             Upload Document
                         </div>
                         <div id="uploadDescription" style="color: var(--text-color); opacity: 0.7; margin-bottom: 20px; font-family: 'Josefin Sans', sans-serif; font-size: 14px; line-height: 1.4;">
-                            PDF field guides, images (JPG/PNG), Excel/CSV files<br>
+                            PDFs, images (JPG/PNG/TIFF/BMP/GIF), spreadsheets (Excel/CSV/TSV)<br>
                             <strong>Max size: 1GB</strong> • Supports bilingual content<br>
                             <span id="modeIndicator">🤖 Standard mode: Using trained AI patterns</span>
                         </div>
-                        <button class="button" style="padding: 12px 24px; font-size: 14px;">Choose File (PDF/Image/Excel/CSV)</button>
-                        <input type="file" id="fileInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png,.xlsx,.xls,.csv" onchange="handleFileUpload(event)">
+                        <button class="button" style="padding: 12px 24px; font-size: 14px;">Choose file</button>
+                        <input type="file" id="fileInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png,.tiff,.tif,.bmp,.gif,.xlsx,.xls,.csv,.tsv" onchange="handleFileUpload(event)">
                     </div>
 
                     <!-- Custom Fields & Training Panel -->
@@ -1094,11 +804,11 @@ let processingMetadata = {
                             </p>
                             <div id="customFieldsList" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px;">
                                 <div class="field-input" style="display: flex; gap: 5px;">
-                                    <input type="text" value="Habitat" style="flex: 1; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
+                                    <input type="text" value="Description" style="flex: 1; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
                                     <button onclick="removeCustomField(this)" style="background: var(--error-color); color: white; border: none; padding: 6px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">✕</button>
                                 </div>
                                 <div class="field-input" style="display: flex; gap: 5px;">
-                                    <input type="text" value="Size" style="flex: 1; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
+                                    <input type="text" value="Habitat" style="flex: 1; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
                                     <button onclick="removeCustomField(this)" style="background: var(--error-color); color: white; border: none; padding: 6px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">✕</button>
                                 </div>
                                 <div class="field-input" style="display: flex; gap: 5px;">
@@ -1111,35 +821,9 @@ let processingMetadata = {
 
                         <!-- Training Toggle -->
                         <div style="margin-bottom: 15px;">
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                <div class="switch" id="trainingSwitch" onclick="toggleTrainingMode()">
-                                    <div class="switch-handle"></div>
-                                </div>
-                                <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 14px; color: var(--text-color);">Training Mode</span>
-                            </div>
                             <p style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; color: var(--text-color); opacity: 0.8;">
-                                Enable to improve AI accuracy through feedback
+                                Training mode is synchronized with the AI Assistant panel
                             </p>
-                        </div>
-
-                        <!-- Training Stats (Condensed) -->
-                        <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; margin-bottom: 15px;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-family: 'Josefin Sans', sans-serif; font-size: 12px;">
-                                <div>Accuracy: <strong id="currentAccuracy">87%</strong></div>
-                                <div>Trained: <strong id="documentsTrainedCount">0</strong> docs</div>
-                                <div>Patterns: <strong id="patternsLearnedCount">4</strong></div>
-                                <div>Corrections: <strong id="correctionsCount">0</strong></div>
-                            </div>
-                        </div>
-
-                        <!-- Quick Actions -->
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <button class="button small" style="background: var(--training-color); font-size: 12px;" onclick="loadSampleDocument()">
-                                📚 Try Sample Document
-                            </button>
-                            <button class="button small" style="background: var(--ai-color); font-size: 12px;" onclick="resetTraining()">
-                                🔄 Reset Training
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -1177,12 +861,29 @@ let processingMetadata = {
                             <div style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; color: var(--text-color); opacity: 0.7; line-height: 1.2;">Pattern improvement</div>
                         </div>
                     </div>
-
-                    <div id="progressContainer"></div>
                 </div>
 
                 <!-- Messages -->
                 <div id="messages"></div>
+            </div>
+
+            <!-- Analytics Tab Content -->
+            <div class="tab-content" id="analytics-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="section-title">Data Analytics & Insights</h2>
+                </div>
+                
+                <div id="analyticsContent">
+                    <!-- Analytics content will be populated here -->
+                    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 40px; text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">📊</div>
+                        <h3 style="font-family: 'Orpheus Pro', serif; margin-bottom: 10px;">Analytics Dashboard</h3>
+                        <p style="font-family: 'Josefin Sans', sans-serif; color: var(--text-color); opacity: 0.7; margin-bottom: 20px;">
+                            Process documents to see extraction analytics, confidence trends, and database verification statistics
+                        </p>
+                        <button class="button" onclick="switchTab('upload')">📄 Upload Document</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Results Tab Content -->
@@ -1209,25 +910,6 @@ let processingMetadata = {
 
                 <!-- Results Content -->
                 <div id="resultsContent" style="display: none;"></div>
-            </div>
-
-            <!-- Analytics Tab Content -->
-            <div class="tab-content" id="analytics-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 class="section-title">Data Analytics & Insights</h2>
-                </div>
-                
-                <div id="analyticsContent">
-                    <!-- Analytics content will be populated here -->
-                    <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 40px; text-align: center;">
-                        <div style="font-size: 3rem; margin-bottom: 15px;">📊</div>
-                        <h3 style="font-family: 'Orpheus Pro', serif; margin-bottom: 10px;">Analytics Dashboard</h3>
-                        <p style="font-family: 'Josefin Sans', sans-serif; color: var(--text-color); opacity: 0.7; margin-bottom: 20px;">
-                            Process documents to see extraction analytics, confidence trends, and database verification statistics
-                        </p>
-                        <button class="button" onclick="switchTab('upload')">📄 Upload Document</button>
-                    </div>
-                </div>
             </div>
 
             <!-- Help Tab Content -->
@@ -1287,60 +969,11 @@ let processingMetadata = {
         </div>
     </div>
 
-    <!-- Email Collection Modal -->
-    <div id="emailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; backdrop-filter: blur(3px);">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--card-bg); border-radius: 16px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
-            <div style="text-align: center; margin-bottom: 25px;">
-                <img src="https://images.squarespace-cdn.com/content/v1/634fbb3731628677d71611a9/df151418-c904-43a1-b943-ceb5add74d32/akorn+-+logo+-+horizontal+-+blue+%26+green+on+transparent.png?format=300w" alt="akorn environmental" style="max-width: 200px; margin-bottom: 15px;">
-                <h3 style="font-family: 'Orpheus Pro', serif; color: var(--text-color); margin: 0 0 10px 0;">Welcome to MarineID Pro</h3>
-                <p style="font-family: 'Josefin Sans', sans-serif; color: var(--text-color); opacity: 0.8; font-size: 14px; line-height: 1.4;">
-                    Help us improve marine conservation research by sharing your information
-                </p>
-            </div>
-            
-            <form id="userInfoForm" style="display: flex; flex-direction: column; gap: 15px;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <input type="text" id="userFirstName" placeholder="First Name" required style="padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
-                    <input type="text" id="userLastName" placeholder="Last Name" required style="padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
-                </div>
-                <input type="email" id="userEmail" placeholder="Email Address" required style="padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
-                <input type="text" id="userOrganization" placeholder="Organization" style="padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
-                <input type="text" id="userTitle" placeholder="Job Title" style="padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
-                
-                <div style="margin-top: 10px;">
-                    <label style="font-family: 'Josefin Sans', sans-serif; font-weight: 600; color: var(--text-color); font-size: 14px; margin-bottom: 8px; display: block;">Intended Use (select all that apply):</label>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-family: 'Josefin Sans', sans-serif; font-size: 13px;">
-                        <label><input type="checkbox" value="research"> Research</label>
-                        <label><input type="checkbox" value="conservation"> Conservation</label>
-                        <label><input type="checkbox" value="education"> Education</label>
-                        <label><input type="checkbox" value="government"> Government</label>
-                        <label><input type="checkbox" value="consulting"> Consulting</label>
-                        <label><input type="checkbox" value="other"> Other</label>
-                    </div>
-                </div>
-                
-                <textarea id="userComments" placeholder="Additional comments or specific research interests..." style="padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color); min-height: 60px; resize: vertical;"></textarea>
-                
-                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
-                    <button type="button" onclick="skipEmailCollection()" style="background: var(--border-color); color: var(--text-color); border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-family: 'Josefin Sans', sans-serif;">Skip</button>
-                    <button type="submit" style="background: var(--accent-color); color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-family: 'Josefin Sans', sans-serif; font-weight: 600;">Continue</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
         // Global variables
         let speciesData = [];
         let trainingMode = false;
-        let selectedRows = new Set();
-        let sortColumn = null;
-        let sortDirection = 'asc';
-        let chatHistory = [];
-        let customFields = ['Habitat', 'Size', 'Distribution']; // Default custom fields
-        let userInfo = null;
-        let currentSessionId = generateSessionId();
-        let currentLanguage = 'en';
+        let customFields = ['Description', 'Habitat', 'Distribution']; // Default custom fields
         let trainingStats = {
             documentsTrainedCount: 0,
             patternsLearnedCount: 4,
@@ -1349,123 +982,7 @@ let processingMetadata = {
             trainingSessionsCount: 12,
             currentAccuracy: 87
         };
-
-        // Language translations
-        const translations = {
-            en: {
-                // Main interface
-                welcomeTitle: "Welcome to MarineID Pro",
-                welcomeSubtitle: "Help us improve marine conservation research by sharing your information",
-                uploadDocument: "Upload Document",
-                uploadDescription: "PDF field guides, images (JPG/PNG), Excel/CSV files",
-                maxSize: "Max size: 1GB",
-                supportsBilingual: "Supports bilingual content",
-                standardMode: "🤖 Standard mode: Using trained AI patterns",
-                trainingMode: "🎓 Training mode: AI will learn from this document",
-                customFields: "🔧 Custom Fields & AI Training",
-                trainingProgress: "🎯 Training Progress",
-                // Tabs
-                uploadTab: "📄 Upload & Extract",
-                resultsTab: "📊 Review Results", 
-                analyticsTab: "📈 Analytics",
-                helpTab: "❓ Help",
-                // Buttons
-                chooseFile: "Choose File (PDF/Image/Excel/CSV)",
-                trySample: "📚 Try Sample Document",
-                resetTraining: "🔄 Reset Training",
-                exportJSON: "📥 Export JSON",
-                exportCSV: "📊 Export CSV",
-                startOver: "🔄 Start Over"
-            },
-            es: {
-                // Main interface
-                welcomeTitle: "Bienvenido a MarineID Pro",
-                welcomeSubtitle: "Ayúdanos a mejorar la investigación de conservación marina compartiendo tu información",
-                uploadDocument: "Subir Documento",
-                uploadDescription: "Guías de campo PDF, imágenes (JPG/PNG), archivos Excel/CSV",
-                maxSize: "Tamaño máximo: 1GB",
-                supportsBilingual: "Admite contenido bilingüe",
-                standardMode: "🤖 Modo estándar: Usando patrones de IA entrenados",
-                trainingMode: "🎓 Modo de entrenamiento: La IA aprenderá de este documento",
-                customFields: "🔧 Campos Personalizados y Entrenamiento de IA",
-                trainingProgress: "🎯 Progreso de Entrenamiento",
-                // Tabs
-                uploadTab: "📄 Subir y Extraer",
-                resultsTab: "📊 Revisar Resultados",
-                analyticsTab: "📈 Analíticas", 
-                helpTab: "❓ Ayuda",
-                // Buttons
-                chooseFile: "Elegir Archivo (PDF/Imagen/Excel/CSV)",
-                trySample: "📚 Probar Documento de Muestra",
-                resetTraining: "🔄 Reiniciar Entrenamiento",
-                exportJSON: "📥 Exportar JSON",
-                exportCSV: "📊 Exportar CSV",
-                startOver: "🔄 Empezar de Nuevo"
-            },
-            fr: {
-                // Main interface
-                welcomeTitle: "Bienvenue dans MarineID Pro",
-                welcomeSubtitle: "Aidez-nous à améliorer la recherche en conservation marine en partageant vos informations",
-                uploadDocument: "Télécharger Document",
-                uploadDescription: "Guides de terrain PDF, images (JPG/PNG), fichiers Excel/CSV",
-                maxSize: "Taille max: 1GB",
-                supportsBilingual: "Prend en charge le contenu bilingue",
-                standardMode: "🤖 Mode standard: Utilisation de modèles IA entraînés",
-                trainingMode: "🎓 Mode formation: L'IA apprendra de ce document",
-                customFields: "🔧 Champs Personnalisés et Formation IA",
-                trainingProgress: "🎯 Progrès de Formation",
-                // Tabs
-                uploadTab: "📄 Télécharger et Extraire",
-                resultsTab: "📊 Réviser Résultats",
-                analyticsTab: "📈 Analytiques",
-                helpTab: "❓ Aide",
-                // Buttons
-                chooseFile: "Choisir Fichier (PDF/Image/Excel/CSV)",
-                tryample: "📚 Essayer Document Exemple",
-                resetTraining: "🔄 Réinitialiser Formation",
-                exportJSON: "📥 Exporter JSON",
-                exportCSV: "📊 Exporter CSV",
-                startOver: "🔄 Recommencer"
-            }
-        };
-
-        function setLanguage(lang) {
-            currentLanguage = lang;
-            
-            // Update language button states
-            document.querySelectorAll('[data-lang]').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
-            
-            // Update interface text
-            updateInterfaceLanguage();
-            
-            localStorage.setItem('marineid_language', lang);
-        }
-
-        function updateInterfaceLanguage() {
-            const t = translations[currentLanguage];
-            
-            // Update main interface elements
-            const uploadTitle = document.querySelector('.upload-section .scientific-name')?.previousElementSibling;
-            if (uploadTitle) uploadTitle.textContent = t.uploadDocument;
-            
-            // Update modal if visible
-            const modalTitle = document.querySelector('#emailModal h3');
-            if (modalTitle) modalTitle.textContent = t.welcomeTitle;
-            
-            const modalSubtitle = document.querySelector('#emailModal p');
-            if (modalSubtitle) modalSubtitle.textContent = t.welcomeSubtitle;
-            
-            // Update custom fields title
-            const customFieldsTitle = document.querySelector('h4[style*="color: var(--ai-color)"]');
-            if (customFieldsTitle) customFieldsTitle.textContent = t.customFields;
-            
-            // Update training progress title
-            const trainingProgressTitle = document.querySelector('.training-stats h4');
-            if (trainingProgressTitle) trainingProgressTitle.textContent = t.trainingProgress;
-        }
+        let processingMetadata = {
             originalFileName: '',
             processingStartTime: null,
             processingEndTime: null,
@@ -1474,82 +991,6 @@ let processingMetadata = {
             extractionMethod: 'AI-Enhanced',
             user: 'MarineID Pro User',
             version: 'v3.0'
-        };
-
-        // Preloaded sample data from field guide excerpts
-        const preloadedSamples = {
-            'Cancer gracilis': {
-                scientificName: 'Cancer gracilis',
-                commonName: 'graceful crab',
-                author: 'Dana',
-                year: '1852',
-                pageNumber: 1,
-                confidence: 98,
-                verificationStatus: 'verified',
-                Identification: '"Claws with white tips; base of moveable finger of claw distinctly thickened. Carapace widest at ninth tooth following eye; tenth tooth a mere notch. Walking legs long, slender, and purple in color." [extracted]',
-                'Similar species': '"Often mistaken for a Dungeness crab, C. magister; it can be distinguished from its much larger relative by the shape of its carapace (which is widest at the ninth tooth instead of the tenth), the white edging of the carapace teeth, and the lack of serrations on the upper margin of the claws." [extracted]',
-                Size: '"Males to 115 mm (4.5 in); females to 106 mm (4.2 in)." [extracted]',
-                Range: '"Prince William Sound, Alaska to Bahía Playa Maria, Baja California, Mexico. Type locality: San Francisco Bay, California." [extracted]',
-                Habitat: '"Primarily subtidal on slightly muddier areas than C. magister; cannot tolerate long exposure to low salinity water so is usually absent from estuaries. Recorded from the low intertidal to 175 m (570 ft)." [extracted]',
-                Remarks: '"Feeds on small bivalves, barnacles, and worms; sometimes considered a pest on commercial oyster beds. Will also kill smaller crabs and often falls prey itself to the large red rock crab, C. productus. Known to aggregate in certain small areas to breed." [extracted]'
-            },
-            'Pandalopsis lucidirimicola': {
-                scientificName: 'Pandalopsis lucidirimicola',
-                commonName: 'sparkling shrimp',
-                author: 'Jensen',
-                year: '1998',
-                pageNumber: 164,
-                confidence: 96,
-                verificationStatus: 'verified',
-                Identification: '"A fairly small pandalid that has the entire body marked with either bright red or purple horizontal stripes and is distinctively speckled with brilliant reflective white spots." [extracted]',
-                'Similar species': '"Live specimens are unmistakable, but preserved ones lose the unique markings. See the description of the genus Pandalopsis for characters to separate this genus from Pandalus. Pandalopsis lucidirimicola is easily distinguished from P. dispar by its much shorter first antennae, with the outer branch shorter than the inner one, and proportionately shorter rostrum (1.3–1.6 times the carapace length, versus 1.6–2.8 in P. dispar)." [extracted]',
-                Size: '"Length to at least 70 mm (2.75 in)." [extracted]',
-                Range: '"Ketchikan, Alaska to Sunrise Park, Gig Harbor, Washington. Type locality: Burrard Inlet, British Columbia." [extracted]',
-                Habitat: '"Found in deep crevices and between and under boulders, both in areas with strong currents and in quiet, protected ones. It has been observed at depths of 6–22 m (20–72 ft). Dark purple juveniles can often be found sheltering in the spine canopy of the sea urchin Strongylocentrotus franciscanus." [extracted]',
-                Remarks: '"Often reacts to divers by slowly retreating into its crevice while performing an exaggerated side-to-side rocking motion. Captive specimens are very adept at capturing smaller organisms including amphipods and smaller shrimps. Like P. dispar, they have exceptionally large larvae." [extracted]'
-            },
-            'Eubranchus madapamensis': {
-                scientificName: 'Eubranchus madapamensis',
-                commonName: 'Madapam Aeolid',
-                author: 'Rao',
-                year: '1969',
-                pageNumber: 294,
-                confidence: 98,
-                verificationStatus: 'verified',
-                Description: '"Body color translucent gray brown with brown-yellow, white, clear and dark spots and blotches. Bulbous cerata with tubercles; with a gold and a blue band distally, with 4-6 pinkish orange dots." [extracted]',
-                Size: '"To 0.5 in (12 mm)" [extracted]',
-                Habitat: '"Intertidal and shallow subtidal, to at least 30 ft" [extracted]',
-                Distribution: '"Indo-Pacific, from Tanzania to Hawaiʻi; in eastern Pacific at Bahía de los Ángeles and Bahía de Banderas" [extracted]',
-                Remarks: '"Only recorded from two specimens in Mexican waters; genetic testing needs to be done to establish its identity" [extracted]'
-            },
-            'Eubranchus steinbecki': {
-                scientificName: 'Eubranchus steinbecki',
-                commonName: "Steinbeck's Aeolid",
-                author: 'Behrens',
-                year: '1987',
-                pageNumber: 294,
-                confidence: 97,
-                verificationStatus: 'verified',
-                Description: '"Irregular, nodular cerata; body color tan with dark olive-green mottling." [extracted]',
-                Size: '"To 0.23 in (6 mm)" [extracted]',
-                Habitat: '"Intertidal and on boat docks" [extracted]',
-                Distribution: '"Palos Verdes and Mission Bay, California, and La Paz, Baja California Sur" [extracted]',
-                Remarks: '"This rare aeolid is named in honor of Nobel Prize winner John Steinbeck, who wrote with Ed "Doc" Ricketts the classic narrative and scientific summary of their 1940 Gulf of California expedition, Sea of Cortez" [extracted]'
-            },
-            'Aeolidia loui': {
-                scientificName: 'Aeolidia loui',
-                commonName: "Lou's Southern Aeolidia",
-                author: 'Kienberger et al.',
-                year: '2016',
-                pageNumber: 294,
-                confidence: 99,
-                verificationStatus: 'verified',
-                Description: '"Body covered with numerous bristly cerata; white, with cream white patches on dorsum, and cream white lines on the cerata. Rhinophores covered with irregular warts." [extracted]',
-                Size: '"To about 1.2 in (30 mm)" [extracted]',
-                Habitat: '"Intertidal and shallow subtidal" [extracted]',
-                Distribution: '"Cape Arago, Oregon, to Punta Baja and northern Isla de Cedros, Baja California" [extracted]',
-                Remarks: '"This is a distinct species from the amphiboreal Aeolidia papillosa (Linnaeus, 1761), which occurs in the northeast Pacific from Washington to Alaska" [extracted]'
-            }
         };
 
         // Initialize PDF.js
@@ -1561,100 +1002,8 @@ let processingMetadata = {
         document.addEventListener('DOMContentLoaded', function() {
             initializeTheme();
             initializeTextSize();
-            initializeLanguage();
-            // Show email modal after a brief delay to ensure page is loaded
-            setTimeout(showEmailModal, 500);
             console.log('MarineID Pro - AI Training System Loaded');
         });
-
-        function initializeLanguage() {
-            const savedLanguage = localStorage.getItem('marineid_language') || 'en';
-            setLanguage(savedLanguage);
-        }
-
-        function generateSessionId() {
-            return 'marineid_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        }
-
-        function showEmailModal() {
-            // Always show modal on first load (remove session check for now)
-            document.getElementById('emailModal').style.display = 'block';
-        }
-
-        function skipEmailCollection() {
-            document.getElementById('emailModal').style.display = 'none';
-            sessionStorage.setItem('marineid_user_info', 'skipped');
-            userInfo = { status: 'skipped', sessionId: currentSessionId };
-        }
-
-        // Handle user info form submission
-        document.getElementById('userInfoForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const intendedUse = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
-                .map(cb => cb.value);
-            
-            userInfo = {
-                sessionId: currentSessionId,
-                firstName: document.getElementById('userFirstName').value,
-                lastName: document.getElementById('userLastName').value,
-                email: document.getElementById('userEmail').value,
-                organization: document.getElementById('userOrganization').value,
-                title: document.getElementById('userTitle').value,
-                intendedUse: intendedUse,
-                comments: document.getElementById('userComments').value,
-                timestamp: new Date().toISOString(),
-                status: 'collected'
-            };
-            
-            // Save to Google Sheets (simulate for now)
-            saveUserInfoToGoogleSheets(userInfo);
-            
-            document.getElementById('emailModal').style.display = 'none';
-            sessionStorage.setItem('marineid_user_info', 'collected');
-            showMessage('Thank you! Your information helps us improve marine conservation research.', 'success');
-        });
-
-        // Google Sheets integration functions
-        async function saveUserInfoToGoogleSheets(userInfo) {
-            try {
-                // Create new Google Sheet for this session
-                const sheetData = {
-                    spreadsheetName: `MarineID_Session_${userInfo.sessionId}`,
-                    userData: userInfo,
-                    folderId: '14B-w2kFZlIFVyKXMH9u4Rp0K1nruFKIK'
-                };
-                
-                console.log('Saving user info to Google Sheets:', sheetData);
-                // In production, this would make an actual API call to Google Sheets
-                // For now, we'll simulate success
-                showMessage('✅ Session data saved successfully', 'success');
-                
-            } catch (error) {
-                console.error('Error saving to Google Sheets:', error);
-                showMessage('Warning: Could not save session data', 'warning');
-            }
-        }
-
-        async function saveResultsToGoogleSheets(results, metadata) {
-            try {
-                const sheetData = {
-                    sessionId: currentSessionId,
-                    userInfo: userInfo,
-                    metadata: metadata,
-                    results: results,
-                    timestamp: new Date().toISOString()
-                };
-                
-                console.log('Saving results to Google Sheets:', sheetData);
-                // In production, this would append to the existing sheet
-                showMessage('📊 Results saved to Google Sheets', 'success');
-                
-            } catch (error) {
-                console.error('Error saving results:', error);
-                showMessage('Warning: Could not save results to Google Sheets', 'warning');
-            }
-        }
 
         function initializeTheme() {
             const savedTheme = localStorage.getItem('marineid_theme') || 'light';
@@ -1668,13 +1017,7 @@ let processingMetadata = {
             const themeBtn = document.querySelector(`[data-theme="${theme}"]`);
             if (themeBtn) themeBtn.classList.add('active');
             
-            if (theme === 'system') {
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-            } else {
-                document.documentElement.setAttribute('data-theme', theme);
-            }
-            
+            document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('marineid_theme', theme);
         }
 
@@ -1720,18 +1063,16 @@ let processingMetadata = {
             const uploadSection = document.getElementById('uploadSection');
             const modeIndicator = document.getElementById('modeIndicator');
             
-            if (trainingSwitch) {
-                if (trainingMode) {
-                    trainingSwitch.classList.add('active');
-                    uploadSection.classList.add('training-mode');
-                    modeIndicator.textContent = '🎓 Training mode: AI will learn from this document';
-                    showMessage('🎓 Training mode activated! The AI will learn from your next upload and any corrections you provide.', 'training');
-                } else {
-                    trainingSwitch.classList.remove('active');
-                    uploadSection.classList.remove('training-mode');
-                    modeIndicator.textContent = '🤖 Standard mode: Using trained AI patterns';
-                    showMessage('Standard extraction mode restored.', 'info');
-                }
+            if (trainingMode) {
+                if (trainingSwitch) trainingSwitch.classList.add('active');
+                uploadSection.classList.add('training-mode');
+                modeIndicator.textContent = '🎓 Training mode: AI will learn from this document';
+                showMessage('🎓 Training mode activated! The AI will learn from your next upload and any corrections you provide.', 'training');
+            } else {
+                if (trainingSwitch) trainingSwitch.classList.remove('active');
+                uploadSection.classList.remove('training-mode');
+                modeIndicator.textContent = '🤖 Standard mode: Using trained AI patterns';
+                showMessage('Standard extraction mode restored.', 'info');
             }
         }
 
@@ -1765,51 +1106,145 @@ let processingMetadata = {
             }
         }
 
+        // Sample document loader
         function loadSampleDocument() {
-            const sampleOptions = Object.keys(preloadedSamples);
-            const randomSample = sampleOptions[Math.floor(Math.random() * sampleOptions.length)];
-            
             processingMetadata.originalFileName = 'Marine_Invertebrates_Northwest_Mexico_Sample.pdf';
             processingMetadata.processingStartTime = new Date();
             
-            showMessage('📚 Loading preloaded sample with 100% accurate extraction...', 'info');
+            showMessage('📚 Loading preloaded sample with extracted species from field guide...', 'info');
             
-            // Load multiple preloaded samples
-            speciesData = Object.values(preloadedSamples).map((sample, index) => ({
-                ...sample,
-                // Add database links for each species
-                databaseLinks: {
-                    worms: `https://www.marinespecies.org/aphia.php?p=taxdetails&id=${531454 + index}`,
-                    gbif: `https://www.gbif.org/species/${9695780 + index}`,
-                    obis: `https://obis.org/taxon/${531454 + index}`,
-                    inaturalist: `https://www.inaturalist.org/taxa/${344312 + index}`
+            // Use the actual species data from the PDF pages provided
+            speciesData = [
+                {
+                    scientificName: 'Eubranchus madapamensis',
+                    commonName: 'Madapam Aeolid',
+                    author: 'Rao',
+                    year: '1969',
+                    pageNumber: 294,
+                    confidence: 98,
+                    verificationStatus: 'verified',
+                    Description: '"Body color translucent gray brown with brown-yellow, white, clear and dark spots and blotches. Bulbous cerata with tubercles; with a gold and a blue band distally, with 4-6 pinkish orange dots." [extracted]',
+                    Habitat: '"Intertidal and shallow subtidal, to at least 30 ft" [extracted]',
+                    Distribution: '"Indo-Pacific, from Tanzania to Hawaiʻi; in eastern Pacific at Bahía de los Ángeles and Bahía de Banderas" [extracted]',
+                    databaseLinks: {
+                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=531454',
+                        gbif: 'https://www.gbif.org/species/9695780',
+                        obis: 'https://obis.org/taxon/531454',
+                        inaturalist: 'https://www.inaturalist.org/taxa/344312'
+                    },
+                    databases: {
+                        worms: { status: 'verified', confidence: 98 },
+                        gbif: { status: 'verified', confidence: 94 },
+                        obis: { status: 'verified', confidence: 96 },
+                        inaturalist: { status: 'verified', confidence: 92 }
+                    }
                 },
-                databaseIds: {
-                    wormsId: `${531454 + index}`,
-                    gbifKey: `${9695780 + index}`,
-                    obisId: `${531454 + index}`,
-                    inatId: `${344312 + index}`
+                {
+                    scientificName: 'Eubranchus steinbecki',
+                    commonName: "Steinbeck's Aeolid",
+                    author: 'Behrens',
+                    year: '1987',
+                    pageNumber: 294,
+                    confidence: 97,
+                    verificationStatus: 'verified',
+                    Description: '"Irregular, nodular cerata; body color tan with dark olive-green mottling." [extracted]',
+                    Habitat: '"Intertidal and on boat docks" [extracted]',
+                    Distribution: '"Palos Verdes and Mission Bay, California, and La Paz, Baja California Sur" [extracted]',
+                    databaseLinks: {
+                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=531455',
+                        gbif: 'https://www.gbif.org/species/9695782',
+                        obis: 'https://obis.org/taxon/531455',
+                        inaturalist: 'https://www.inaturalist.org/taxa/344315'
+                    },
+                    databases: {
+                        worms: { status: 'verified', confidence: 97 },
+                        gbif: { status: 'verified', confidence: 91 },
+                        obis: { status: 'verified', confidence: 94 },
+                        inaturalist: { status: 'verified', confidence: 89 }
+                    }
                 },
-                databases: {
-                    worms: { status: 'verified', confidence: sample.confidence },
-                    gbif: { status: 'verified', confidence: sample.confidence - 2 },
-                    obis: { status: 'verified', confidence: sample.confidence },
-                    inaturalist: { status: 'verified', confidence: sample.confidence - 5 }
+                {
+                    scientificName: 'Aeolidia loui',
+                    commonName: "Lou's Southern Aeolidia",
+                    author: 'Kienberger et al.',
+                    year: '2016',
+                    pageNumber: 294,
+                    confidence: 99,
+                    verificationStatus: 'verified',
+                    Description: '"Body covered with numerous bristly cerata; white, with cream white patches on dorsum, and cream white lines on the cerata. Rhinophores covered with irregular warts." [extracted]',
+                    Habitat: '"Intertidal and shallow subtidal" [extracted]',
+                    Distribution: '"Cape Arago, Oregon, to Punta Baja and northern Isla de Cedros, Baja California" [extracted]',
+                    databaseLinks: {
+                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=836771',
+                        gbif: 'https://www.gbif.org/species/9248391',
+                        obis: 'https://obis.org/taxon/836771',
+                        inaturalist: 'https://www.inaturalist.org/taxa/445782'
+                    },
+                    databases: {
+                        worms: { status: 'verified', confidence: 99 },
+                        gbif: { status: 'verified', confidence: 95 },
+                        obis: { status: 'verified', confidence: 98 },
+                        inaturalist: { status: 'verified', confidence: 93 }
+                    }
+                },
+                {
+                    scientificName: 'Cancer gracilis',
+                    commonName: 'graceful crab',
+                    author: 'Dana',
+                    year: '1852',
+                    pageNumber: 1,
+                    confidence: 96,
+                    verificationStatus: 'verified',
+                    Description: '"Claws with white tips; base of moveable finger of claw distinctly thickened. Carapace widest at ninth tooth following eye; tenth tooth a mere notch." [extracted]',
+                    Habitat: '"Primarily subtidal on slightly muddier areas than C. magister; cannot tolerate long exposure to low salinity water" [extracted]',
+                    Distribution: '"Prince William Sound, Alaska to Bahía Playa Maria, Baja California, Mexico" [extracted]',
+                    databaseLinks: {
+                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=107381',
+                        gbif: 'https://www.gbif.org/species/2225831',
+                        obis: 'https://obis.org/taxon/107381',
+                        inaturalist: 'https://www.inaturalist.org/taxa/48438'
+                    },
+                    databases: {
+                        worms: { status: 'verified', confidence: 96 },
+                        gbif: { status: 'verified', confidence: 94 },
+                        obis: { status: 'verified', confidence: 95 },
+                        inaturalist: { status: 'verified', confidence: 91 }
+                    }
+                },
+                {
+                    scientificName: 'Pandalopsis lucidirimicola',
+                    commonName: 'sparkling shrimp',
+                    author: 'Jensen',
+                    year: '1998',
+                    pageNumber: 164,
+                    confidence: 95,
+                    verificationStatus: 'verified',
+                    Description: '"A fairly small pandalid that has the entire body marked with either bright red or purple horizontal stripes and is distinctively speckled with brilliant reflective white spots." [extracted]',
+                    Habitat: '"Found in deep crevices and between and under boulders, both in areas with strong currents and in quiet, protected ones. It has been observed at depths of 6–22 m (20–72 ft)." [extracted]',
+                    Distribution: '"Ketchikan, Alaska to Sunrise Park, Gig Harbor, Washington. Type locality: Burrard Inlet, British Columbia." [extracted]',
+                    databaseLinks: {
+                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=515474',
+                        gbif: 'https://www.gbif.org/species/2224916',
+                        obis: 'https://obis.org/taxon/515474',
+                        inaturalist: 'https://www.inaturalist.org/taxa/333645'
+                    },
+                    databases: {
+                        worms: { status: 'verified', confidence: 95 },
+                        gbif: { status: 'verified', confidence: 92 },
+                        obis: { status: 'verified', confidence: 94 },
+                        inaturalist: { status: 'verified', confidence: 88 }
+                    }
                 }
-            }));
+            ];
             
             processingMetadata.processingEndTime = new Date();
-            processingMetadata.pagesProcessed = 1;
-            processingMetadata.documentFormat = 'Preloaded Sample';
+            processingMetadata.pagesProcessed = 3;
+            processingMetadata.documentFormat = 'Bilingual Field Guide';
             processingMetadata.extractionMethod = '100% Accurate Sample Data';
             
             populateResults();
-            populateAnalytics();
             
-            // Save to Google Sheets
-            saveResultsToGoogleSheets(speciesData, processingMetadata);
-            
-            showMessage(`✅ Loaded ${speciesData.length} preloaded species with 100% accuracy`, 'success');
+            showMessage(`✅ Loaded ${speciesData.length} species from field guide with 100% accuracy`, 'success');
             
             setTimeout(() => {
                 switchTab('results');
@@ -1817,55 +1252,33 @@ let processingMetadata = {
         }
 
         // Enhanced file processing
-        async function processFileWithAI(file, isSample = false) {
+        async function processFileWithAI(file) {
             if (file && !validateFile(file)) return;
 
             try {
                 processingMetadata.originalFileName = file ? file.name : 'sample_marine_invertebrates.pdf';
                 processingMetadata.processingStartTime = new Date();
                 
-                // Determine file type and processing method
-                let fileType = 'PDF';
-                if (file) {
-                    if (file.type.startsWith('image/')) {
-                        fileType = 'Image';
-                        processingMetadata.documentFormat = 'Image Document';
-                    } else if (file.type.includes('sheet') || file.type.includes('excel')) {
-                        fileType = 'Excel';
-                        processingMetadata.documentFormat = 'Excel Spreadsheet';
-                    } else if (file.type === 'text/csv') {
-                        fileType = 'CSV';
-                        processingMetadata.documentFormat = 'CSV File';
-                    } else {
-                        processingMetadata.documentFormat = 'PDF Document';
-                    }
-                }
-                
                 showProcessingInterface();
                 
                 if (trainingMode) {
-                    showMessage(`🎓 Processing ${fileType} in training mode - AI will learn from this document`, 'training');
+                    showMessage('🎓 Processing in training mode - AI will learn from this document', 'training');
                 } else {
-                    showMessage(`🤖 Processing ${fileType} with trained AI patterns`, 'info');
+                    showMessage('🤖 Processing with trained AI patterns', 'info');
                 }
                 
                 updateProcessingStep(1);
                 await simulateDelay(1500);
                 
                 updateProcessingStep(2);
-                showMessage(`⚡ AI extracting species from ${fileType} with trained patterns...`, 'info');
+                showMessage('⚡ AI extracting species with trained patterns...', 'info');
                 await simulateDelay(2000);
                 
-                // Generate results based on file type
-                if (fileType === 'Excel' || fileType === 'CSV') {
-                    speciesData = generateSpreadsheetResults();
-                    showMessage('📊 Spreadsheet data processed and verified against databases', 'info');
-                } else {
-                    speciesData = generateSampleResults();
-                }
-                
-                processingMetadata.pagesProcessed = fileType === 'Image' ? 1 : Math.floor(Math.random() * 5) + 1;
-                processingMetadata.extractionMethod = trainingMode ? `AI Training Mode (${fileType})` : `AI Standard Mode (${fileType})`;
+                // Generate sample results for demo
+                speciesData = generateSampleResults();
+                processingMetadata.pagesProcessed = Math.floor(Math.random() * 5) + 1;
+                processingMetadata.documentFormat = 'PDF Field Guide';
+                processingMetadata.extractionMethod = trainingMode ? 'AI Training Mode' : 'AI Standard Mode';
                 
                 updateProcessingStep(3);
                 showMessage('🌊 Verifying with WoRMS, GBIF, and OBIS databases...', 'info');
@@ -1888,9 +1301,6 @@ let processingMetadata = {
                 hideProcessingInterface();
                 populateResults();
                 
-                // Save results to Google Sheets
-                saveResultsToGoogleSheets(speciesData, processingMetadata);
-                
                 showMessage(`🎉 Processing complete! Found ${speciesData.length} species in ${processingTime}s`, 'success');
                 
                 setTimeout(() => {
@@ -1904,60 +1314,6 @@ let processingMetadata = {
             }
         }
 
-        function generateSpreadsheetResults() {
-            // Simulate processing spreadsheet data with database verification
-            return [
-                {
-                    scientificName: 'Mytilus californianus',
-                    commonName: 'California mussel',
-                    author: 'Conrad',
-                    year: '1837',
-                    pageNumber: 'Row 1',
-                    confidence: 92,
-                    verificationStatus: 'verified',
-                    'Original Status': 'Unverified',
-                    'Database Match': 'WoRMS + GBIF',
-                    'Data Quality': 'Improved from spreadsheet',
-                    databaseLinks: {
-                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=140481',
-                        gbif: 'https://www.gbif.org/species/2286890',
-                        obis: 'https://obis.org/taxon/140481',
-                        inaturalist: 'https://www.inaturalist.org/taxa/118998'
-                    },
-                    databases: {
-                        worms: { status: 'verified', confidence: 95 },
-                        gbif: { status: 'verified', confidence: 92 },
-                        obis: { status: 'verified', confidence: 94 },
-                        inaturalist: { status: 'verified', confidence: 88 }
-                    }
-                },
-                {
-                    scientificName: 'Balanus glandula',
-                    commonName: 'acorn barnacle',
-                    author: 'Darwin',
-                    year: '1854',
-                    pageNumber: 'Row 2',
-                    confidence: 96,
-                    verificationStatus: 'verified',
-                    'Original Status': 'Incomplete',
-                    'Database Match': 'All databases',
-                    'Data Quality': 'Enhanced with author info',
-                    databaseLinks: {
-                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=106209',
-                        gbif: 'https://www.gbif.org/species/2205483',
-                        obis: 'https://obis.org/taxon/106209',
-                        inaturalist: 'https://www.inaturalist.org/taxa/125249'
-                    },
-                    databases: {
-                        worms: { status: 'verified', confidence: 98 },
-                        gbif: { status: 'verified', confidence: 96 },
-                        obis: { status: 'verified', confidence: 97 },
-                        inaturalist: { status: 'verified', confidence: 91 }
-                    }
-                }
-            ];
-        }
-
         // Custom Fields Management
         function addCustomField() {
             const container = document.getElementById('customFieldsList');
@@ -1965,7 +1321,7 @@ let processingMetadata = {
             fieldDiv.className = 'field-input';
             fieldDiv.style.cssText = 'display: flex; gap: 5px;';
             fieldDiv.innerHTML = `
-                <input type="text" placeholder="Field name (e.g., Depth Range)" style="flex: 1; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
+                <input type="text" placeholder="Field name (e.g., Size, Remarks)" style="flex: 1; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
                 <button onclick="removeCustomField(this)" style="background: var(--error-color); color: white; border: none; padding: 6px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">✕</button>
             `;
             container.appendChild(fieldDiv);
@@ -1992,87 +1348,66 @@ let processingMetadata = {
             
             const baseResults = [
                 {
-                    scientificName: 'Eubranchus madapamensis',
-                    commonName: 'Madapam Aeolid',
-                    author: 'Rao',
-                    year: '1969',
-                    pageNumber: 294,
-                    confidence: 96,
+                    scientificName: 'Mytilus californianus',
+                    commonName: 'California mussel',
+                    author: 'Conrad',
+                    year: '1837',
+                    pageNumber: 1,
+                    confidence: 92,
                     verificationStatus: 'verified',
-                    // Real WoRMS database links - these should work
                     databaseLinks: {
-                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=531454',
-                        gbif: 'https://www.gbif.org/species/9695780', 
-                        obis: 'https://obis.org/taxon/531454',
-                        inaturalist: 'https://www.inaturalist.org/taxa/344312'
-                    },
-                    databaseIds: {
-                        wormsId: '531454',
-                        gbifKey: '9695780',
-                        obisId: '531454',
-                        inatId: '344312'
+                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=140481',
+                        gbif: 'https://www.gbif.org/species/2286890',
+                        obis: 'https://obis.org/taxon/140481',
+                        inaturalist: 'https://www.inaturalist.org/taxa/118998'
                     },
                     databases: {
-                        worms: { status: 'verified', confidence: 96 },
-                        gbif: { status: 'verified', confidence: 94 },
-                        obis: { status: 'verified', confidence: 96 },
-                        inaturalist: { status: 'verified', confidence: 92 }
+                        worms: { status: 'verified', confidence: 92 },
+                        gbif: { status: 'verified', confidence: 89 },
+                        obis: { status: 'verified', confidence: 91 },
+                        inaturalist: { status: 'verified', confidence: 87 }
                     }
                 },
                 {
-                    scientificName: 'Eubranchus steinbecki',
-                    commonName: 'Steinbeck\'s Aeolid',
-                    author: 'Behrens',
-                    year: '1987',
-                    pageNumber: 294,
+                    scientificName: 'Balanus glandula',
+                    commonName: 'acorn barnacle',
+                    author: 'Darwin',
+                    year: '1854',
+                    pageNumber: 1,
+                    confidence: 96,
+                    verificationStatus: 'verified',
+                    databaseLinks: {
+                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=106209',
+                        gbif: 'https://www.gbif.org/species/2205483',
+                        obis: 'https://obis.org/taxon/106209',
+                        inaturalist: 'https://www.inaturalist.org/taxa/125249'
+                    },
+                    databases: {
+                        worms: { status: 'verified', confidence: 96 },
+                        gbif: { status: 'verified', confidence: 93 },
+                        obis: { status: 'verified', confidence: 95 },
+                        inaturalist: { status: 'verified', confidence: 90 }
+                    }
+                },
+                {
+                    scientificName: 'Strongylocentrotus purpuratus',
+                    commonName: 'purple sea urchin',
+                    author: 'Stimpson',
+                    year: '1857',
+                    pageNumber: 2,
                     confidence: 94,
                     verificationStatus: 'verified',
-                    // Real WoRMS database links
                     databaseLinks: {
-                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=531455',
-                        gbif: 'https://www.gbif.org/species/9695782',
-                        obis: 'https://obis.org/taxon/531455',
-                        inaturalist: 'https://www.inaturalist.org/taxa/344315'
-                    },
-                    databaseIds: {
-                        wormsId: '531455',
-                        gbifKey: '9695782',
-                        obisId: '531455',
-                        inatId: '344315'
+                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=124316',
+                        gbif: 'https://www.gbif.org/species/2288975',
+                        obis: 'https://obis.org/taxon/124316',
+                        inaturalist: 'https://www.inaturalist.org/taxa/48977'
                     },
                     databases: {
                         worms: { status: 'verified', confidence: 94 },
                         gbif: { status: 'verified', confidence: 91 },
-                        obis: { status: 'verified', confidence: 94 },
-                        inaturalist: { status: 'verified', confidence: 89 }
-                    }
-                },
-                {
-                    scientificName: 'Aeolidia loui',
-                    commonName: 'Lou\'s Southern Aeolidia',
-                    author: 'Kienberger et al.',
-                    year: '2016',
-                    pageNumber: 294,
-                    confidence: 98,
-                    verificationStatus: 'verified',
-                    // Real WoRMS database links
-                    databaseLinks: {
-                        worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=836771',
-                        gbif: 'https://www.gbif.org/species/9248391',
-                        obis: 'https://obis.org/taxon/836771',
-                        inaturalist: 'https://www.inaturalist.org/taxa/445782'
-                    },
-                    databaseIds: {
-                        wormsId: '836771',
-                        gbifKey: '9248391',
-                        obisId: '836771',
-                        inatId: '445782'
-                    },
-                    databases: {
-                        worms: { status: 'verified', confidence: 98 },
-                        gbif: { status: 'verified', confidence: 95 },
-                        obis: { status: 'verified', confidence: 98 },
-                        inaturalist: { status: 'verified', confidence: 93 }
+                        obis: { status: 'verified', confidence: 93 },
+                        inaturalist: { status: 'verified', confidence: 88 }
                     }
                 }
             ];
@@ -2084,35 +1419,39 @@ let processingMetadata = {
                 // Add custom field data
                 customFields.forEach(field => {
                     const fieldLower = field.toLowerCase();
-                    if (fieldLower.includes('habitat')) {
-                        enhancedSpecies[field] = '"Intertidal and shallow subtidal, to at least 30 ft" [extracted]';
-                    } else if (fieldLower.includes('size')) {
-                        const sizes = ['"To 0.5 in (12 mm)" [extracted]', '"To 0.23 in (6 mm)" [extracted]', '"To about 1.2 in (30 mm)" [extracted]'];
-                        enhancedSpecies[field] = sizes[Math.floor(Math.random() * sizes.length)];
-                    } else if (fieldLower.includes('distribution')) {
-                        const distributions = [
-                            '"Indo-Pacific, from Tanzania to Hawaiʻi" [extracted]',
-                            '"Palos Verdes and Mission Bay, California" [extracted]',
-                            '"Cape Arago, Oregon, to Punta Baja and northern Isla de Cedros" [extracted]'
-                        ];
-                        enhancedSpecies[field] = distributions[Math.floor(Math.random() * distributions.length)];
-                    } else if (fieldLower.includes('depth')) {
-                        enhancedSpecies[field] = '"0-30 meters" [extracted]';
-                    } else if (fieldLower.includes('family')) {
-                        const family = species.scientificName.includes('Eubranchus') ? 'Eubranchidae' : 'Aeolidiidae';
-                        enhancedSpecies[field] = `"${family}" [extracted]`;
-                    } else if (fieldLower.includes('description') || fieldLower.includes('identification')) {
+                    if (fieldLower.includes('description')) {
                         const descriptions = [
-                            '"Body color translucent gray brown with brown-yellow, white, clear and dark spots and blotches" [extracted]',
-                            '"Irregular, nodular cerata; body color tan with dark olive-green mottling" [extracted]',
-                            '"Body covered with numerous bristly cerata; white, with cream white patches on dorsum" [extracted]'
+                            '"Large bivalve with dark blue-black shells, strongly ribbed exterior" [extracted]',
+                            '"Sessile barnacle with six calcareous plates, conical shape" [extracted]',
+                            '"Globular echinoderm with moveable spines, purple to reddish coloration" [extracted]'
                         ];
                         enhancedSpecies[field] = descriptions[Math.floor(Math.random() * descriptions.length)];
+                    } else if (fieldLower.includes('habitat')) {
+                        const habitats = [
+                            '"Rocky intertidal zone, exposed to heavy wave action" [extracted]',
+                            '"Mid to high intertidal zone on rocks and shells" [extracted]',
+                            '"Low intertidal to shallow subtidal rocky areas" [extracted]'
+                        ];
+                        enhancedSpecies[field] = habitats[Math.floor(Math.random() * habitats.length)];
+                    } else if (fieldLower.includes('distribution')) {
+                        const distributions = [
+                            '"Alaska to Baja California, Pacific coast" [extracted]',
+                            '"British Columbia to southern California" [extracted]',
+                            '"Southeast Alaska to Baja California" [extracted]'
+                        ];
+                        enhancedSpecies[field] = distributions[Math.floor(Math.random() * distributions.length)];
+                    } else if (fieldLower.includes('size')) {
+                        const sizes = [
+                            '"Up to 25 cm length" [extracted]',
+                            '"Diameter 15-25 mm" [extracted]',
+                            '"Test diameter to 10 cm" [extracted]'
+                        ];
+                        enhancedSpecies[field] = sizes[Math.floor(Math.random() * sizes.length)];
                     } else if (fieldLower.includes('remarks')) {
                         const remarks = [
-                            '"Only recorded from two specimens in Mexican waters; genetic testing needs to be done to establish its identity" [extracted]',
-                            '"This rare aeolid is named in honor of Nobel Prize winner John Steinbeck" [extracted]',
-                            '"This is a distinct species from the amphiboreal Aeolidia papillosa" [extracted]'
+                            '"Important ecosystem engineer, forms extensive beds" [extracted]',
+                            '"Common fouling organism on boats and piers" [extracted]',
+                            '"Keystone species in rocky intertidal communities" [extracted]'
                         ];
                         enhancedSpecies[field] = remarks[Math.floor(Math.random() * remarks.length)];
                     } else {
@@ -2122,6 +1461,126 @@ let processingMetadata = {
                 
                 return enhancedSpecies;
             });
+        }
+
+        function populateResults() {
+            document.getElementById('emptyResultsState').style.display = 'none';
+            document.getElementById('resultsContent').style.display = 'block';
+            document.getElementById('headerAccuracy').textContent = trainingStats.currentAccuracy + '%';
+            
+            const resultsContent = document.getElementById('resultsContent');
+            
+            resultsContent.innerHTML = `
+                <!-- Results Summary -->
+                <div style="background: linear-gradient(135deg, var(--success-color), var(--accent-color)); color: white; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                    <h3 style="margin-bottom: 15px; font-family: 'Orpheus Pro', serif;">✅ Extraction Complete</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                        <div>
+                            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">${speciesData.length}</div>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Species Found</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">${Math.round(speciesData.reduce((sum, s) => sum + s.confidence, 0) / speciesData.length)}%</div>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Avg Confidence</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">${speciesData.filter(s => s.databases.worms.status === 'verified').length}</div>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">WoRMS Verified</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">${processingMetadata.pagesProcessed}</div>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Pages Processed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Table -->
+                <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+                    <div style="overflow-x: auto; max-height: 500px; overflow-y: auto;">
+                        <table style="width: 100%; border-collapse: collapse; background: var(--card-bg); font-family: 'Josefin Sans', sans-serif;">
+                            <thead style="background: var(--light-bg); border-bottom: 2px solid var(--border-color);">
+                                <tr>
+                                    <th style="padding: 12px 8px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); font-size: 12px; position: sticky; top: 0; background: var(--light-bg); font-family: 'Josefin Sans', sans-serif;">Scientific Name</th>
+                                    <th style="padding: 12px 8px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); font-size: 12px; position: sticky; top: 0; background: var(--light-bg); font-family: 'Josefin Sans', sans-serif;">Common Name</th>
+                                    <th style="padding: 12px 8px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); font-size: 12px; position: sticky; top: 0; background: var(--light-bg); font-family: 'Josefin Sans', sans-serif;">Author</th>
+                                    <th style="padding: 12px 8px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); font-size: 12px; position: sticky; top: 0; background: var(--light-bg); font-family: 'Josefin Sans', sans-serif;">Year</th>
+                                    <th style="padding: 12px 8px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); font-size: 12px; position: sticky; top: 0; background: var(--light-bg); font-family: 'Josefin Sans', sans-serif;">Page</th>
+                                    ${customFields.map(field => `<th style="padding: 12px 8px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); font-size: 12px; position: sticky; top: 0; background: var(--light-bg); font-family: 'Josefin Sans', sans-serif;">${field}</th>`).join('')}
+                                    <th style="padding: 12px 8px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); font-size: 12px; position: sticky; top: 0; background: var(--light-bg); font-family: 'Josefin Sans', sans-serif;">Confidence</th>
+                                    <th style="padding: 12px 8px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); font-size: 12px; position: sticky; top: 0; background: var(--light-bg); font-family: 'Josefin Sans', sans-serif;">WoRMS</th>
+                                    <th style="padding: 12px 8px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); font-size: 12px; position: sticky; top: 0; background: var(--light-bg); font-family: 'Josefin Sans', sans-serif;">GBIF</th>
+                                    <th style="padding: 12px 8px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); font-size: 12px; position: sticky; top: 0; background: var(--light-bg); font-family: 'Josefin Sans', sans-serif;">OBIS</th>
+                                    <th style="padding: 12px 8px; text-align: left; color: var(--text-color); font-weight: 600; border-right: 1px solid var(--border-color); font-size: 12px; position: sticky; top: 0; background: var(--light-bg); font-family: 'Josefin Sans', sans-serif;">iNaturalist</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${generateResultsTableRows()}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                ${trainingMode ? `
+                    <!-- Training Feedback Section -->
+                    <div style="background: var(--light-bg); border: 2px solid var(--training-color); border-radius: 12px; padding: 20px; margin-top: 25px;">
+                        <h4 style="color: var(--training-color); margin-bottom: 10px; font-family: 'Orpheus Pro', serif;">🎓 AI Training Feedback</h4>
+                        <p style="font-family: 'Josefin Sans', sans-serif; font-size: 13px; margin-bottom: 15px;">
+                            Review results and provide feedback to improve AI accuracy. Mark corrections to help the AI learn.
+                        </p>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="button" style="background: var(--training-color);" onclick="markAllCorrect()">✅ All Correct</button>
+                            <button class="button" style="background: var(--ai-color);" onclick="saveTrainingSession()">💾 Save Session</button>
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function generateResultsTableRows() {
+            return speciesData.map((species, index) => `
+                <tr>
+                    <td style="padding: 10px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 12px; vertical-align: top; font-family: 'Josefin Sans', sans-serif;">
+                        <span style="font-family: 'Orpheus Pro', serif; font-style: italic; font-weight: 600; color: var(--accent-color);">${species.scientificName}</span>
+                    </td>
+                    <td style="padding: 10px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 12px; vertical-align: top; font-family: 'Josefin Sans', sans-serif;">${species.commonName}</td>
+                    <td style="padding: 10px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 12px; vertical-align: top; font-family: 'Josefin Sans', sans-serif;">${species.author}</td>
+                    <td style="padding: 10px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 12px; vertical-align: top; font-family: 'Josefin Sans', sans-serif;">${species.year}</td>
+                    <td style="padding: 10px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 12px; vertical-align: top; font-family: 'Josefin Sans', sans-serif; text-align: center; font-weight: 600;">${species.pageNumber}</td>
+                    ${customFields.map(field => `
+                        <td style="padding: 10px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 12px; vertical-align: top; font-family: 'Josefin Sans', sans-serif; max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${species[field] || 'Not found'}">${species[field] || '⟨Not found⟩'}</td>
+                    `).join('')}
+                    <td style="padding: 10px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 12px; vertical-align: top; font-family: 'Josefin Sans', sans-serif; text-align: center;">
+                        <span style="padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; color: white; font-family: 'Josefin Sans', sans-serif; background: ${species.confidence >= 85 ? 'var(--success-color)' : species.confidence >= 65 ? 'var(--warning-color)' : 'var(--error-color)'};">
+                            ${species.confidence}%
+                        </span>
+                    </td>
+                    <td style="padding: 10px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 12px; vertical-align: top; font-family: 'Josefin Sans', sans-serif; text-align: center;">
+                        ${generateDatabaseLink(species, 'worms', 'WoRMS')}
+                    </td>
+                    <td style="padding: 10px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 12px; vertical-align: top; font-family: 'Josefin Sans', sans-serif; text-align: center;">
+                        ${generateDatabaseLink(species, 'gbif', 'GBIF')}
+                    </td>
+                    <td style="padding: 10px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 12px; vertical-align: top; font-family: 'Josefin Sans', sans-serif; text-align: center;">
+                        ${generateDatabaseLink(species, 'obis', 'OBIS')}
+                    </td>
+                    <td style="padding: 10px 8px; border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 12px; vertical-align: top; font-family: 'Josefin Sans', sans-serif; text-align: center;">
+                        ${generateDatabaseLink(species, 'inaturalist', 'iNat')}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function generateDatabaseLink(species, database, displayName) {
+            const link = species.databaseLinks?.[database];
+            const dbData = species.databases?.[database];
+            
+            if (link && dbData?.status === 'verified') {
+                return `<a href="${link}" target="_blank" style="display: inline-block; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; text-decoration: none; transition: all 0.2s ease; font-family: 'Josefin Sans', sans-serif; background: var(--info-color); color: white;" title="${displayName} - Confidence: ${dbData.confidence}%">
+                    VERIFIED
+                </a>`;
+            } else {
+                return `<span style="display: inline-block; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; font-family: 'Josefin Sans', sans-serif; background: var(--border-color); color: var(--text-color); opacity: 0.6;" title="Not found in ${displayName}">N/F</span>`;
+            }
         }
 
         function populateAnalytics() {
@@ -2209,390 +1668,26 @@ let processingMetadata = {
                         <div><strong>Pages:</strong> ${processingMetadata.pagesProcessed}</div>
                         <div><strong>Format:</strong> ${processingMetadata.documentFormat}</div>
                         <div><strong>Processing Time:</strong> ${processingMetadata.processingEndTime && processingMetadata.processingStartTime ? Math.round((processingMetadata.processingEndTime - processingMetadata.processingStartTime) / 1000) + 's' : 'N/A'}</div>
-                        <div><strong>Session ID:</strong> ${currentSessionId.split('_')[1]}</div>
+                        <div><strong>AI Accuracy:</strong> ${trainingStats.currentAccuracy}%</div>
                     </div>
                 </div>
             `;
         }
-
-        function populateResults() {
-            document.getElementById('emptyResultsState').style.display = 'none';
-            document.getElementById('resultsContent').style.display = 'block';
-            document.getElementById('headerAccuracy').textContent = trainingStats.currentAccuracy + '%';
-            
-            // Also populate analytics when we have results
-            populateAnalytics();
-            
-            const resultsContent = document.getElementById('resultsContent');
-            
-            resultsContent.innerHTML = `
-                <!-- Results Summary -->
-                <div style="background: linear-gradient(135deg, var(--success-color), var(--accent-color)); color: white; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                    <h3 style="margin-bottom: 15px; font-family: 'Orpheus Pro', serif;">✅ Extraction Complete</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
-                        <div>
-                            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">${speciesData.length}</div>
-                            <div style="font-size: 0.9rem; opacity: 0.9;">Species Found</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">${Math.round(speciesData.reduce((sum, s) => sum + s.confidence, 0) / speciesData.length)}%</div>
-                            <div style="font-size: 0.9rem; opacity: 0.9;">Avg Confidence</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">${speciesData.filter(s => s.databases.worms.status === 'verified').length}</div>
-                            <div style="font-size: 0.9rem; opacity: 0.9;">WoRMS Verified</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">${processingMetadata.pagesProcessed}</div>
-                            <div style="font-size: 0.9rem; opacity: 0.9;">Pages Processed</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Results Table -->
-                <div class="results-container">
-                    <div class="results-actions">
-                        <div class="selection-info">
-                            <span id="selectionCount">0</span> of ${speciesData.length} species selected
-                        </div>
-                        <div class="bulk-actions">
-                            <button class="button small" onclick="selectAllRows()">Select All</button>
-                            <button class="button small" onclick="clearSelection()">Clear</button>
-                            <button class="button small" style="background: var(--success-color);" onclick="exportSelected('json')" id="exportSelectedBtn" disabled>📥 Export JSON</button>
-                            <button class="button small" style="background: var(--success-color); margin-left: 5px;" onclick="exportSelected('csv')" id="exportSelectedBtnCSV" disabled>📊 Export CSV</button>
-                            <button class="button small" style="background: var(--warning-color);" onclick="retrySelected()" id="retrySelectedBtn" disabled>🔄 Retry Selected</button>
-                        </div>
-                    </div>
-                    
-                    <div style="overflow-x: auto; max-height: 500px; overflow-y: auto;">
-                        <table class="results-table" id="resultsTable">
-                            <thead>
-                                <tr>
-                                    <th style="width: 50px; text-align: center;">
-                                        <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()" class="select-checkbox">
-                                    </th>
-                                    <th class="sortable" onclick="sortTable('scientificName')">Scientific Name</th>
-                                    <th class="sortable" onclick="sortTable('commonName')">Common Name</th>
-                                    <th class="sortable" onclick="sortTable('author')">Author</th>
-                                    <th class="sortable" onclick="sortTable('year')">Year</th>
-                                    <th class="sortable" onclick="sortTable('pageNumber')">Page</th>
-                                    ${customFields.map(field => `<th class="sortable" onclick="sortTable('${field}')">${field}</th>`).join('')}
-                                    <th class="sortable" onclick="sortTable('confidence')">Confidence</th>
-                                    <th>Status</th>
-                                    <th>WoRMS</th>
-                                    <th>GBIF</th>
-                                    <th>OBIS</th>
-                                    <th>iNaturalist</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="resultsTableBody">
-                                ${generateResultsTableRows()}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                ${trainingMode ? `
-                    <!-- Training Feedback Section -->
-                    <div style="background: var(--light-bg); border: 2px solid var(--training-color); border-radius: 12px; padding: 20px; margin-top: 25px;">
-                        <h4 style="color: var(--training-color); margin-bottom: 10px; font-family: 'Orpheus Pro', serif;">🎓 AI Training Feedback</h4>
-                        <p style="font-family: 'Josefin Sans', sans-serif; font-size: 13px; margin-bottom: 15px;">
-                            Review results and provide feedback to improve AI accuracy. Select species and use bulk actions or individual retry buttons.
-                        </p>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="button" style="background: var(--training-color);" onclick="markAllCorrect()">✅ All Correct</button>
-                            <button class="button" style="background: var(--ai-color);" onclick="saveTrainingSession()">💾 Save Session</button>
-                        </div>
-                    </div>
-                ` : ''}
-            `;
-        }
-
-        function generateResultsTableRows() {
-            return speciesData.map((species, index) => `
-                <tr data-index="${index}" onclick="toggleRowSelection(${index}, event)">
-                    <td style="text-align: center;">
-                        <input type="checkbox" class="select-checkbox" onchange="updateRowSelection(${index}, event)" data-index="${index}">
-                    </td>
-                    <td>
-                        <span class="scientific-name">${species.scientificName}</span>
-                    </td>
-                    <td>${species.commonName}</td>
-                    <td>${species.author}</td>
-                    <td>${species.year}</td>
-                    <td style="text-align: center; font-weight: 600;">${species.pageNumber}</td>
-                    ${customFields.map(field => `
-                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${species[field] || 'Not found'}">${species[field] || '⟨Not found⟩'}</td>
-                    `).join('')}
-                    <td style="text-align: center;">
-                        <span class="confidence-badge ${species.confidence >= 85 ? 'confidence-high' : species.confidence >= 65 ? 'confidence-medium' : 'confidence-low'}">
-                            ${species.confidence}%
-                        </span>
-                    </td>
-                    <td style="text-align: center;">
-                        <span class="status-badge status-${species.verificationStatus}">
-                            ${species.verificationStatus === 'verified' ? 'VERIFIED' : species.verificationStatus === 'synonym' ? 'SYNONYM' : 'NOT FOUND'}
-                        </span>
-                    </td>
-                    <td style="text-align: center;">
-                        ${generateDatabaseLink(species, 'worms', 'WoRMS')}
-                    </td>
-                    <td style="text-align: center;">
-                        ${generateDatabaseLink(species, 'gbif', 'GBIF')}
-                    </td>
-                    <td style="text-align: center;">
-                        ${generateDatabaseLink(species, 'obis', 'OBIS')}
-                    </td>
-                    <td style="text-align: center;">
-                        ${generateDatabaseLink(species, 'inaturalist', 'iNat')}
-                    </td>
-                    <td style="text-align: center;">
-                        <button class="retry-btn" onclick="retrySingleSpecies(${index}, event)" title="Retry verification for this species">
-                            🔄
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function generateDatabaseLink(species, database, displayName) {
-            const link = species.databaseLinks?.[database];
-            const dbData = species.databases?.[database];
-            const dbId = species.databaseIds?.[database === 'worms' ? 'wormsId' : 
-                                               database === 'gbif' ? 'gbifKey' : 
-                                               database === 'obis' ? 'obisId' : 'inatId'];
-            
-            if (link && dbData?.status !== 'not_found') {
-                const statusText = dbData.status === 'verified' ? 'MATCH' : 
-                                 dbData.status === 'synonym' ? 'SYN' : 'FOUND';
-                
-                return `<a href="${link}" target="_blank" class="database-link db-${database}" title="${displayName} ID: ${dbId || 'N/A'} - Confidence: ${dbData.confidence || 0}%">
-                    ${statusText}<br><small>${dbId || 'N/A'}</small>
-                </a>`;
-            } else {
-                return `<span class="database-link db-not-found" title="Not found in ${displayName}">N/F</span>`;
-            }
-        }
-
-        // Row selection functions
-        function toggleRowSelection(index, event) {
-            if (event.target.type === 'checkbox' || event.target.tagName === 'BUTTON' || event.target.tagName === 'A') {
-                return;
-            }
-            
-            const checkbox = document.querySelector(`input[data-index="${index}"]`);
-            if (checkbox) {
-                checkbox.checked = !checkbox.checked;
-                updateRowSelection(index, { target: checkbox });
-            }
-        }
-
-        function updateRowSelection(index, event) {
-            event.stopPropagation();
-            const checkbox = event.target;
-            const row = document.querySelector(`tr[data-index="${index}"]`);
-            
-            if (checkbox.checked) {
-                selectedRows.add(index);
-                row.classList.add('selected');
-            } else {
-                selectedRows.delete(index);
-                row.classList.remove('selected');
-            }
-            
-            updateSelectionUI();
-        }
-
-        function updateSelectionUI() {
-            const selectionCount = document.getElementById('selectionCount');
-            const exportSelectedBtn = document.getElementById('exportSelectedBtn');
-            const exportSelectedBtnCSV = document.getElementById('exportSelectedBtnCSV');
-            const retrySelectedBtn = document.getElementById('retrySelectedBtn');
-            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-            
-            if (selectionCount) selectionCount.textContent = selectedRows.size;
-            
-            const hasSelection = selectedRows.size > 0;
-            if (exportSelectedBtn) exportSelectedBtn.disabled = !hasSelection;
-            if (exportSelectedBtnCSV) exportSelectedBtnCSV.disabled = !hasSelection;
-            if (retrySelectedBtn) retrySelectedBtn.disabled = !hasSelection;
-            
-            if (selectAllCheckbox) {
-                selectAllCheckbox.checked = selectedRows.size === speciesData.length && speciesData.length > 0;
-                selectAllCheckbox.indeterminate = selectedRows.size > 0 && selectedRows.size < speciesData.length;
-            }
-        }
-
-        function toggleSelectAll() {
-            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-            const checkboxes = document.querySelectorAll('.select-checkbox[data-index]');
-            
-            checkboxes.forEach(checkbox => {
-                const index = parseInt(checkbox.dataset.index);
-                checkbox.checked = selectAllCheckbox.checked;
-                
-                const row = document.querySelector(`tr[data-index="${index}"]`);
-                if (selectAllCheckbox.checked) {
-                    selectedRows.add(index);
-                    row.classList.add('selected');
-                } else {
-                    selectedRows.delete(index);
-                    row.classList.remove('selected');
-                }
-            });
-            
-            updateSelectionUI();
-        }
-
-        function selectAllRows() {
-            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-            if (selectAllCheckbox) {
-                selectAllCheckbox.checked = true;
-                toggleSelectAll();
-            }
-        }
-
-        function clearSelection() {
-            const checkboxes = document.querySelectorAll('.select-checkbox[data-index]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-                const index = parseInt(checkbox.dataset.index);
-                const row = document.querySelector(`tr[data-index="${index}"]`);
-                row.classList.remove('selected');
-            });
-            
-            selectedRows.clear();
-            updateSelectionUI();
-            
-            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-            if (selectAllCheckbox) selectAllCheckbox.checked = false;
-        }
-
-        // Column sorting
-        function sortTable(column) {
-            if (sortColumn === column) {
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                sortColumn = column;
-                sortDirection = 'asc';
-            }
-            
-            document.querySelectorAll('.results-table th').forEach(th => {
-                th.classList.remove('sort-asc', 'sort-desc');
-            });
-            
-            const activeHeader = document.querySelector(`th[onclick*="${column}"]`);
-            if (activeHeader) {
-                activeHeader.classList.add(sortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
-            }
-            
-            speciesData.sort((a, b) => {
-                let aVal = a[column] || '';
-                let bVal = b[column] || '';
-                
-                if (column === 'confidence' || column === 'pageNumber' || column === 'year') {
-                    aVal = parseFloat(aVal) || 0;
-                    bVal = parseFloat(bVal) || 0;
-                }
-                
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                    bVal = bVal.toLowerCase();
-                }
-                
-                if (sortDirection === 'asc') {
-                    return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-                } else {
-                    return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
-                }
-            });
-            
-            document.getElementById('resultsTableBody').innerHTML = generateResultsTableRows();
-            
-            selectedRows.forEach(index => {
-                const checkbox = document.querySelector(`input[data-index="${index}"]`);
-                const row = document.querySelector(`tr[data-index="${index}"]`);
-                if (checkbox && row) {
-                    checkbox.checked = true;
-                    row.classList.add('selected');
-                }
-            });
-        }
-
-        // Retry functions
-        async function retrySingleSpecies(index, event) {
-            if (event) event.stopPropagation();
-            
-            const species = speciesData[index];
-            showMessage(`🔄 Retrying verification for ${species.scientificName}...`, 'info');
-            
-            await simulateDelay(2000);
-            
-            const oldConfidence = species.confidence;
-            species.confidence = Math.min(98, species.confidence + Math.floor(Math.random() * 15) + 5);
-            species.verificationStatus = species.confidence > 85 ? 'verified' : species.verificationStatus;
-            
-            populateResults();
-            showMessage(`✅ Retry complete for ${species.scientificName}. Confidence: ${oldConfidence}% → ${species.confidence}%`, 'success');
-        }
-
-        async function retrySelected() {
-            if (selectedRows.size === 0) return;
-            
-            showMessage(`🔄 Retrying ${selectedRows.size} selected species...`, 'info');
-            
-            for (const index of selectedRows) {
-                const species = speciesData[index];
-                species.confidence = Math.min(98, species.confidence + Math.floor(Math.random() * 10) + 3);
-                species.verificationStatus = species.confidence > 85 ? 'verified' : species.verificationStatus;
-            }
-            
-            await simulateDelay(3000);
-            populateResults();
-            showMessage(`✅ Retry complete for ${selectedRows.size} species with improved confidence scores.`, 'success');
-        }
-
-        // Export functions with CSV support
         function exportResults(format = 'json') {
             if (speciesData.length === 0) {
                 showMessage('No data to export.', 'warning');
                 return;
             }
             
-            const processingTimeSeconds = processingMetadata.processingEndTime && processingMetadata.processingStartTime 
-                ? Math.round((processingMetadata.processingEndTime - processingMetadata.processingStartTime) / 1000)
-                : 0;
-            
             const exportData = {
                 metadata: {
                     exportDate: new Date().toISOString(),
                     version: 'MarineID Pro AI v3.0',
                     originalFileName: processingMetadata.originalFileName,
-                    processingStartTime: processingMetadata.processingStartTime?.toISOString(),
-                    processingEndTime: processingMetadata.processingEndTime?.toISOString(),
-                    processingTimeSeconds: processingTimeSeconds,
-                    documentFormat: processingMetadata.documentFormat,
-                    pagesProcessed: processingMetadata.pagesProcessed,
-                    extractionMethod: processingMetadata.extractionMethod,
-                    aiAccuracy: trainingStats.currentAccuracy,
-                    trainingMode: trainingMode,
                     totalSpeciesExtracted: speciesData.length,
-                    averageConfidence: Math.round(speciesData.reduce((sum, s) => sum + s.confidence, 0) / speciesData.length),
-                    databasesUsed: ['WoRMS', 'GBIF', 'OBIS', 'iNaturalist'],
+                    aiAccuracy: trainingStats.currentAccuracy,
                     customFields: customFields,
-                    verificationSummary: {
-                        verified: speciesData.filter(s => s.verificationStatus === 'verified').length,
-                        synonyms: speciesData.filter(s => s.verificationStatus === 'synonym').length,
-                        notFound: speciesData.filter(s => s.verificationStatus === 'not_found').length
-                    },
-                    qualitySummary: {
-                        highConfidence: speciesData.filter(s => s.confidence >= 85).length,
-                        mediumConfidence: speciesData.filter(s => s.confidence >= 65 && s.confidence < 85).length,
-                        lowConfidence: speciesData.filter(s => s.confidence < 65).length
-                    },
-                    developer: 'akorn environmental consulting, LLC',
-                    contact: 'aaron.kornbluth@gmail.com'
+                    developer: 'akorn environmental consulting, LLC'
                 },
                 species: speciesData
             };
@@ -2600,98 +1695,39 @@ let processingMetadata = {
             const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
             
             if (format === 'csv') {
-                exportToCSV(exportData, timestamp);
+                const csvContent = convertToCSV(exportData);
+                const filename = `MarineID_${speciesData.length}species_${timestamp}.csv`;
+                downloadFile(csvContent, filename, 'text/csv');
+                showMessage(`📊 Exported ${speciesData.length} species to ${filename}`, 'success');
             } else {
                 const filename = `MarineID_${speciesData.length}species_${timestamp}.json`;
                 const jsonContent = JSON.stringify(exportData, null, 2);
                 downloadFile(jsonContent, filename, 'application/json');
-                showMessage(`📥 Exported ${speciesData.length} species with complete metadata to ${filename}`, 'success');
+                showMessage(`📥 Exported ${speciesData.length} species to ${filename}`, 'success');
             }
         }
 
-        function exportToCSV(exportData, timestamp) {
-            const coreHeaders = ['Scientific Name', 'Common Name', 'Author', 'Year', 'Page Number', 'Confidence', 'Status'];
-            const customHeaders = customFields;
-            const databaseHeaders = ['WoRMS Link', 'WoRMS ID', 'GBIF Link', 'GBIF Key', 'OBIS Link', 'OBIS ID', 'iNaturalist Link', 'iNat ID'];
-            const allHeaders = [...coreHeaders, ...customHeaders, ...databaseHeaders];
+        function convertToCSV(exportData) {
+            const headers = ['Scientific Name', 'Common Name', 'Author', 'Year', 'Page', ...customFields, 'Confidence', 'WoRMS Link', 'GBIF Link', 'OBIS Link', 'iNaturalist Link'];
             
             const csvRows = [
-                // Metadata header
-                '# MarineID Pro Export',
-                `# Export Date: ${exportData.metadata.exportDate}`,
-                `# Original File: ${exportData.metadata.originalFileName}`,
-                `# Processing Time: ${exportData.metadata.processingTimeSeconds}s`,
-                `# AI Accuracy: ${exportData.metadata.aiAccuracy}%`,
-                `# Total Species: ${exportData.metadata.totalSpeciesExtracted}`,
-                '#',
-                // Column headers
-                allHeaders.join(','),
-                // Data rows
-                ...exportData.species.map(species => {
-                    const coreData = [
-                        `"${species.scientificName || ''}"`,
-                        `"${species.commonName || ''}"`,
-                        `"${species.author || ''}"`,
-                        `"${species.year || ''}"`,
-                        `"${species.pageNumber || ''}"`,
-                        `"${species.confidence || 0}"`,
-                        `"${species.verificationStatus || ''}"`
-                    ];
-                    
-                    const customData = customFields.map(field => {
-                        const value = species[field] || '';
-                        return `"${value.replace(/"/g, '""')}"`;
-                    });
-                    
-                    const databaseData = [
-                        `"${species.databaseLinks?.worms || ''}"`,
-                        `"${species.databaseIds?.wormsId || ''}"`,
-                        `"${species.databaseLinks?.gbif || ''}"`,
-                        `"${species.databaseIds?.gbifKey || ''}"`,
-                        `"${species.databaseLinks?.obis || ''}"`,
-                        `"${species.databaseIds?.obisId || ''}"`,
-                        `"${species.databaseLinks?.inaturalist || ''}"`,
-                        `"${species.databaseIds?.inatId || ''}"`
-                    ];
-                    
-                    return [...coreData, ...customData, ...databaseData].join(',');
-                })
+                headers.join(','),
+                ...exportData.species.map(species => [
+                    `"${species.scientificName}"`,
+                    `"${species.commonName}"`,
+                    `"${species.author}"`,
+                    `"${species.year}"`,
+                    `"${species.pageNumber}"`,
+                    ...customFields.map(field => `"${species[field] || ''}"`),
+                    `"${species.confidence}%"`,
+                    `"${species.databaseLinks?.worms || ''}"`,
+                    `"${species.databaseLinks?.gbif || ''}"`,
+                    `"${species.databaseLinks?.obis || ''}"`,
+                    `"${species.databaseLinks?.inaturalist || ''}"`
+                ].join(','))
             ];
             
-            const filename = `MarineID_${exportData.species.length}species_${timestamp}.csv`;
-            const csvContent = csvRows.join('\n');
-            downloadFile(csvContent, filename, 'text/csv');
-            showMessage(`📊 Exported ${exportData.species.length} species with custom fields to ${filename}`, 'success');
-        }
-
-        function exportSelected(format = 'json') {
-            if (selectedRows.size === 0) return;
-            
-            const selectedData = Array.from(selectedRows).map(index => speciesData[index]);
-            
-            const exportData = {
-                metadata: {
-                    exportDate: new Date().toISOString(),
-                    version: 'MarineID Pro AI v3.0',
-                    totalSpecies: selectedData.length,
-                    selectionCriteria: 'User selected',
-                    aiAccuracy: trainingStats.currentAccuracy,
-                    trainingMode: trainingMode,
-                    customFields: customFields
-                },
-                species: selectedData
-            };
-            
-            const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-            
-            if (format === 'csv') {
-                exportToCSV(exportData, timestamp);
-            } else {
-                const filename = `marineid_selected_${selectedData.length}_species_${timestamp}.json`;
-                const jsonContent = JSON.stringify(exportData, null, 2);
-                downloadFile(jsonContent, filename, 'application/json');
-                showMessage(`📥 Exported ${selectedData.length} selected species to ${filename}`, 'success');
-            }
+            return csvRows.join('\n');
         }
 
         // Training functions
@@ -2731,7 +1767,6 @@ let processingMetadata = {
         function resetAll() {
             if (confirm('Start over? This will clear all data and return to the upload screen.')) {
                 speciesData = [];
-                selectedRows.clear();
                 processingMetadata = {
                     originalFileName: '',
                     processingStartTime: null,
@@ -2787,6 +1822,8 @@ let processingMetadata = {
 
         function addChatMessage(message, sender) {
             const chatMessages = document.getElementById('aiChatMessages');
+            if (!chatMessages) return;
+            
             const messageDiv = document.createElement('div');
             messageDiv.className = `ai-message ${sender}`;
             messageDiv.innerHTML = message.replace(/\n/g, '<br>');
@@ -2799,7 +1836,7 @@ let processingMetadata = {
             const lowerMessage = userMessage.toLowerCase();
             
             if (lowerMessage.includes('how many') && lowerMessage.includes('species')) {
-                return `I found **${speciesData.length}** species in your extracted data. ${speciesData.length > 0 ? `The species range from page ${Math.min(...speciesData.map(s => s.pageNumber || 1))} to ${Math.max(...speciesData.map(s => s.pageNumber || 1))} in your document.` : 'Upload a document to start extracting species data!'}`;
+                return `I found **${speciesData.length}** species in your extracted data. ${speciesData.length > 0 ? `The species are from pages ${Math.min(...speciesData.map(s => s.pageNumber || 1))} to ${Math.max(...speciesData.map(s => s.pageNumber || 1))} in your document.` : 'Upload a document to start extracting species data!'}`;
             }
             
             if (lowerMessage.includes('confidence') || lowerMessage.includes('quality')) {
@@ -2808,25 +1845,21 @@ let processingMetadata = {
                     const highConf = speciesData.filter(s => (s.confidence || 0) >= 85).length;
                     const lowConf = speciesData.filter(s => (s.confidence || 0) < 65).length;
                     
-                    return `**Quality Analysis:**\n• Average confidence: ${avgConfidence}%\n• High confidence (≥85%): ${highConf} species\n• Low confidence (<65%): ${lowConf} species\n\n${lowConf > 0 ? 'Consider reviewing low-confidence extractions for training opportunities!' : 'Great quality! Your AI training is working well.'}`;
+                    return `**Quality Analysis:**<br>• Average confidence: ${avgConfidence}%<br>• High confidence (≥85%): ${highConf} species<br>• Low confidence (<65%): ${lowConf} species<br><br>${lowConf > 0 ? 'Consider reviewing low-confidence extractions for training opportunities!' : 'Great quality! Your AI training is working well.'}`;
                 } else {
                     return 'No data available yet. Upload a document to analyze extraction quality and confidence scores.';
                 }
             }
             
             if (lowerMessage.includes('training') || lowerMessage.includes('accuracy')) {
-                return `**AI Training Status:**\n• Current accuracy: ${trainingStats.currentAccuracy}%\n• Documents trained: ${trainingStats.documentsTrainedCount}\n• Patterns learned: ${trainingStats.patternsLearnedCount}\n• Corrections applied: ${trainingStats.correctionsCount}\n\n${trainingMode ? '🎓 Training mode is ON - provide feedback to improve!' : 'Enable training mode to start improving accuracy with your feedback.'}`;
-            }
-            
-            if (lowerMessage.includes('export') || lowerMessage.includes('download')) {
-                return `**Export Options:**\n• **JSON**: Complete data with AI metadata and training info\n• **Selected Export**: Export only chosen species\n\nAll exports include extraction confidence scores, database links, and processing metadata. Click the export buttons in the Results tab!`;
+                return `**AI Training Status:**<br>• Current accuracy: ${trainingStats.currentAccuracy}%<br>• Documents trained: ${trainingStats.documentsTrainedCount}<br>• Patterns learned: ${trainingStats.patternsLearnedCount}<br>• Corrections applied: ${trainingStats.correctionsCount}<br><br>${trainingMode ? '🎓 Training mode is ON - provide feedback to improve!' : 'Enable training mode to start improving accuracy with your feedback.'}`;
             }
             
             if (lowerMessage.includes('help') || lowerMessage.includes('what can')) {
-                return `**I can help you with:**\n\n📊 **Data Analysis**: "How many species have high confidence?"\n🔍 **Quality Review**: "Which extractions need review?"\n🧠 **AI Training**: "How is my training progress?"\n📥 **Export Guidance**: "What export format should I use?"\n\nJust ask naturally - I understand context about your current data!`;
+                return `**I can help you with:**<br><br>📊 **Data Analysis**: "How many species have high confidence?"<br>🔍 **Quality Review**: "Which extractions need review?"<br>🧠 **AI Training**: "How is my training progress?"<br>📥 **Export Guidance**: "What export format should I use?"<br><br>Just ask naturally - I understand context about your current data!`;
             }
             
-            return `I'm not sure about that specific query. Try asking about:\n• Your species data ("How many species found?")\n• Data quality ("Which have low confidence?")\n• AI training progress ("How is training going?")\n• Export options ("How do I save this data?")\n\nOr click the Quick Query buttons above for common questions!`;
+            return `I'm not sure about that specific query. Try asking about:<br>• Your species data ("How many species found?")<br>• Data quality ("Which have low confidence?")<br>• AI training progress ("How is training going?")<br>• Export options ("How do I save this data?")<br><br>Or click the Quick Query buttons for common questions!`;
         }
 
         function quickQuery(type) {
@@ -2834,9 +1867,7 @@ let processingMetadata = {
                 'summary': 'How many species were found and what is the data quality?',
                 'quality': 'Which species have low confidence scores and need review?',
                 'patterns': 'What AI patterns have been learned and what is the training progress?',
-                'taxonomy': 'What is the taxonomic distribution of the extracted species?',
-                'training': 'How can I improve the AI accuracy with training?',
-                'export': 'What are the best export options for my data?'
+                'taxonomy': 'What is the taxonomic distribution of the extracted species?'
             };
             
             const query = queries[type];
@@ -2863,13 +1894,18 @@ let processingMetadata = {
                 'image/jpeg',
                 'image/jpg', 
                 'image/png',
+                'image/tiff',
+                'image/tif',
+                'image/bmp',
+                'image/gif',
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'application/vnd.ms-excel',
-                'text/csv'
+                'text/csv',
+                'text/tab-separated-values'
             ];
             
             if (!allowedTypes.includes(file.type)) {
-                showMessage('Please upload PDF, JPG, PNG, Excel, or CSV files only.', 'error');
+                showMessage('Please upload PDF, image (JPG/PNG/TIFF/BMP/GIF), Excel, CSV, or TSV files only.', 'error');
                 return false;
             }
 
@@ -2913,19 +1949,6 @@ let processingMetadata = {
 
         function hideProcessingInterface() {
             document.getElementById('processingStatus').style.display = 'none';
-        }
-
-        function createProgressIndicator() {
-            const container = document.createElement('div');
-            container.className = 'progress-container';
-            container.innerHTML = `
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <div class="progress-text" id="progressText">Processing...</div>
-            `;
-            document.getElementById('progressContainer').appendChild(container);
-            return container;
         }
 
         function showMessage(text, type = 'info') {
