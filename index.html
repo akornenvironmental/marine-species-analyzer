@@ -1039,7 +1039,7 @@
                 </div>
 
                 <!-- Main Interface Grid -->
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 30px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
                     <!-- Upload Section -->
                     <div class="upload-section" id="uploadSection" 
                          ondragover="handleDragOver(event)" 
@@ -1048,7 +1048,7 @@
                          onclick="document.getElementById('fileInput').click()">
                         <div style="font-size: 3rem; margin-bottom: 15px;">📄</div>
                         <div style="font-size: 1.3rem; font-weight: 600; color: var(--text-color); margin-bottom: 10px; font-family: 'Orpheus Pro', serif;">
-                            Upload Marine Document
+                            Upload Document
                         </div>
                         <div id="uploadDescription" style="color: var(--text-color); opacity: 0.7; margin-bottom: 20px; font-family: 'Josefin Sans', sans-serif; font-size: 14px; line-height: 1.4;">
                             PDF field guides, images (JPG/PNG), Excel/CSV files<br>
@@ -1089,7 +1089,7 @@
                         <!-- Training Toggle -->
                         <div style="margin-bottom: 15px;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                <div class="switch" id="trainingSwitch2" onclick="toggleTrainingMode()">
+                                <div class="switch" id="trainingSwitch" onclick="toggleTrainingMode()">
                                     <div class="switch-handle"></div>
                                 </div>
                                 <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 14px; color: var(--text-color);">Training Mode</span>
@@ -1102,10 +1102,10 @@
                         <!-- Training Stats (Condensed) -->
                         <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; margin-bottom: 15px;">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-family: 'Josefin Sans', sans-serif; font-size: 12px;">
-                                <div>Accuracy: <strong id="currentAccuracy2">87%</strong></div>
-                                <div>Trained: <strong id="documentsTrainedCount2">0</strong> docs</div>
-                                <div>Patterns: <strong id="patternsLearnedCount2">4</strong></div>
-                                <div>Corrections: <strong id="correctionsCount2">0</strong></div>
+                                <div>Accuracy: <strong id="currentAccuracy">87%</strong></div>
+                                <div>Trained: <strong id="documentsTrainedCount">0</strong> docs</div>
+                                <div>Patterns: <strong id="patternsLearnedCount">4</strong></div>
+                                <div>Corrections: <strong id="correctionsCount">0</strong></div>
                             </div>
                         </div>
 
@@ -1573,28 +1573,22 @@
         // Training mode toggle
         function toggleTrainingMode() {
             trainingMode = !trainingMode;
-            const trainingSwitches = [document.getElementById('trainingSwitch'), document.getElementById('trainingSwitch2')];
+            const trainingSwitch = document.getElementById('trainingSwitch');
             const uploadSection = document.getElementById('uploadSection');
             const modeIndicator = document.getElementById('modeIndicator');
             
-            trainingSwitches.forEach(trainingSwitch => {
-                if (trainingSwitch) {
-                    if (trainingMode) {
-                        trainingSwitch.classList.add('active');
-                    } else {
-                        trainingSwitch.classList.remove('active');
-                    }
+            if (trainingSwitch) {
+                if (trainingMode) {
+                    trainingSwitch.classList.add('active');
+                    uploadSection.classList.add('training-mode');
+                    modeIndicator.textContent = '🎓 Training mode: AI will learn from this document';
+                    showMessage('🎓 Training mode activated! The AI will learn from your next upload and any corrections you provide.', 'training');
+                } else {
+                    trainingSwitch.classList.remove('active');
+                    uploadSection.classList.remove('training-mode');
+                    modeIndicator.textContent = '🤖 Standard mode: Using trained AI patterns';
+                    showMessage('Standard extraction mode restored.', 'info');
                 }
-            });
-            
-            if (trainingMode) {
-                uploadSection.classList.add('training-mode');
-                modeIndicator.textContent = '🎓 Training mode: AI will learn from this document';
-                showMessage('🎓 Training mode activated! The AI will learn from your next upload and any corrections you provide.', 'training');
-            } else {
-                uploadSection.classList.remove('training-mode');
-                modeIndicator.textContent = '🤖 Standard mode: Using trained AI patterns';
-                showMessage('Standard extraction mode restored.', 'info');
             }
         }
 
@@ -2575,17 +2569,6 @@
             document.getElementById('documentsTrainedCount').textContent = trainingStats.documentsTrainedCount;
             document.getElementById('patternsLearnedCount').textContent = trainingStats.patternsLearnedCount;
             document.getElementById('correctionsCount').textContent = trainingStats.correctionsCount;
-            
-            // Update secondary display
-            const currentAccuracy2 = document.getElementById('currentAccuracy2');
-            const documentsTrainedCount2 = document.getElementById('documentsTrainedCount2');
-            const patternsLearnedCount2 = document.getElementById('patternsLearnedCount2');
-            const correctionsCount2 = document.getElementById('correctionsCount2');
-            
-            if (currentAccuracy2) currentAccuracy2.textContent = trainingStats.currentAccuracy + '%';
-            if (documentsTrainedCount2) documentsTrainedCount2.textContent = trainingStats.documentsTrainedCount;
-            if (patternsLearnedCount2) patternsLearnedCount2.textContent = trainingStats.patternsLearnedCount;
-            if (correctionsCount2) correctionsCount2.textContent = trainingStats.correctionsCount;
         }
 
         // Reset function
