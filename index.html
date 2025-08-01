@@ -1026,37 +1026,27 @@
         <div class="main-content">
             <div class="content-header">
                 <div class="header-main">
-                    <h1 style="font-family: 'Orpheus Pro', serif; font-size: 28px; color: var(--text-color); margin-bottom: 5px; font-weight: 700;">
+                    <h1 style="font-family: 'Orpheus Pro', serif; font-size: 28px; color: var(--text-color); margin-bottom: 8px; font-weight: 700;">
                         🐚 MarineID Pro <span class="ai-learning-indicator">🧠 AI Learning</span>
                     </h1>
-                    <p style="font-family: 'Josefin Sans', sans-serif; color: var(--text-color); opacity: 0.7; font-size: 16px; font-weight: 400; margin-bottom: 10px;">
-                        AI-powered marine species extraction from field guides and scientific documents
-                    </p>
-                    <p style="font-family: 'Josefin Sans', sans-serif; color: var(--text-color); opacity: 0.8; font-size: 14px; line-height: 1.4; max-width: 75%; padding-right: 20px;">
-                        <strong>Extract hundreds of marine species</strong> from PDF field guides, research papers, and taxonomic documents. The AI learns from bilingual content (English/Spanish), recognizes numbered species entries, extracts habitat and distribution data, and verifies results against authoritative marine databases including <strong><a href="https://www.marinespecies.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">WoRMS</a></strong>, <strong><a href="https://www.gbif.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">GBIF</a></strong>, and <strong><a href="https://obis.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">OBIS</a></strong>.
-                        <br><br>
-                        <strong>Perfect for:</strong> Marine biologists processing field guides • Taxonomists working with species lists • Researchers analyzing biodiversity documents • Conservation organizations conducting species inventories
+                    <p style="font-family: 'Josefin Sans', sans-serif; color: var(--text-color); opacity: 0.8; font-size: 14px; line-height: 1.4; max-width: 80%; padding-right: 20px;">
+                        <strong>Extract marine species</strong> from PDF field guides and research papers. AI learns from bilingual content, extracts custom fields, and verifies against <strong><a href="https://www.marinespecies.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">WoRMS</a></strong>, <strong><a href="https://www.gbif.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">GBIF</a></strong>, <strong><a href="https://obis.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">OBIS</a></strong>, and <strong><a href="https://www.inaturalist.org" target="_blank" style="color: var(--accent-color); text-decoration: none;">iNaturalist</a></strong>.
                     </p>
                 </div>
                 <div class="header-controls">
-                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 8px;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="font-family: 'Josefin Sans', sans-serif; font-size: 12px;">Text Size:</span>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                        <div style="display: flex; align-items: center; gap: 5px;">
                             <button class="text-size-btn" onclick="adjustTextSize('small')" data-size="small">A</button>
                             <button class="text-size-btn active" onclick="adjustTextSize('medium')" data-size="medium">A</button>
                             <button class="text-size-btn" onclick="adjustTextSize('large')" data-size="large">A</button>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 5px;">
-                            <span style="font-family: 'Josefin Sans', sans-serif; font-size: 12px;">Theme:</span>
-                            <button class="theme-btn" onclick="setTheme('system')" data-theme="system">System</button>
+                        <div style="display: flex; align-items: center; gap: 3px;">
                             <button class="theme-btn active" onclick="setTheme('light')" data-theme="light">Light</button>
                             <button class="theme-btn" onclick="setTheme('dark')" data-theme="dark">Dark</button>
                         </div>
                     </div>
                     <div style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; color: var(--text-color); opacity: 0.6; text-align: right; line-height: 1.2;">
-                        <strong>Desktop Optimized</strong><br>
-                        <em>Mobile version coming soon</em><br>
-                        AI Training Engine v3.0
+                        <strong>Desktop Optimized</strong> • <em>Mobile coming soon</em>
                     </div>
                 </div>
             </div>
@@ -1083,7 +1073,7 @@
                                 </div>
                                 <div style="background: rgba(255,255,255,0.7); padding: 12px; border-radius: 8px;">
                                     <strong>🧠 Step 2: AI Extract</strong><br>
-                                    AI automatically finds species names, authors, habitats, and other data using trained patterns.
+                                    AI automatically finds species names, authors, habitats, and custom fields using trained patterns.
                                 </div>
                                 <div style="background: rgba(255,255,255,0.7); padding: 12px; border-radius: 8px;">
                                     <strong>✅ Step 3: Verify & Export</strong><br>
@@ -1094,23 +1084,87 @@
                     </div>
                 </div>
 
-                <!-- Upload Section -->
-                <div class="upload-section" id="uploadSection" 
-                     ondragover="handleDragOver(event)" 
-                     ondragleave="handleDragLeave(event)" 
-                     ondrop="handleDrop(event)"
-                     onclick="document.getElementById('fileInput').click()">
-                    <div style="font-size: 3rem; margin-bottom: 15px;">📄</div>
-                    <div style="font-size: 1.3rem; font-weight: 600; color: var(--text-color); margin-bottom: 10px; font-family: 'Orpheus Pro', serif;">
-                        Upload Marine Document
+                <!-- Main Interface Grid -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 30px;">
+                    <!-- Upload Section -->
+                    <div class="upload-section" id="uploadSection" 
+                         ondragover="handleDragOver(event)" 
+                         ondragleave="handleDragLeave(event)" 
+                         ondrop="handleDrop(event)"
+                         onclick="document.getElementById('fileInput').click()">
+                        <div style="font-size: 3rem; margin-bottom: 15px;">📄</div>
+                        <div style="font-size: 1.3rem; font-weight: 600; color: var(--text-color); margin-bottom: 10px; font-family: 'Orpheus Pro', serif;">
+                            Upload Marine Document
+                        </div>
+                        <div id="uploadDescription" style="color: var(--text-color); opacity: 0.7; margin-bottom: 20px; font-family: 'Josefin Sans', sans-serif; font-size: 14px; line-height: 1.4;">
+                            PDF field guides, research papers, species lists<br>
+                            <strong>Max size: 1GB</strong> • Supports bilingual content<br>
+                            <span id="modeIndicator">🤖 Standard mode: Using trained AI patterns</span>
+                        </div>
+                        <button class="button" style="padding: 12px 24px; font-size: 14px;">Choose PDF File</button>
+                        <input type="file" id="fileInput" style="display: none;" accept=".pdf" onchange="handleFileUpload(event)">
                     </div>
-                    <div id="uploadDescription" style="color: var(--text-color); opacity: 0.7; margin-bottom: 20px; font-family: 'Josefin Sans', sans-serif; font-size: 14px; line-height: 1.4;">
-                        PDF field guides, research papers, species lists<br>
-                        <strong>Max size: 1GB</strong> • Supports bilingual content<br>
-                        <span id="modeIndicator">🤖 Standard mode: Using trained AI patterns</span>
+
+                    <!-- Custom Fields & Training Panel -->
+                    <div style="background: var(--light-bg); border: 1px solid var(--ai-color); border-radius: 12px; padding: 20px;">
+                        <h4 style="font-family: 'Orpheus Pro', serif; color: var(--ai-color); margin-bottom: 15px; font-size: 16px;">🔧 Custom Fields & AI Training</h4>
+                        
+                        <!-- Custom Fields Configuration -->
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="font-family: 'Orpheus Pro', serif; color: var(--text-color); margin-bottom: 8px; font-size: 14px;">📋 Custom Fields to Extract</h5>
+                            <p style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; color: var(--text-color); opacity: 0.8; margin-bottom: 10px;">
+                                Core fields (genus, species, author, year) always extracted. Add custom fields:
+                            </p>
+                            <div id="customFieldsList" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px;">
+                                <div class="field-input" style="display: flex; gap: 5px;">
+                                    <input type="text" value="Habitat" style="flex: 1; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
+                                    <button onclick="removeCustomField(this)" style="background: var(--error-color); color: white; border: none; padding: 6px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">✕</button>
+                                </div>
+                                <div class="field-input" style="display: flex; gap: 5px;">
+                                    <input type="text" value="Size" style="flex: 1; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
+                                    <button onclick="removeCustomField(this)" style="background: var(--error-color); color: white; border: none; padding: 6px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">✕</button>
+                                </div>
+                                <div class="field-input" style="display: flex; gap: 5px;">
+                                    <input type="text" value="Distribution" style="flex: 1; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
+                                    <button onclick="removeCustomField(this)" style="background: var(--error-color); color: white; border: none; padding: 6px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">✕</button>
+                                </div>
+                            </div>
+                            <button onclick="addCustomField()" style="background: var(--success-color); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; font-family: 'Josefin Sans', sans-serif; font-weight: 600; width: 100%;">+ Add Field</button>
+                        </div>
+
+                        <!-- Training Toggle -->
+                        <div style="margin-bottom: 15px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <div class="switch" id="trainingSwitch" onclick="toggleTrainingMode()">
+                                    <div class="switch-handle"></div>
+                                </div>
+                                <span style="font-family: 'Josefin Sans', sans-serif; font-weight: 600; font-size: 14px; color: var(--text-color);">Training Mode</span>
+                            </div>
+                            <p style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; color: var(--text-color); opacity: 0.8;">
+                                Enable to improve AI accuracy through feedback
+                            </p>
+                        </div>
+
+                        <!-- Training Stats (Condensed) -->
+                        <div style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; margin-bottom: 15px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-family: 'Josefin Sans', sans-serif; font-size: 12px;">
+                                <div>Accuracy: <strong id="currentAccuracy">87%</strong></div>
+                                <div>Trained: <strong id="documentsTrainedCount">0</strong> docs</div>
+                                <div>Patterns: <strong id="patternsLearnedCount">4</strong></div>
+                                <div>Corrections: <strong id="correctionsCount">0</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <button class="button training small" onclick="loadSampleDocument()" style="font-size: 12px;">
+                                📚 Try Sample Document
+                            </button>
+                            <button class="button ai small" onclick="resetTraining()" style="font-size: 12px;">
+                                🔄 Reset Training
+                            </button>
+                        </div>
                     </div>
-                    <button class="button" style="padding: 12px 24px; font-size: 14px;">Choose PDF File</button>
-                    <input type="file" id="fileInput" style="display: none;" accept=".pdf" onchange="handleFileUpload(event)">
                 </div>
 
                 <!-- Processing Status -->
@@ -1160,7 +1214,8 @@
                     <h2 class="section-title">Review Results & Export</h2>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <span class="ai-learning-indicator">🧠 AI Accuracy: <span id="headerAccuracy">87%</span></span>
-                        <button class="button success" onclick="exportResults()">📥 Export Data</button>
+                        <button class="button success" onclick="exportResults('json')">📥 Export JSON</button>
+                        <button class="button success" onclick="exportResults('csv')" style="margin-left: 5px;">📊 Export CSV</button>
                         <button class="button" onclick="resetAll()" style="background: var(--error-color);">🔄 Start Over</button>
                     </div>
                 </div>
@@ -1244,6 +1299,7 @@
         let sortColumn = null;
         let sortDirection = 'asc';
         let chatHistory = [];
+        let customFields = ['Habitat', 'Size', 'Distribution']; // Default custom fields
         let trainingStats = {
             documentsTrainedCount: 0,
             patternsLearnedCount: 4,
@@ -1455,22 +1511,51 @@
             }
         }
 
+        // Custom Fields Management
+        function addCustomField() {
+            const container = document.getElementById('customFieldsList');
+            const fieldDiv = document.createElement('div');
+            fieldDiv.className = 'field-input';
+            fieldDiv.style.cssText = 'display: flex; gap: 5px;';
+            fieldDiv.innerHTML = `
+                <input type="text" placeholder="Field name (e.g., Depth Range)" style="flex: 1; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 11px; font-family: 'Josefin Sans', sans-serif; background: var(--card-bg); color: var(--text-color);">
+                <button onclick="removeCustomField(this)" style="background: var(--error-color); color: white; border: none; padding: 6px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;">✕</button>
+            `;
+            container.appendChild(fieldDiv);
+            updateCustomFields();
+        }
+
+        function removeCustomField(button) {
+            button.parentElement.remove();
+            updateCustomFields();
+        }
+
+        function updateCustomFields() {
+            const fieldInputs = document.querySelectorAll('#customFieldsList input');
+            customFields = Array.from(fieldInputs)
+                .map(input => input.value.trim())
+                .filter(field => field.length > 0);
+            
+            console.log('Custom fields updated:', customFields);
+        }
+
         function generateSampleResults() {
-            return [
+            // Generate results with custom fields
+            updateCustomFields(); // Ensure we have current custom fields
+            
+            const baseResults = [
                 {
                     scientificName: 'Eubranchus madapamensis',
                     commonName: 'Madapam Aeolid',
                     author: 'Rao',
                     year: '1969',
                     pageNumber: 294,
-                    habitat: '"Intertidal and shallow subtidal, to at least 30 ft" [extracted]',
-                    size: '"To 0.5 in (12 mm)" [extracted]',
-                    distribution: '"Indo-Pacific, from Tanzania to Hawaiʻi" [extracted]',
                     confidence: 96,
                     verificationStatus: 'verified',
+                    // Real WoRMS database links - these should work
                     databaseLinks: {
                         worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=531454',
-                        gbif: 'https://www.gbif.org/species/9695780',
+                        gbif: 'https://www.gbif.org/species/9695780', 
                         obis: 'https://obis.org/taxon/531454',
                         inaturalist: 'https://www.inaturalist.org/taxa/344312'
                     },
@@ -1493,11 +1578,9 @@
                     author: 'Behrens',
                     year: '1987',
                     pageNumber: 294,
-                    habitat: '"Intertidal and on boat docks" [extracted]',
-                    size: '"To 0.23 in (6 mm)" [extracted]',
-                    distribution: '"Palos Verdes and Mission Bay, California" [extracted]',
                     confidence: 94,
                     verificationStatus: 'verified',
+                    // Real WoRMS database links
                     databaseLinks: {
                         worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=531455',
                         gbif: 'https://www.gbif.org/species/9695782',
@@ -1523,11 +1606,9 @@
                     author: 'Kienberger et al.',
                     year: '2016',
                     pageNumber: 294,
-                    habitat: '"Intertidal and shallow subtidal" [extracted]',
-                    size: '"To about 1.2 in (30 mm)" [extracted]',
-                    distribution: '"Cape Arago, Oregon, to Punta Baja and northern Isla de Cedros" [extracted]',
                     confidence: 98,
                     verificationStatus: 'verified',
+                    // Real WoRMS database links
                     databaseLinks: {
                         worms: 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=836771',
                         gbif: 'https://www.gbif.org/species/9248391',
@@ -1548,6 +1629,39 @@
                     }
                 }
             ];
+
+            // Add custom field data based on user configuration
+            return baseResults.map(species => {
+                const enhancedSpecies = { ...species };
+                
+                // Add custom field data
+                customFields.forEach(field => {
+                    const fieldLower = field.toLowerCase();
+                    if (fieldLower.includes('habitat')) {
+                        enhancedSpecies[field] = '"Intertidal and shallow subtidal, to at least 30 ft" [extracted]';
+                    } else if (fieldLower.includes('size')) {
+                        const sizes = ['To 0.5 in (12 mm)', 'To 0.23 in (6 mm)', 'To about 1.2 in (30 mm)'];
+                        const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+                        enhancedSpecies[field] = `"${randomSize}" [extracted]`;
+                    } else if (fieldLower.includes('distribution')) {
+                        const distributions = [
+                            'Indo-Pacific, from Tanzania to Hawaiʻi',
+                            'Palos Verdes and Mission Bay, California',
+                            'Cape Arago, Oregon, to Punta Baja and northern Isla de Cedros'
+                        ];
+                        const randomDist = distributions[Math.floor(Math.random() * distributions.length)];
+                        enhancedSpecies[field] = `"${randomDist}" [extracted]`;
+                    } else if (fieldLower.includes('depth')) {
+                        enhancedSpecies[field] = '"0-30 meters" [extracted]';
+                    } else if (fieldLower.includes('family')) {
+                        enhancedSpecies[field] = species.scientificName.includes('Eubranchus') ? 'Eubranchidae' : 'Aeolidiidae';
+                    } else {
+                        enhancedSpecies[field] = `⟨${field} not found⟩ [system]`;
+                    }
+                });
+                
+                return enhancedSpecies;
+            });
         }
 
         function populateResults() {
@@ -1590,7 +1704,8 @@
                         <div class="bulk-actions">
                             <button class="button small" onclick="selectAllRows()">Select All</button>
                             <button class="button small" onclick="clearSelection()">Clear</button>
-                            <button class="button success small" onclick="exportSelected()" id="exportSelectedBtn" disabled>📥 Export Selected</button>
+                            <button class="button success small" onclick="exportSelected('json')" id="exportSelectedBtn" disabled>📥 Export JSON</button>
+                            <button class="button success small" onclick="exportSelected('csv')" id="exportSelectedBtnCSV" disabled style="margin-left: 5px;">📊 Export CSV</button>
                             <button class="button warning small" onclick="retrySelected()" id="retrySelectedBtn" disabled>🔄 Retry Selected</button>
                         </div>
                     </div>
@@ -1607,6 +1722,7 @@
                                     <th class="sortable" onclick="sortTable('author')">Author</th>
                                     <th class="sortable" onclick="sortTable('year')">Year</th>
                                     <th class="sortable" onclick="sortTable('pageNumber')">Page</th>
+                                    ${customFields.map(field => `<th class="sortable" onclick="sortTable('${field}')">${field}</th>`).join('')}
                                     <th class="sortable" onclick="sortTable('confidence')">Confidence</th>
                                     <th>Status</th>
                                     <th>WoRMS</th>
@@ -1652,6 +1768,9 @@
                     <td>${species.author}</td>
                     <td>${species.year}</td>
                     <td style="text-align: center; font-weight: 600;">${species.pageNumber}</td>
+                    ${customFields.map(field => `
+                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;" title="${species[field] || 'Not found'}">${species[field] || '⟨Not found⟩'}</td>
+                    `).join('')}
                     <td style="text-align: center;">
                         <span class="confidence-badge ${species.confidence >= 85 ? 'confidence-high' : species.confidence >= 65 ? 'confidence-medium' : 'confidence-low'}">
                             ${species.confidence}%
@@ -1734,6 +1853,7 @@
         function updateSelectionUI() {
             const selectionCount = document.getElementById('selectionCount');
             const exportSelectedBtn = document.getElementById('exportSelectedBtn');
+            const exportSelectedBtnCSV = document.getElementById('exportSelectedBtnCSV');
             const retrySelectedBtn = document.getElementById('retrySelectedBtn');
             const selectAllCheckbox = document.getElementById('selectAllCheckbox');
             
@@ -1741,6 +1861,7 @@
             
             const hasSelection = selectedRows.size > 0;
             if (exportSelectedBtn) exportSelectedBtn.disabled = !hasSelection;
+            if (exportSelectedBtnCSV) exportSelectedBtnCSV.disabled = !hasSelection;
             if (retrySelectedBtn) retrySelectedBtn.disabled = !hasSelection;
             
             if (selectAllCheckbox) {
@@ -1878,8 +1999,8 @@
             showMessage(`✅ Retry complete for ${selectedRows.size} species with improved confidence scores.`, 'success');
         }
 
-        // Export functions
-        function exportResults() {
+        // Export functions with CSV support
+        function exportResults(format = 'json') {
             if (speciesData.length === 0) {
                 showMessage('No data to export.', 'warning');
                 return;
@@ -1905,6 +2026,7 @@
                     totalSpeciesExtracted: speciesData.length,
                     averageConfidence: Math.round(speciesData.reduce((sum, s) => sum + s.confidence, 0) / speciesData.length),
                     databasesUsed: ['WoRMS', 'GBIF', 'OBIS', 'iNaturalist'],
+                    customFields: customFields,
                     verificationSummary: {
                         verified: speciesData.filter(s => s.verificationStatus === 'verified').length,
                         synonyms: speciesData.filter(s => s.verificationStatus === 'synonym').length,
@@ -1922,15 +2044,73 @@
             };
             
             const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-            const filename = `MarineID_${speciesData.length}species_${timestamp}.json`;
             
-            const jsonContent = JSON.stringify(exportData, null, 2);
-            downloadFile(jsonContent, filename, 'application/json');
-            
-            showMessage(`📥 Exported ${speciesData.length} species with complete metadata and database links to ${filename}`, 'success');
+            if (format === 'csv') {
+                exportToCSV(exportData, timestamp);
+            } else {
+                const filename = `MarineID_${speciesData.length}species_${timestamp}.json`;
+                const jsonContent = JSON.stringify(exportData, null, 2);
+                downloadFile(jsonContent, filename, 'application/json');
+                showMessage(`📥 Exported ${speciesData.length} species with complete metadata to ${filename}`, 'success');
+            }
         }
 
-        function exportSelected() {
+        function exportToCSV(exportData, timestamp) {
+            const coreHeaders = ['Scientific Name', 'Common Name', 'Author', 'Year', 'Page Number', 'Confidence', 'Status'];
+            const customHeaders = customFields;
+            const databaseHeaders = ['WoRMS Link', 'WoRMS ID', 'GBIF Link', 'GBIF Key', 'OBIS Link', 'OBIS ID', 'iNaturalist Link', 'iNat ID'];
+            const allHeaders = [...coreHeaders, ...customHeaders, ...databaseHeaders];
+            
+            const csvRows = [
+                // Metadata header
+                '# MarineID Pro Export',
+                `# Export Date: ${exportData.metadata.exportDate}`,
+                `# Original File: ${exportData.metadata.originalFileName}`,
+                `# Processing Time: ${exportData.metadata.processingTimeSeconds}s`,
+                `# AI Accuracy: ${exportData.metadata.aiAccuracy}%`,
+                `# Total Species: ${exportData.metadata.totalSpeciesExtracted}`,
+                '#',
+                // Column headers
+                allHeaders.join(','),
+                // Data rows
+                ...exportData.species.map(species => {
+                    const coreData = [
+                        `"${species.scientificName || ''}"`,
+                        `"${species.commonName || ''}"`,
+                        `"${species.author || ''}"`,
+                        `"${species.year || ''}"`,
+                        `"${species.pageNumber || ''}"`,
+                        `"${species.confidence || 0}"`,
+                        `"${species.verificationStatus || ''}"`
+                    ];
+                    
+                    const customData = customFields.map(field => {
+                        const value = species[field] || '';
+                        return `"${value.replace(/"/g, '""')}"`;
+                    });
+                    
+                    const databaseData = [
+                        `"${species.databaseLinks?.worms || ''}"`,
+                        `"${species.databaseIds?.wormsId || ''}"`,
+                        `"${species.databaseLinks?.gbif || ''}"`,
+                        `"${species.databaseIds?.gbifKey || ''}"`,
+                        `"${species.databaseLinks?.obis || ''}"`,
+                        `"${species.databaseIds?.obisId || ''}"`,
+                        `"${species.databaseLinks?.inaturalist || ''}"`,
+                        `"${species.databaseIds?.inatId || ''}"`
+                    ];
+                    
+                    return [...coreData, ...customData, ...databaseData].join(',');
+                })
+            ];
+            
+            const filename = `MarineID_${exportData.species.length}species_${timestamp}.csv`;
+            const csvContent = csvRows.join('\n');
+            downloadFile(csvContent, filename, 'text/csv');
+            showMessage(`📊 Exported ${exportData.species.length} species with custom fields to ${filename}`, 'success');
+        }
+
+        function exportSelected(format = 'json') {
             if (selectedRows.size === 0) return;
             
             const selectedData = Array.from(selectedRows).map(index => speciesData[index]);
@@ -1942,14 +2122,22 @@
                     totalSpecies: selectedData.length,
                     selectionCriteria: 'User selected',
                     aiAccuracy: trainingStats.currentAccuracy,
-                    trainingMode: trainingMode
+                    trainingMode: trainingMode,
+                    customFields: customFields
                 },
                 species: selectedData
             };
             
-            const jsonContent = JSON.stringify(exportData, null, 2);
-            downloadFile(jsonContent, `marineid_selected_${selectedData.length}_species.json`, 'application/json');
-            showMessage(`📥 Exported ${selectedData.length} selected species.`, 'success');
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+            
+            if (format === 'csv') {
+                exportToCSV(exportData, timestamp);
+            } else {
+                const filename = `marineid_selected_${selectedData.length}_species_${timestamp}.json`;
+                const jsonContent = JSON.stringify(exportData, null, 2);
+                downloadFile(jsonContent, filename, 'application/json');
+                showMessage(`📥 Exported ${selectedData.length} selected species to ${filename}`, 'success');
+            }
         }
 
         // Training functions
