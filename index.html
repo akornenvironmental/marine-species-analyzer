@@ -847,6 +847,13 @@ let processingMetadata = {
             .processing-steps {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            .header-controls {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 15px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -869,6 +876,15 @@ let processingMetadata = {
             
             .tab-content {
                 padding: 15px;
+            }
+            
+            .content-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .header-controls {
+                align-items: flex-start;
             }
         }
 
@@ -988,7 +1004,7 @@ let processingMetadata = {
                     </p>
                 </div>
                 <div class="header-controls">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
                         <div style="display: flex; align-items: center; gap: 5px;">
                             <button class="text-size-btn" onclick="adjustTextSize('small')" data-size="small">A</button>
                             <button class="text-size-btn active" onclick="adjustTextSize('medium')" data-size="medium">A</button>
@@ -1000,9 +1016,9 @@ let processingMetadata = {
                             <button class="theme-btn" onclick="setTheme('system')" data-theme="system">Auto</button>
                         </div>
                         <div style="display: flex; align-items: center; gap: 3px;">
-                            <button class="text-size-btn active" onclick="setLanguage('en')" data-lang="en">EN</button>
-                            <button class="text-size-btn" onclick="setLanguage('es')" data-lang="es">ES</button>
-                            <button class="text-size-btn" onclick="setLanguage('fr')" data-lang="fr">FR</button>
+                            <button class="theme-btn active" onclick="setLanguage('en')" data-lang="en">EN</button>
+                            <button class="theme-btn" onclick="setLanguage('es')" data-lang="es">ES</button>
+                            <button class="theme-btn" onclick="setLanguage('fr')" data-lang="fr">FR</button>
                         </div>
                     </div>
                     <div style="font-family: 'Josefin Sans', sans-serif; font-size: 11px; color: var(--text-color); opacity: 0.6; text-align: right; line-height: 1.2;">
@@ -1546,7 +1562,8 @@ let processingMetadata = {
             initializeTheme();
             initializeTextSize();
             initializeLanguage();
-            showEmailModal();
+            // Show email modal after a brief delay to ensure page is loaded
+            setTimeout(showEmailModal, 500);
             console.log('MarineID Pro - AI Training System Loaded');
         });
 
@@ -1560,11 +1577,8 @@ let processingMetadata = {
         }
 
         function showEmailModal() {
-            // Check if user has already provided info in this session
-            const hasProvidedInfo = sessionStorage.getItem('marineid_user_info');
-            if (!hasProvidedInfo) {
-                document.getElementById('emailModal').style.display = 'block';
-            }
+            // Always show modal on first load (remove session check for now)
+            document.getElementById('emailModal').style.display = 'block';
         }
 
         function skipEmailCollection() {
