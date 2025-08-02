@@ -1588,33 +1588,50 @@
             }
         }
 
-        // ENHANCED SPECIES EXTRACTION with image analysis support
+        // ENHANCED SPECIES EXTRACTION with FIXED pattern recognition
         async function extractSpeciesFromText(text, images = []) {
             const species = [];
             const lines = text.split('\n');
             let currentPageNumber = 1;
             
-            showMessage('🔍 Applying advanced pattern recognition...', 'info');
+            showMessage('🔍 Applying enhanced species extraction patterns...', 'info');
             
-            // Enhanced patterns for marine species identification
+            // FIXED: More precise patterns for marine species identification
             const speciesPatterns = [
-                // Standard binomial with author and year
-                /([A-Z][a-z]+)\s+([a-z]+)\s+([A-Z][a-zA-Z\s&.,]+),?\s*(\d{4})/g,
-                // Binomial without author/year
-                /([A-Z][a-z]+)\s+([a-z]+)(?=\s|$|\n)/g,
-                // Species in taxonomic context
-                /(?:Species:|Genus:|Family:)\s*([A-Z][a-z]+\s+[a-z]+)/g,
-                // Subspecies patterns
-                /([A-Z][a-z]+)\s+([a-z]+)\s+([a-z]+)\s+([A-Z][a-zA-Z\s&.,]+),?\s*(\d{4})/g
+                // Pattern 1: Full scientific name with author and year (most common)
+                /\b([A-Z][a-z]+)\s+([a-z]+)\s+([A-Z][^,\d]*?)(?:,\s*)?(\d{4})\b/g,
+                
+                // Pattern 2: Scientific name with author but no year
+                /\b([A-Z][a-z]+)\s+([a-z]+)\s+([A-Z][a-zA-Z\s&.-]+)\b/g,
+                
+                // Pattern 3: Simple binomial nomenclature
+                /\b([A-Z][a-z]{2,})\s+([a-z]{3,})\b/g,
+                
+                // Pattern 4: Species with subspecies
+                /\b([A-Z][a-z]+)\s+([a-z]+)\s+([a-z]+)\s+([A-Z][^,\d]*?)(?:,\s*)?(\d{4})\b/g
             ];
             
+            // Exclusion patterns to filter out non-species text
             const excludePatterns = [
-                /^(The|This|Size|Range|Habitat|Description|Similar|Remarks|Figure|Page|Chapter|Table)$/i,
-                /^(North|South|East|West|Pacific|Atlantic|Ocean|Sea|Bay|Gulf|Marine|Intertidal)$/i,
-                /^(Length|Width|Height|Depth|Temperature|Salinity|Color|White|Black|Red|Blue)$/i
+                /^(The|This|Size|Range|Habitat|Description|Similar|Remarks|Figure|Page|Chapter|Table|Common|Family|Order|Class|Phylum|Kingdom)$/i,
+                /^(North|South|East|West|Pacific|Atlantic|Ocean|Sea|Bay|Gulf|Marine|Intertidal|Subtidal|Alaska|California|Mexico|Canada)$/i,
+                /^(Length|Width|Height|Depth|Temperature|Salinity|Color|White|Black|Red|Blue|Green|Yellow|Brown)$/i,
+                /^(They|These|Those|Some|Many|Most|All|Few|Several|Other|Another|Same|Different)$/i,
+                /^(Found|Occurs|Lives|Feeds|Grows|Moves|Swims|Crawls|Attaches|Burrows)$/i,
+                /^(cm|mm|m|ft|in|deg|C|F|kg|g|lb|oz)$/i
             ];
             
-            // Process text line by line
+            // Valid marine genera to boost confidence
+            const marineGenera = [
+                'Cancer', 'Pandalopsis', 'Dendronotus', 'Eubranchus', 'Aeolidia', 'Obelia', 'Clytia', 'Gonothyraea',
+                'Mytilus', 'Balanus', 'Strongylocentrotus', 'Haliotis', 'Patella', 'Lottia', 'Tegula', 'Nucella',
+                'Pisaster', 'Pycnopodia', 'Henricia', 'Cucumaria', 'Parastichopus', 'Anthopleura', 'Metridium',
+                'Pagurus', 'Hemigrapsus', 'Pachygrapsus', 'Pugettia', 'Oregonia', 'Chionoecetes', 'Tanner',
+                'Sebastes', 'Clinocottus', 'Oligocottus', 'Artedius', 'Hexagrammos', 'Ophiodon', 'Anoplarchus',
+                'Alaria', 'Macrocystis', 'Nereocystis', 'Fucus', 'Pelvetia', 'Ulva', 'Enteromorpha', 'Porphyra'
+            ];
+            
+            // Process text line by line with improved logic
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
                 
@@ -1625,25 +1642,50 @@
                     continue;
                 }
                 
-                // Skip very short lines, headers, or non-content
-                if (line.length < 8) continue;
+                // Skip very short lines or headers
+                if (line.length < 10) continue;
                 
-                // Extract species using multiple patterns
+                // Extract species using improved patterns
                 for (const pattern of speciesPatterns) {
                     let match;
                     const regex = new RegExp(pattern.source, pattern.flags);
                     
                     while ((match = regex.exec(line)) !== null) {
-                        const genus = match[1];
-                        const species_epithet = match[2];
-                        const subspecies = match[3] && !match[3].match(/^\d{4}$/) ? match[3] : '';
-                        const author = subspecies ? match[4] || '' : match[3] || '';
-                        const year = subspecies ? match[5] || '' : match[4] || '';
+                        let genus, species_epithet, subspecies = '', author = '', year = '';
+                        
+                        // Parse match based on pattern type
+                        if (match.length === 5 && match[4].match(/^\d{4}$/)) {
+                            // Pattern 1: Full name with year
+                            [, genus, species_epithet, author, year] = match;
+                        } else if (match.length === 6 && match[5].match(/^\d{4}$/)) {
+                            // Pattern 4: Subspecies with year
+                            [, genus, species_epithet, subspecies, author, year] = match;
+                        } else if (match.length === 4) {
+                            // Pattern 2: Name with author, no year
+                            [, genus, species_epithet, author] = match;
+                        } else if (match.length === 3) {
+                            // Pattern 3: Simple binomial
+                            [, genus, species_epithet] = match;
+                        } else {
+                            continue;
+                        }
                         
                         // Validation checks
+                        if (!genus || !species_epithet) continue;
                         if (genus.length < 3 || species_epithet.length < 3) continue;
                         if (excludePatterns.some(pattern => pattern.test(genus) || pattern.test(species_epithet))) continue;
                         
+                        // Clean up author and year
+                        if (author) {
+                            author = author.replace(/[,\(\)\[\]]/g, '').trim();
+                            // Check if author is actually a year
+                            if (author.match(/^\d{4}$/)) {
+                                year = author;
+                                author = '';
+                            }
+                        }
+                        
+                        // Construct scientific name
                         const scientificName = subspecies ? 
                             `${genus} ${species_epithet} ${subspecies}` : 
                             `${genus} ${species_epithet}`;
@@ -1651,204 +1693,175 @@
                         // Check for duplicates
                         if (species.find(s => s.scientificName === scientificName)) continue;
                         
+                        // Calculate confidence based on various factors
+                        let confidence = 60; // Base confidence
+                        
+                        // Boost for known marine genera
+                        if (marineGenera.includes(genus)) confidence += 20;
+                        
+                        // Boost for having author/year
+                        if (author) confidence += 10;
+                        if (year && year.match(/^\d{4}$/)) confidence += 10;
+                        
+                        // Boost for marine-specific terms in context
+                        const contextText = lines.slice(Math.max(0, i-2), Math.min(lines.length, i+3)).join(' ').toLowerCase();
+                        const marineTerms = ['intertidal', 'subtidal', 'marine', 'ocean', 'depth', 'salinity', 'rocky', 'sandy', 'crab', 'shrimp', 'nudibranch', 'urchin', 'anemone', 'barnacle', 'mussel', 'clam', 'snail', 'worm', 'star'];
+                        for (const term of marineTerms) {
+                            if (contextText.includes(term)) confidence += 2;
+                        }
+                        
                         // Extract contextual information
-                        const context = await extractContextualInfo(lines, i, scientificName, images);
+                        const context = extractContextualInfo(lines, i, scientificName);
                         
                         const speciesEntry = {
                             scientificName: scientificName,
-                            commonName: context.commonName || extractCommonName(line) || '',
-                            author: author.replace(/[,\(\)\[\]]/g, '').trim(),
+                            commonName: context.commonName || extractCommonName(line, lines, i) || '',
+                            author: author,
                             year: year,
                             pageNumber: currentPageNumber,
-                            confidence: calculateConfidence(line, context),
+                            confidence: Math.min(confidence, 98),
                             verificationStatus: 'pending',
                             Citation: processingMetadata.citation || '',
                             Description: context.description || '',
-                            Identification: context.identification || '',
                             Habitat: context.habitat || '',
-                            Distribution: context.range || context.distribution || '',
+                            Distribution: context.distribution || context.range || '',
                             Size: context.size || '',
                             Remarks: context.remarks || '',
                             'Similar species': context.similar || '',
-                            Etymology: context.etymology || '',
-                            Ecology: context.ecology || '',
-                            'Conservation status': context.conservation || ''
+                            Identification: context.identification || ''
                         };
+                        
+                        // Add custom fields
+                        customFields.forEach(field => {
+                            if (!speciesEntry[field]) {
+                                speciesEntry[field] = context[field.toLowerCase()] || '';
+                            }
+                        });
                         
                         species.push(speciesEntry);
                         
-                        // Prevent infinite loops
-                        if (species.length >= 100) {
-                            showMessage('⚠️ Limiting results to top 100 species to prevent timeout', 'warning');
-                            break;
+                        // Prevent infinite loops and limit results
+                        if (species.length >= 50) {
+                            showMessage('⚠️ Limiting results to top 50 species for performance', 'warning');
+                            return species.sort((a, b) => b.confidence - a.confidence);
                         }
                     }
-                    
-                    if (species.length >= 100) break;
                 }
                 
-                if (species.length >= 100) break;
-                
-                // Yield control periodically to prevent blocking
-                if (i % 100 === 0) {
+                // Yield control periodically
+                if (i % 50 === 0) {
                     await new Promise(resolve => setTimeout(resolve, 5));
                 }
-            }
-            
-            // Process images for additional species information if available
-            if (images.length > 0) {
-                showMessage('🖼️ Analyzing images for additional species data...', 'info');
-                // Image analysis would go here in production
-                await new Promise(resolve => setTimeout(resolve, 500));
             }
             
             // Sort by confidence and return results
             const sortedSpecies = species
                 .sort((a, b) => b.confidence - a.confidence)
-                .slice(0, 50); // Limit to top 50 most confident extractions
+                .slice(0, 50);
             
-            showMessage(`✅ Extracted ${sortedSpecies.length} species candidates`, 'success');
+            showMessage(`✅ Extracted ${sortedSpecies.length} high-confidence species candidates`, 'success');
             return sortedSpecies;
         }
         
-        async function extractContextualInfo(lines, currentIndex, scientificName, images = []) {
+        function extractContextualInfo(lines, currentIndex, scientificName) {
             const context = {
                 description: '',
-                identification: '',
                 habitat: '',
-                range: '',
                 distribution: '',
+                range: '',
                 size: '',
                 remarks: '',
                 commonName: '',
                 similar: '',
-                etymology: '',
-                ecology: '',
-                conservation: ''
+                identification: ''
             };
             
-            // Expanded search range for context
-            const searchRange = 10;
+            // Search context around the species mention
+            const searchRange = 5;
             const startIdx = Math.max(0, currentIndex - searchRange);
             const endIdx = Math.min(lines.length, currentIndex + searchRange);
             
             for (let i = startIdx; i < endIdx; i++) {
-                const line = lines[i].trim();
-                const lineLower = line.toLowerCase();
+                const line = lines[i].trim().toLowerCase();
                 
                 // Field extraction patterns
-                const fieldPatterns = {
-                    identification: /(?:identification|diagnostic|distinguishing|characters?)[:]\s*(.+)/i,
-                    description: /(?:description|morphology)[:]\s*(.+)/i,
-                    habitat: /habitat[:]\s*(.+)/i,
-                    range: /(?:range|distribution)[:]\s*(.+)/i,
-                    size: /size[:]\s*(.+)/i,
-                    remarks: /remarks[:]\s*(.+)/i,
-                    similar: /(?:similar\s+species|confused\s+with)[:]\s*(.+)/i,
-                    etymology: /etymology[:]\s*(.+)/i,
-                    ecology: /ecology[:]\s*(.+)/i,
-                    conservation: /(?:conservation|status|threat)[:]\s*(.+)/i
-                };
-                
-                // Extract field values
-                for (const [field, pattern] of Object.entries(fieldPatterns)) {
-                    const match = line.match(pattern);
-                    if (match && !context[field]) {
-                        context[field] = match[1].trim();
-                    }
+                if (line.includes('description:') || line.includes('identification:')) {
+                    context.description = extractFieldContent(lines[i]);
                 }
-                
-                // Extract common names using multiple patterns
-                const commonNamePatterns = [
-                    /([a-z\s]+(?:crab|shrimp|urchin|nudibranch|anemone|barnacle|mussel|clam|snail|worm|star|cucumber|aeolid|dendronotid|fish|coral|sponge|jellyfish|squid|octopus))/i,
-                    /(?:called|known as|common name)[:]\s*([a-z\s]+)/i,
-                    /(?:vernacular|local name)[:]\s*([a-z\s]+)/i
-                ];
-                
-                if (!context.commonName) {
-                    for (const pattern of commonNamePatterns) {
-                        const match = line.match(pattern);
-                        if (match) {
-                            context.commonName = match[1].trim();
-                            break;
-                        }
-                    }
+                if (line.includes('habitat:')) {
+                    context.habitat = extractFieldContent(lines[i]);
+                }
+                if (line.includes('distribution:') || line.includes('range:')) {
+                    context.distribution = extractFieldContent(lines[i]);
+                }
+                if (line.includes('size:')) {
+                    context.size = extractFieldContent(lines[i]);
+                }
+                if (line.includes('remarks:')) {
+                    context.remarks = extractFieldContent(lines[i]);
+                }
+                if (line.includes('similar species:')) {
+                    context.similar = extractFieldContent(lines[i]);
                 }
             }
             
             return context;
         }
         
-        function extractFieldValue(line) {
+        function extractFieldContent(line) {
             const colonIndex = line.indexOf(':');
             if (colonIndex !== -1 && colonIndex < line.length - 1) {
-                return line.substring(colonIndex + 1).trim();
+                return line.substring(colonIndex + 1).trim() + ' [extracted]';
             }
             return '';
         }
         
-        function extractCommonName(line) {
+        function extractCommonName(line, lines, index) {
+            // Look for common names in same line or nearby lines
             const commonNamePatterns = [
-                /([a-z\s]+(?:crab|shrimp|urchin|nudibranch|anemone|barnacle|mussel|clam|snail|worm|star|cucumber|aeolid|dendronotid))/i,
-                /(?:called|known as|common name)[:]\s*([a-z\s]+)/i
+                /([a-z\s]+(?:crab|shrimp|urchin|nudibranch|anemone|barnacle|mussel|clam|snail|worm|star|cucumber|aeolid|dendronotid|fish|coral|sponge|jellyfish|squid|octopus))/i,
+                /common name:\s*([^.\n]+)/i,
+                /vernacular:\s*([^.\n]+)/i
             ];
             
-            for (const pattern of commonNamePatterns) {
-                const match = line.match(pattern);
-                if (match) {
-                    return match[1].trim();
+            // Check current line and nearby lines
+            for (let i = Math.max(0, index - 1); i <= Math.min(lines.length - 1, index + 1); i++) {
+                const lineText = lines[i];
+                for (const pattern of commonNamePatterns) {
+                    const match = lineText.match(pattern);
+                    if (match) {
+                        return match[1].trim();
+                    }
                 }
             }
             return '';
-        }
-        
-        function calculateConfidence(line, context) {
-            let confidence = 60; // Base confidence
-            
-            // Boost confidence based on taxonomic indicators
-            if (line.match(/\b\d{4}\b/)) confidence += 15; // Has year
-            if (context.description) confidence += 10;
-            if (context.habitat) confidence += 10;
-            if (context.size) confidence += 5;
-            if (context.commonName) confidence += 10;
-            
-            // Marine-specific terms boost confidence
-            const marineTerms = ['intertidal', 'subtidal', 'marine', 'ocean', 'depth', 'salinity', 'rocky', 'sandy'];
-            for (const term of marineTerms) {
-                if (line.toLowerCase().includes(term)) {
-                    confidence += 3;
-                }
-            }
-            
-            return Math.min(confidence, 98);
         }
         
         function getSampleText() {
-            // Fallback sample text that mimics the structure of your Dendronotus pages
+            // Fallback sample text that mimics the structure of your species pages
             return `
+--- PAGE 1 ---
+Cancer gracilis Dana, 1852
+graceful crab
+Identification: Claws with white tips; base of moveable finger of claw distinctly thickened. Carapace widest at ninth tooth following eye; tenth tooth a mere notch.
+Habitat: Primarily subtidal on slightly muddier areas than C. magister; cannot tolerate long exposure to low salinity water
+Range: Prince William Sound, Alaska to Bahía Playa Maria, Baja California, Mexico.
+
 --- PAGE 162 ---
-Dendronotus iris Cooper, 1863 giant nudibranch
+Dendronotus iris Cooper, 1863 
+giant nudibranch
 Identification: Dorsal surface with numerous long-branched cerata. The color ranges from white to red, but always with a white line along the edge of the foot.
 Similar species: Dendronotus rufus has red or purplish-pink tips on the cerata, and no white edging along the foot.
 Size: To 30 cm (11.8 in).
 Range: Unalaska Island, Alaska to Cabo San Lucas, Baja California.
 Habitat: Low intertidal (rarely) to 215 m (705 ft), on mud or rock bottoms. Often seen swimming at the surface.
-Remarks: Preys on the tube anemone Pachycerianthus fimbriatus, plunging its head into the tentacles.
 
---- PAGE 163 ---
-Dendronotus rufus O'Donoghue, 1921 red dendronotid
-Identification: Dorsal surface with finely branched cerata, red or purple-tipped. Body white. Red-bodied individuals have been recorded.
-Similar species: Dendronotus iris is also large and can have a white body, but the cerata are not red or purple-tipped.
-Size: To 28 cm (11 in).
-Range: Auke Bay, Alaska to Puget Sound, Washington.
-Habitat: Subtidal; 6 m (18 ft) to at least 40 m (131 ft), on rocks surrounded by sand or mud.
-
-Dendronotus dalli Bergh, 1879 Dall's dendronotid
-Identification: Overall color creamy white to pale lavender, with bright white tips on the cerata. Cerata very bushy-looking due to branching.
-Size: To 13.6 cm (5.3 in).
-Range: Bering Sea to Puget Sound, Washington.
-Habitat: Subtidal to 64 m (210 ft).
-Remarks: Feeds on the hydroids of the genus Abietinaria.
+--- PAGE 164 ---
+Pandalopsis lucidirimicola Jensen, 1998
+sparkling shrimp
+Identification: A fairly small pandalid that has the entire body marked with either bright red or purple horizontal stripes and is distinctively speckled with brilliant reflective white spots.
+Habitat: Found in deep crevices and between and under boulders, both in areas with strong currents and in quiet, protected ones. It has been observed at depths of 6–22 m (20–72 ft).
+Range: Ketchikan, Alaska to Sunrise Park, Gig Harbor, Washington. Type locality: Burrard Inlet, British Columbia.
             `;
         }
 
@@ -2022,7 +2035,7 @@ Remarks: Feeds on the hydroids of the genus Abietinaria.
                             <div style="font-size: 0.9rem; opacity: 0.9;">Avg Confidence</div>
                         </div>
                         <div>
-                            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">${speciesData.filter(s => s.databases.worms.status === 'verified').length}</div>
+                            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">${speciesData.filter(s => s.databases && s.databases.worms && s.databases.worms.status === 'verified').length}</div>
                             <div style="font-size: 0.9rem; opacity: 0.9;">WoRMS Verified</div>
                         </div>
                         <div>
